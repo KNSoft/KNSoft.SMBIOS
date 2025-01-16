@@ -2171,31 +2171,466 @@ typedef struct _SMBIOS_64BIT_MEMORY_ERROR_INFORMATION
 
 #pragma endregion
 
+#pragma region Management Device (Type 34)
+
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE ((BYTE)34)
+
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_OTHER                         ((BYTE)01h) // Other
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_UNKNOWN                       ((BYTE)02h) // Unknown
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM75   ((BYTE)03h) // National Semiconductor LM75
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM78   ((BYTE)04h) // National Semiconductor LM78
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM79   ((BYTE)05h) // National Semiconductor LM79
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM80   ((BYTE)06h) // National Semiconductor LM80
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM81   ((BYTE)07h) // National Semiconductor LM81
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_ANALOG_DEVICES_ADM9240        ((BYTE)08h) // Analog Devices ADM9240
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_DALLAS_SEMICONDUCTOR_DS1780   ((BYTE)09h) // Dallas Semiconductor DS1780
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_MAXIM_1617                    ((BYTE)0Ah) // Maxim 1617
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_GENESYS_GL518SM               ((BYTE)0Bh) // Genesys GL518SM
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_WINBOND_W83781D               ((BYTE)0Ch) // Winbond W83781D
+#define SMBIOS_MANAGEMENT_DEVICE_TYPE_HOLTEK_HT82H791               ((BYTE)0Dh) // Holtek HT82H791
+
+#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_OTHER     ((BYTE)01h) // Other
+#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_UNKNOWN   ((BYTE)02h) // Unknown
+#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_IO_PORT   ((BYTE)03h) // I/O Port 
+#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_MEMORY    ((BYTE)04h) // Memory
+#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_SMBUS     ((BYTE)05h) // SM Bus
+
+typedef struct _SMBIOS_MANAGEMENT_DEVICE
+{
+    DMI_STRING Description;
+    BYTE Type;          // SMBIOS_MANAGEMENT_DEVICE_TYPE_*
+    DWORD Address;
+    BYTE AddressType;   // SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_*
+} SMBIOS_MANAGEMENT_DEVICE, *PSMBIOS_MANAGEMENT_DEVICE;
+
+#pragma endregion
+
+#pragma region Management Device Component (Type 35)
+
+#define SMBIOS_MANAGEMENT_DEVICE_COMPONENT_TYPE ((BYTE)35)
+
+typedef struct _SMBIOS_MANAGEMENT_DEVICE_COMPONENT
+{
+    DMI_STRING Description;
+    WORD ManagementDeviceHandle;
+    WORD ComponentHandle;
+    WORD ThresholdHandle;
+} SMBIOS_MANAGEMENT_DEVICE_COMPONENT, *PSMBIOS_MANAGEMENT_DEVICE_COMPONENT;
+
+#pragma endregion
+
+#pragma region Management Device Threshold Data (Type 36)
+
+#define SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA_TYPE ((BYTE)36)
+
+typedef struct _SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA
+{
+    WORD LowerThresholdNonCritical;
+    WORD UpperThresholdNonCritical;
+    WORD LowerThresholdCritical;
+    WORD UpperThresholdCritical;
+    WORD LowerThresholdNonRecoverable;
+    WORD UpperThresholdNonRecoverable;
+} SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA, *PSMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA;
+
+#pragma endregion
+
+#pragma region Memory Channel (Type 37)
+
+#define SMBIOS_MEMORY_CHANNEL_TYPE ((BYTE)37)
+
+#define SMBIOS_MEMORY_CHANNEL_TYPE_OTHER        ((BYTE)01h) // Other
+#define SMBIOS_MEMORY_CHANNEL_TYPE_UNKNOWN      ((BYTE)02h) // Unknown
+#define SMBIOS_MEMORY_CHANNEL_TYPE_RAMBUS       ((BYTE)03h) // Rambus
+#define SMBIOS_MEMORY_CHANNEL_TYPE_SYNC_LINK    ((BYTE)04h) // SyncLink
+
+typedef struct _SMBIOS_MEMORY_CHANNEL_DEVICE
+{
+    BYTE Load;
+    WORD Handle;
+} SMBIOS_MEMORY_CHANNEL_DEVICE, *PSMBIOS_MEMORY_CHANNEL_DEVICE;
+
+typedef struct _SMBIOS_MEMORY_CHANNEL
+{
+    BYTE Type; // SMBIOS_MEMORY_CHANNEL_TYPE_*
+    BYTE MaximumLoad;
+    BYTE MemoryDeviceCount;
+    _Field_size_(MemoryDeviceCount) SMBIOS_MEMORY_CHANNEL_DEVICE MemoryDevices[];
+} SMBIOS_MEMORY_CHANNEL, *PSMBIOS_MEMORY_CHANNEL;
+
+#pragma endregion
+
+#pragma region IPMI Device Information (Type 38)
+
+#define SMBIOS_IPMI_DEVICE_INFORMATION_TYPE ((BYTE)38)
+
+#define SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_UNKONWN   ((BYTE)00h) // Unknown
+#define SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_KCS       ((BYTE)01h) // KCS: Keyboard Controller Style
+#define SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_SMIC      ((BYTE)02h) // SMIC: Server Management Interface Chip
+#define SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_BT        ((BYTE)03h) // BT: Block Transfer
+#define SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_SSIF      ((BYTE)04h) // SSIF: SMBus System Interface
+
+#define SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_SUCCESSIVE  ((BYTE)0b00) // On successive byte boundaries
+#define SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_32BIT       ((BYTE)0b01) // On 32-bit boundaries
+#define SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_16BIT       ((BYTE)0b10) // On 16-bit boundaries
+#define SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_RESERVED    ((BYTE)0b11) // Reserved
+
+typedef struct _SMBIOS_IPMI_DEVICE_INFORMATION
+{
+    BYTE Type; // SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_*
+    union
+    {
+        BYTE Value;
+        struct
+        {
+            BYTE Minor : 4; // 0:3 Least significant bits
+            BYTE Major : 4; // 4:7 Most significant digit
+        };
+    } SpecificationRevision;
+    BYTE I2CTargetAddress;
+    BYTE NVStorageDeviceAddress;
+    union
+    {
+        QWORD Value;
+        struct
+        {
+            QWORD IOSpace : 1;  // 00 1 The address is in I/O space, or 0 the address is memory-mapped
+            QWORD Address : 63; // 01:63 Address
+        };
+    } BaseAddress;
+    union
+    {
+        BYTE Value;
+        struct
+        {
+            BYTE InterruptTriggerMode : 1;  // 0 1 = level, 0 = edge
+            BYTE InterruptPolarity : 1;     // 1 1 = active high, 0 = active low
+            BYTE Reserved0 : 1;             // 2 Reserved. Return as 0b
+            BYTE InterruptInfo : 1;         // 3 1 = specified, 0 = not specified
+            BYTE LSBAddress : 1;            // 4 LS-bit for addresses
+            BYTE Reserved1 : 1;             // 5 Reserved. Return as 0b
+            BYTE RegisterSpacing : 2;       // 6:7 SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_*
+        };
+    } BaseAddressInfo;
+} SMBIOS_IPMI_DEVICE_INFORMATION, *PSMBIOS_IPMI_DEVICE_INFORMATION;
+
+#pragma endregion
+
+#if SMBIOS_VERSION >= 0x02030100
+
+#pragma region System Power Supply (Type 39)
+
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE ((BYTE)39)
+
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_OTHER          ((WORD)0b0001) // Other
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_UNKNOWN        ((WORD)0b0010) // Unknown
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_MANUAL         ((WORD)0b0011) // Manual
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_AUTO_SWITCH    ((WORD)0b0100) // Auto-switch
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_WIDE_RANGE     ((WORD)0b0101) // Wide range
+#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_NOT_APPLICABLE ((WORD)0b0110) // Not applicable
+
+#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OTHER         ((WORD)0b001) // Other
+#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_UNKNOWN       ((WORD)0b010) // Unknown
+#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OK            ((WORD)0b011) // OK
+#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_NON_CRITICAL  ((WORD)0b100) // Non-critical
+#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_CRITICAL      ((WORD)0b101) // Critical; power supply has failed and has been taken off-line
+
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_OTHER       ((WORD)0b0001) // Other
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UNKNOWN     ((WORD)0b0010) // Unknown
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_LINEAR      ((WORD)0b0011) // Linear
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_SWITCHING   ((WORD)0b0100) // Switching
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_BATTERY     ((WORD)0b0101) // Battery
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UPS         ((WORD)0b0110) // UPS
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_CONVERTER   ((WORD)0b0111) // Converter
+#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_REGULATOR   ((WORD)0b1000) // Regulator
+
+typedef struct _SMBIOS_SYSTEM_POWER_SUPPLY
+{
+    BYTE PowerUnitGroup;
+    DMI_STRING Location;
+    DMI_STRING DeviceName;
+    DMI_STRING Manufacturer;
+    DMI_STRING SerialNumber;
+    DMI_STRING AssetTagNumber;
+    DMI_STRING ModelPartNumber;
+    DMI_STRING RevisionLevel;
+    WORD MaxPowerCapacity;
+    union
+    {
+        WORD Value;
+        struct
+        {
+            WORD HotReplaceable : 1;                // 00 Power supply is hot-replaceable
+            WORD Present : 1;                       // 01 Power supply is present 
+            WORD UnpluggedFromTheWall : 1;          // 02 Power supply is unplugged from the wall
+            WORD InputVoltageRangeSwitching : 4;    // 03:06 SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_*
+            WORD Status : 3;                        // 07:09 SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_*
+            WORD Type : 4;                          // 10:13 SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_*
+            WORD Reserved : 2;                      // 14:15 Reserved; set to 00b
+        };
+    } Characteristics;
+    WORD InputVoltageProbeHandle;
+    WORD CoolingDeviceHandle;
+    WORD InputCurrentProbeHandle;
+} SMBIOS_SYSTEM_POWER_SUPPLY, *PSMBIOS_SYSTEM_POWER_SUPPLY;
+
+#pragma endregion
+
+#if SMBIOS_VERSION >= 0x02060000
+
+#pragma region Additional Information (Type 40)
+
+#define SMBIOS_ADDITIONAL_INFORMATION_TYPE ((BYTE)40)
+
+typedef struct _SMBIOS_ADDITIONAL_INFORMATION_ENTRY
+{
+    BYTE Length;
+    WORD ReferencedHandle;
+    BYTE ReferencedOffset;
+    DMI_STRING String;
+    BYTE Value[1]; // Varies
+} SMBIOS_ADDITIONAL_INFORMATION_ENTRY, *PSMBIOS_ADDITIONAL_INFORMATION_ENTRY;
+
+typedef struct _SMBIOS_ADDITIONAL_INFORMATION
+{
+    BYTE Count;
+    _Field_size_(Count) SMBIOS_ADDITIONAL_INFORMATION_ENTRY Entries[];
+} SMBIOS_ADDITIONAL_INFORMATION, *PSMBIOS_ADDITIONAL_INFORMATION;
+
+#pragma endregion
+
+#pragma region Onboard Devices Extended Information (Type 41)
+
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION_TYPE ((BYTE)41)
+
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_OTHER              ((BYTE)01h) // Other
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UNKNOWN            ((BYTE)02h) // Unknown
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_VIDEO              ((BYTE)03h) // Video
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SCSI_CONTROLLER    ((BYTE)04h) // SCSI Controller
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_ETHERNET           ((BYTE)05h) // Ethernet
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_TOKEN_RING         ((BYTE)06h) // Token Ring
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SOUND              ((BYTE)07h) // Sound
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_PATA_CONTROLLER    ((BYTE)08h) // PATA Controller
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SATA_CONTROLLER    ((BYTE)09h) // SATA Controller
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SAS_CONTROLLER     ((BYTE)0Ah) // SAS Controller
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WIRELESS_LAN       ((BYTE)0Bh) // Wireless LAN
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_BLUETOOTH          ((BYTE)0Ch) // Bluetooth
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WWAN               ((BYTE)0Dh) // WWAN
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_EMMC               ((BYTE)0Eh) // eMMC (embedded Multi-Media Controller)
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_NVME_CONTROLLER    ((BYTE)0Fh) // NVMe Controller
+#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UFS_CONTROLLER     ((BYTE)10h) // UFS Controller
+
+typedef struct _SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION
+{
+    DMI_STRING ReferenceDesignation;
+    union
+    {
+        BYTE Value;
+        struct
+        {
+            BYTE DeviceType : 7;    // 0:6 SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_*
+            BYTE Status : 1;        // 7 1 – Device Enabled, 0 – Device Disabled
+        };
+    } Type;
+    BYTE TypeInstance;
+    WORD SegmentGroupNumber;
+    BYTE BusNumber;
+    union
+    {
+        BYTE Value;
+        struct
+        {
+            BYTE FunctionNumber : 3;    // 0：2 Function number
+            BYTE DeviceNumber : 5;      // 3：7 Device number
+        };
+    } DeviceFunctionNumber;
+} SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION, *PSMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION;
+
+#pragma endregion
+
+#pragma region Management Controller Host Interface (Type 42)
+
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_TYPE ((BYTE)42)
+
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_RESERVED_0        ((BYTE)000h) // Reserved
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_RESERVED_1        ((BYTE)001h) // Reserved
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_IPMI              ((BYTE)002h) // IPMI
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_MCTP              ((BYTE)003h) // MCTP
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_REDFISH_OVER_IP   ((BYTE)004h) // Redfish over IP
+#define SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_OEM_DEFINED       ((BYTE)0F0h) // OEM-defined
+
+typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD
+{
+    BYTE Type; // SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_*
+    BYTE TypeSpecificDataLength;
+    _Field_size_bytes_(TypeSpecificDataLength) BYTE TypeSpecificData[];
+} SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD, *PSMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD;
+
+typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE
+{
+    BYTE Type; // 00h–3Fh MCTP Host Interfaces, 40h Network Host Interface, F0h OEM-defined, others Reserved
+    BYTE TypeSpecificDataLength;
+    _Field_size_bytes_(TypeSpecificDataLength) BYTE TypeSpecificData[];
+/*
+    BYTE NumberOfProtocolRecords;
+    SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD ProtocolRecords[];
+*/
+} SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE, *PSMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE;
+
+#pragma endregion
+
+#pragma region TPM Device (Type 43)
+
+#define SMBIOS_TPM_DEVICE_TYPE ((BYTE)43)
+
+typedef struct _SMBIOS_TPM_DEVICE
+{
+    BYTE VendorID[4];
+    BYTE MajorSpecVersion;
+    BYTE MinorSpecVersion;
+    DWORD FirmwareVersion1;
+    DWORD FirmwareVersion2;
+    DMI_STRING Description;
+    union
+    {
+        QWORD Value;
+        struct
+        {
+            QWORD Reserved0 : 1;                                    // 00 Reserved
+            QWORD Reserved1 : 1;                                    // 01 Reserved
+            QWORD NotSupported : 1;                                 // 02 Characteristics are not supported
+            QWORD FamilyConfigurableViaFirmwareUpdate : 1;          // 03 Family configurable via firmware update
+            QWORD FamilyConfigurableViaPlatformSoftwareSupport : 1; // 04 Family configurable via platform software support
+            QWORD FamilyConfigurableViaOEMProprietaryMechanism : 1; // 05 Family configurable via OEM proprietary mechanism
+            QWORD Reserved2 : 58;                                   // 06:63 Reserved
+        };
+    } Characteristics;
+    DWORD OEMDefined;
+} SMBIOS_TPM_DEVICE, *PSMBIOS_TPM_DEVICE;
+
+#pragma endregion
+
+#pragma region Processor Additional Information (Type 44)
+
+#define SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION_TYPE ((BYTE)44)
+
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_RESERVED     ((BYTE)00h) // Reserved
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_X86          ((BYTE)01h) // IA32 (x86)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_X64          ((BYTE)02h) // x64 (x86-64, Intel64, AMD64, EM64T)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_IA64         ((BYTE)03h) // Intel® Itanium® architecture
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_ARM32        ((BYTE)04h) // 32-bit ARM (Aarch32)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_ARM64        ((BYTE)05h) // 64-bit ARM (Aarch64)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_RISCV32      ((BYTE)06h) // 32-bit RISC-V (RV32) 
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_RISCV64      ((BYTE)07h) // 64-bit RISC-V (RV64)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_RISCV128     ((BYTE)08h) // 128-bit RISC-V (RV128)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_LOONGARCH32  ((BYTE)09h) // 32-bit LoongArch (LoongArch32)
+#define SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_LOONGARCH64  ((BYTE)0Ah) // 64-bit LoongArch (LoongArch64)
+
+typedef struct _SMBIOS_PROCESSOR_SPECIFIC_BLOCK
+{
+    BYTE Length;
+    BYTE Type; // SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_*
+    _Field_size_bytes_(Length) BYTE Data[1]; // Varies
+} SMBIOS_PROCESSOR_SPECIFIC_BLOCK, *PSMBIOS_PROCESSOR_SPECIFIC_BLOCK;
+
+typedef struct _SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION
+{
+    WORD ReferencedHandle;
+    SMBIOS_PROCESSOR_SPECIFIC_BLOCK ProcessorSpecificBlock[];
+} SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION, *PSMBIOS_PROCESSOR_ADDITIONAL_INFORMATION;
+
+#pragma endregion
+
+#if SMBIOS_VERSION >= 0x03050000
+
+#pragma region Firmware Inventory Information (Type 45)
+
+#define SMBIOS_FIRMWARE_INVENTORY_INFORMATION_TYPE ((BYTE)45)
+
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM      ((BYTE)00h) // The format is a free-form string
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR    ((BYTE)01h) // The format is "MAJOR.MINOR"
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32  ((BYTE)02h) // The format is a C-style hexadecimal string representation of the 32-bit numeric value
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64  ((BYTE)03h) // The format is a C-style hexadecimal string representation of the 64-bit numeric value
+
+#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM   ((BYTE)00h) // The format is a free-form string
+#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID   ((BYTE)01h) // The format is a string representation of the UEFI ESRT FwClass GUID or the UEFI Firmware Management Protocol ImageTypeId
+
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_OTHER               ((BYTE)01h) // Other
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_UNKNOWN             ((BYTE)02h) // Unknown
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_DISABLED            ((BYTE)03h) // Disabled
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_ENABLED             ((BYTE)04h) // Enabled
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_ABSENT              ((BYTE)05h) // Absent
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_STANDBY_OFFLINE     ((BYTE)06h) // StandbyOffline
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_STANDBY_SPARE       ((BYTE)07h) // StandbySpare
+#define SMBIOS_FIRMWARE_INVENTORY_STATE_UNAVAILABLE_OFFLINE ((BYTE)08h) // UnavailableOffline
+
+typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
+{
+    DMI_STRING ComponentName;
+    DMI_STRING Version;
+    BYTE VersionFormat;                         // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*, 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    DMI_STRING ID;
+    BYTE IDFormat;                              // SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_*, 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    DMI_STRING ReleaseDate;
+    DMI_STRING Manufacturer;
+    DMI_STRING LowestSupportedFirmwareVersion;  // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*
+    QWORD ImageSize;
+    union
+    {
+        WORD Value;
+        struct
+        {
+            WORD Updatable : 1;     // 00 Updatable
+            WORD WriteProtect : 1;  // 01 Write-Protect
+            WORD Reserved : 14;     // 02:15 Reserved
+        };
+    } Characteristics;
+    BYTE State; // SMBIOS_FIRMWARE_INVENTORY_STATE_*
+    BYTE NumberOfAssociatedComponents;
+    _Field_size_(NumberOfAssociatedComponents) WORD AssociatedComponentHandles[];
+} SMBIOS_FIRMWARE_INVENTORY_INFORMATION, *PSMBIOS_FIRMWARE_INVENTORY_INFORMATION;
+
+#pragma endregion
+
+#pragma region String Property (Type 46)
+
+#define SMBIOS_STRING_PROPERTY_TYPE ((BYTE)46)
+
+#define SMBIOS_STRING_PROPERTY_ID_RESERVED          ((WORD)0) // Reserved – do not use
+#define SMBIOS_STRING_PROPERTY_ID_UEFI_DEVICE_PATH  ((WORD)1) // UEFI device path
+
+typedef struct _SMBIOS_STRING_PROPERTY
+{
+    WORD ID; // SMBIOS_STRING_PROPERTY_ID_*
+    DMI_STRING String;
+    WORD ParentHandle;
+} SMBIOS_STRING_PROPERTY, *PSMBIOS_STRING_PROPERTY;
+
+#pragma endregion
+
+#endif // SMBIOS_VERSION >= 0x03050000
+
+#endif // SMBIOS_VERSION >= 0x02060000
+
+#endif // SMBIOS_VERSION >= 0x02030100
+
 #endif // SMBIOS_VERSION >= 0x02030000
+
+#pragma region Inactive (Type 126)
+
+#define SMBIOS_INACTIVE_TYPE ((BYTE)126)
+
+#pragma endregion Inactive
+
+#pragma region End-of-Table (Type 127)
+
+#define SMBIOS_END_OF_TABLE_TYPE ((BYTE)127)
+
+#pragma endregion End-of-Table
 
 #endif // SMBIOS_VERSION >= 0x02020000
 
 #endif // SMBIOS_VERSION >= 0x02010000
-
-typedef enum _SMBIOS_INFORMATION_TYPE
-{
-    SMBIOSSystemBootInformation = 32,
-    SMBIOSManagementDevice = 34,
-    SMBIOSManagementDeviceComponent = 35,
-    SMBIOSManagementDeviceThresholdData = 36,
-    SMBIOSMemoryChannel = 37,
-    SMBIOSIPMIDeviceInformation = 38,
-    SMBIOSSystemPowerSupply = 39,
-    SMBIOSAdditionalInformation = 40,
-    SMBIOSOnboardDevicesExtendedInformation = 41,
-    SMBIOSManagementControllerHostInterface = 42,
-    SMBIOSTPMDevice = 43,
-    SMBIOSProcessorAdditionalInformation = 44,
-    SMBIOSFirmwareInventoryInformation = 45,
-    SMBIOSStringProperty = 46,
-    SMBIOSInactive = 126,
-    SMBIOSEndOfTable = 127
-} SMBIOS_INFORMATION_TYPE, *PSMBIOS_INFORMATION_TYPE;
 
 typedef struct _SMBIOS_TABLE
 {
@@ -2238,195 +2673,28 @@ typedef struct _SMBIOS_TABLE
 #if SMBIOS_VERSION >= 0x02030000
         SMBIOS_SYSTEM_BOOT_INFORMATION SystemBootInformation; // Type 32
         SMBIOS_64BIT_MEMORY_ERROR_INFORMATION _64BitMemoryErrorInformation; // Type 33
-#endif
-#endif
-#endif
-        struct
-        {
-            BYTE Description;
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_OTHER                         ((BYTE)01h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_UNKNOWN                       ((BYTE)02h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM75   ((BYTE)03h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM78   ((BYTE)04h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM79   ((BYTE)05h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM80   ((BYTE)06h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_NATIONAL_SEMICONDUCTOR_LM81   ((BYTE)07h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_ANALOG_DEVICES_ADM9240        ((BYTE)08h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_DALLAS_SEMICONDUCTOR_DS1780   ((BYTE)09h)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_MAXIM_1617                    ((BYTE)0Ah)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_GENESYS_GL518SM               ((BYTE)0Bh)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_WINBOND_W83781D               ((BYTE)0Ch)
-#define SMBIOS_MANAGEMENT_DEVICE_TYPE_HOLTEK_HT82H791               ((BYTE)0Dh)
-            BYTE Type;          /* SMBIOS_MANAGEMENT_DEVICE_TYPE_* */
-            DWORD Address;
-#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_OTHER     ((BYTE)01h)
-#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_UNKNOWN   ((BYTE)02h)
-#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_IO_PORT   ((BYTE)03h)
-#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_MEMORY    ((BYTE)04h)
-#define SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_SMBUS     ((BYTE)05h)
-            BYTE AddressType;   /* SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_* */
-        } TYPE_34_MANAGEMENT_DEVICE;
-        struct
-        {
-            BYTE Description;
-            WORD ManagementDeviceHandle;
-            WORD ComponentHandle;
-            WORD ThresholdHandle;
-        } TYPE_35_MANAGEMENT_DEVICE_COMPONENT;
-        struct
-        {
-            BYTE PowerUnitGroup;
-            BYTE Location;
-            BYTE DeviceName;
-            BYTE Manufacturer;
-            BYTE SerialNumber;
-            BYTE AssetTagNumber;
-            BYTE ModelPartNumber;
-            BYTE RevisionLevel;
-            WORD MaxPowerCapacity;
-            union
-            {
-                WORD Characteristics;
-                struct
-                {
-                    WORD HotReplaceable : 1;
-                    WORD Present : 1;
-                    WORD UnpluggedFromTheWall : 1;
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_OTHER          0001b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_UNKNOWN        0010b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_MANUAL         0011b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_AUTO_SWITCH    0100b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_WIDE_RANGE     0101b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_NOT_APPLICABLE 0110b
-                    WORD DMTFInputVoltageRangeSwitching : 4;    /* SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_* */
-#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OTHER         001b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_UNKNOWN       010b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OK            011b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_NON_CRITICAL  100b
-#define SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_CRITICAL      101b
-                    WORD Status : 3;                            /* SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_* */
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_OTHER       0001b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UNKNOWN     0010b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_LINEAR      0011b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_SWITCHING   0100b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_BATTERY     0101b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UPS         0110b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_CONVERTER   0111b  
-#define SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_REGULATOR   1000b  
-                    WORD DMTFPowerSupplyType : 4;               /* SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_* */
-                    WORD Reserved : 2;
-                };
-            };
-        } TYPE_39_SYSTEM_POWER_SUPPLY;
-        struct
-        {
-            BYTE ReferenceDesignation;
-            union
-            {
-                BYTE Type;
-                struct
-                {
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_OTHER              ((BYTE)01h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UNKNOWN            ((BYTE)02h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_VIDEO              ((BYTE)03h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SCSI_CONTROLLER    ((BYTE)04h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_ETHERNET           ((BYTE)05h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_TOKEN_RING         ((BYTE)06h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SOUND              ((BYTE)07h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_PATA_CONTROLLER    ((BYTE)08h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SATA_CONTROLLER    ((BYTE)09h)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SAS_CONTROLLER     ((BYTE)0Ah)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WIRELESS_LAN       ((BYTE)0Bh)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_BLUETOOTH          ((BYTE)0Ch)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WWAN               ((BYTE)0Dh)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_EMMC               ((BYTE)0Eh)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_NVME_CONTROLLER    ((BYTE)0Fh)
-#define SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UFS_CONTROLLER     ((BYTE)10h)
-                    BYTE TypeOfDevice : 7; /* SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_* */
-                    BYTE Status : 1;
-                };
-            };
-            BYTE TypeInstance;
-            WORD SegmentGroupNumber;
-            BYTE BusNumber;
-            union
-            {
-                BYTE DeviceFunctionNumber;
-                struct
-                {
-                    BYTE FunctionNumber : 3;
-                    BYTE DeviceNumber : 5;
-                };
-            };
-        } TYPE_41_ONBOARD_DEVICES_EXTENDED_INFORMATION;
-        struct
-        {
-            BYTE VendorID[4];
-            BYTE MajorSpecVersion;
-            BYTE MinorSpecVersion;
-            DWORD FirmwareVersion1;
-            DWORD FirmwareVersion2;
-            BYTE Description;
-            union
-            {
-                QWORD Characteristics;
-                struct
-                {
-                    QWORD Reserved0 : 1;
-                    QWORD Reserved1 : 1;
-                    QWORD NotSupported : 1;
-                    QWORD FamilyConfigurableViaFirmwareUpdate : 1;
-                    QWORD FamilyConfigurableViaPlatformSoftwareSupport : 1;
-                    QWORD FamilyConfigurableViaOEMProprietaryMechanism : 1;
-                    QWORD Reserved2 : 58;
-                };
-            };
-            DWORD OEMDefined;
-        } TYPE_43_TPM_DEVICE;
-        struct
-        {
-            WORD ReferencedHandle;
-            BYTE ProcessorSpecificBlock[];
-        } TYPE_44_PROCESSOR_ADDITIONAL_INFO;
-        struct
-        {
-            BYTE ComponentName;
-            BYTE Version;
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM      ((BYTE)00h)
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR    ((BYTE)01h)
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32  ((BYTE)02h)
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64  ((BYTE)03h)
-            BYTE VersionFormat; /* SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_* */
-            BYTE ID;
-#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM   ((BYTE)00h)
-#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID   ((BYTE)01h)
-            BYTE IDFormat;  /* SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_* */
-            BYTE ReleaseDate;
-            BYTE Manufacturer;
-            BYTE LowestSupportedFirmwareVersion;    /* SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_* */
-            QWORD ImageSize;
-            union
-            {
-                WORD Characteristics;
-                struct
-                {
-                    WORD Updatable : 1;
-                    WORD WriteProtect : 1;
-                    WORD Reserved : 14;
-                };
-            };
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_OTHER               ((BYTE)01h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_UNKNOWN             ((BYTE)02h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_DISABLED            ((BYTE)03h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_ENABLED             ((BYTE)04h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_ABSENT              ((BYTE)05h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_STANDBY_OFFLINE     ((BYTE)06h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_STANDBY_SPARE       ((BYTE)07h)
-#define SMBIOS_FIRMWARE_INVENTORY_STATE_UNAVAILABLE_OFFLINE ((BYTE)08h)
-            BYTE State; /* SMBIOS_FIRMWARE_INVENTORY_STATE_* */
-            BYTE NumberOfAssociatedComponents;
-            _Field_size_(NumberOfAssociatedComponents) WORD AssociatedComponentHandles[];
-        } TYPE_45_FIRMWARE_INVENTORY_INFO;
+        SMBIOS_MANAGEMENT_DEVICE ManagementDevice; // Type 34
+        SMBIOS_MANAGEMENT_DEVICE_COMPONENT ManagementDeviceComponent; // Type 35
+        SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA ManagementDeviceThresholdData; // Type 36
+        SMBIOS_MEMORY_CHANNEL MemoryChannel; // Type 37
+        SMBIOS_IPMI_DEVICE_INFORMATION IPMIDeviceInformation; // Type 38
+#if SMBIOS_VERSION >= 0x02030100
+        SMBIOS_SYSTEM_POWER_SUPPLY SystemPowerSupply; // Type 39
+#if SMBIOS_VERSION >= 0x02060000
+        SMBIOS_ADDITIONAL_INFORMATION AdditionalInformation; // Type 40
+        SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION OnboardDevicesExtendedInformation; // Type 41
+        SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE ManagementControllerHostInterface; // Type 42
+        SMBIOS_TPM_DEVICE TPMDevice; // Type 43
+        SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION ProcessorAdditionalInformation; // Type 44
+#if SMBIOS_VERSION >= 0x03050000
+        SMBIOS_FIRMWARE_INVENTORY_INFORMATION FirmwareInventoryInformation; // Type 45
+        SMBIOS_STRING_PROPERTY StringProperty; // Type 46
+#endif // SMBIOS_VERSION >= 0x03050000
+#endif // SMBIOS_VERSION >= 0x02060000
+#endif // SMBIOS_VERSION >= 0x02030100
+#endif // SMBIOS_VERSION >= 0x02030000
+#endif // SMBIOS_VERSION >= 0x02020000
+#endif // SMBIOS_VERSION >= 0x02010000
     };
 } SMBIOS_TABLE, *PSMBIOS_TABLE;
 
