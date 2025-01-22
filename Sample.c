@@ -72,6 +72,7 @@ GetSmbiosTableData(
 
 static const char* g_Strings[UCHAR_MAX];
 
+static
 PSMBIOS_TABLE
 PrintSmbiosTable(
     PSMBIOS_TABLE Table,
@@ -80,18 +81,21 @@ PrintSmbiosTable(
 {
     PSMBIOS_TABLE NextTable;
     void* EndOfTable;
-    unsigned short i;
-    unsigned char *psz, StringCount;
+    WORD i;
+    const char *psz;
+    BYTE StringCount;
     size_t MaxSize, Length;
-    PSMBIOS_TABLE_TYPE_INFO TypeInfo;
+    PSMBIOS_TYPE_INFO TypeInfo;
+    QWORD BitFieldValue, Value;
+    WORD BitFieldSize = 0, ValueSize;
 
     /* Get type information */
     TypeInfo = NULL;
-    for (i = 0; i < _countof(SmbiosTableTypeInfo); i++)
+    for (i = 0; i < _countof(SmbiosTypeInfo); i++)
     {
-        if (SmbiosTableTypeInfo[i].Type == Table->Header.Type)
+        if (SmbiosTypeInfo[i].Type == Table->Header.Type)
         {
-            TypeInfo = &SmbiosTableTypeInfo[i];
+            TypeInfo = &SmbiosTypeInfo[i];
             break;
         }
     }
@@ -102,7 +106,7 @@ PrintSmbiosTable(
     NextTable = NULL;
     while (true)
     {
-        if (psz + 2 >= (unsigned char*)EndOfData)
+        if (psz + 2 >= (const char*)EndOfData)
         {
             break;
         }
@@ -140,7 +144,7 @@ PrintSmbiosTable(
     {
         printf("[Type %hhu (Unrecognized)]\n", Table->Header.Type);
     }
-    printf("Handle: %hu, Offset: 0x%08lX, Length: 0x%hhX bytes, Total: 0x%lX bytes\n",
+    printf("Handle: 0x%04hX, Offset: 0x%08lX, Length: 0x%02hhX bytes, Total: 0x%lX bytes\n",
            Table->Header.Handle,
            SubPtr(StartOfData, Table),
            Table->Header.Length,
@@ -153,18 +157,99 @@ PrintSmbiosTable(
     }
     for (i = 0; i < TypeInfo->FieldCount; i++)
     {
-        printf("\t%hs: ", TypeInfo->Fields[i].Name);
-        if (TypeInfo->Fields[i].Type == SmbiosDataTypeString)
+        Value = 0;
+        if (TypeInfo->Fields[i].IsBitField)
+        {
+            if (BitFieldSize == 0)
+            {
+                if (i == 0 ||
+                    TypeInfo->Fields[i - 1].IsBitField ||
+                    TypeInfo->Fields[i - 1].Type != SmbiosDataTypeUInt)
+                {
+                    break;
+                }
+                BitFieldSize = TypeInfo->Fields[i - 1].Size;
+                BitFieldValue = 0;
+                memcpy(&BitFieldValue, AddPtr(Table, TypeInfo->Fields[i - 1].Offset), TypeInfo->Fields[i - 1].Size);
+            }
+            putchar('\t');
+            if (TypeInfo->Fields[i].Type == SmbiosDataTypeBit)
+            {
+                printf("%02hhu [%hc] %hs",
+                       TypeInfo->Fields[i].Offset,
+                       _bittest64(&BitFieldValue, TypeInfo->Fields[i].Offset) ? 'x' : ' ',
+                       TypeInfo->Fields[i].Name);
+            } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUInt || TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
+            {
+                printf("%02hhu:%02hhu %hs: ",
+                       TypeInfo->Fields[i].Offset,
+                       TypeInfo->Fields[i].Offset + TypeInfo->Fields[i].Size - 1,
+                       TypeInfo->Fields[i].Name);
+                Value = BitFieldValue;
+                Value >>= TypeInfo->Fields[i].Offset;
+                Value &= ((QWORD)1 << TypeInfo->Fields[i].Size) - 1;
+            }
+        } else
+        {
+            if (TypeInfo->Fields[i].Offset + TypeInfo->Fields[i].Size > Table->Header.Length)
+            {
+                break;
+            }
+            BitFieldSize = 0;
+            printf("0x%04hX %hs: ", TypeInfo->Fields[i].Offset, TypeInfo->Fields[i].Name);
+        }
+
+        if (TypeInfo->Fields[i].Type == SmbiosDataTypeString && TypeInfo->Fields[i].Size == sizeof(BYTE))
         {
             BYTE Index = *(BYTE*)AddPtr(Table, TypeInfo->Fields[i].Offset);
             if (Index != 0 && Index <= StringCount)
             {
-                puts(g_Strings[Index - 1]);
+                printf("0x%02hhX \"%hs\"", Index, g_Strings[Index - 1]);
+            }
+        } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUInt || TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
+        {
+            if (TypeInfo->Fields[i].IsBitField)
+            {
+                ValueSize = BitFieldSize;
             } else
             {
-                putchar('\n');
+                Value = 0;
+                memcpy(&Value, AddPtr(Table, TypeInfo->Fields[i].Offset), TypeInfo->Fields[i].Size);
+                ValueSize = TypeInfo->Fields[i].Size;
             }
+            if (ValueSize == sizeof(BYTE))
+            {
+                printf("0x%02hhX", (BYTE)Value);
+            } else if (ValueSize == sizeof(WORD))
+            {
+                printf("0x%04hX", (WORD)Value);
+            } else if (ValueSize == sizeof(DWORD))
+            {
+                printf("0x%08lX", (DWORD)Value);
+            } else if (ValueSize == sizeof(QWORD))
+            {
+                printf("0x%016llX", Value);
+            }
+            if (TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
+            {
+                WORD j;
+                for (j = 0; j < TypeInfo->Fields[i].AdditionalInfo.Enum.Count; j++)
+                {
+                    if (TypeInfo->Fields[i].AdditionalInfo.Enum.Values[j].Value == Value)
+                    {
+                        printf(" (%hs)", TypeInfo->Fields[i].AdditionalInfo.Enum.Values[j].Name);
+                        break;
+                    }
+                }
+            }
+        } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUuid && TypeInfo->Fields[i].Size == 16)
+        {
+            PBYTE Uuid = (PBYTE)AddPtr(Table, TypeInfo->Fields[i].Offset);
+            printf("%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+                   Uuid[0], Uuid[1], Uuid[2], Uuid[3], Uuid[4], Uuid[5], Uuid[6], Uuid[7],
+                   Uuid[8], Uuid[9], Uuid[10], Uuid[11], Uuid[12], Uuid[13], Uuid[14], Uuid[15]);
         }
+        putchar('\n');
     }
 
 _Exit:
@@ -178,30 +263,25 @@ main()
     PSMBIOS_RAW_DATA Data;
     unsigned int DataSize;
     PSMBIOS_TABLE Table;
-    void* EndOfData;
 
-    /* SMBIOS use UTF-8 strings */
-    setlocale(LC_ALL, "UTF-8");
+#ifdef _WINDOWS
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+    setlocale(LC_ALL, ".UTF-8");
+
     if (!GetSmbiosTableData(&Data, &DataSize))
     {
         puts("Get SMBIOS table failed\n");
         return ENODATA;
     }
-
-    /* SMBIOS information */
-    printf("SMBIOS Version: %lu.%lu\n", Data->SMBIOSMajorVersion, Data->SMBIOSMinorVersion);
-    printf("DMI Revision: %lu\n", Data->DmiRevision);
+    printf("SMBIOS Version: %hhu.%hhu\n", Data->SMBIOSMajorVersion, Data->SMBIOSMinorVersion);
+    printf("DMI Revision: %hhu\n", Data->DmiRevision);
     printf("Data Size: %lu bytes\n\n", Data->Length);
-    EndOfData = AddPtr(Data->SMBIOSTableData, Data->Length);
-
-    /* Print all tables */
     Table = (PSMBIOS_TABLE)Data->SMBIOSTableData;
     do
     {
-        Table = PrintSmbiosTable(Table, Data->SMBIOSTableData, EndOfData);
+        Table = PrintSmbiosTable(Table, Data->SMBIOSTableData, AddPtr(Data->SMBIOSTableData, Data->Length));
     } while (Table != NULL);
-
-    /* Cleanup and exit */
     free(Data);
     return 0;
 }
