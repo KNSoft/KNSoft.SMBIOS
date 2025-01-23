@@ -1,4 +1,5 @@
 ﻿#include "SMBIOS.h"
+#include "SMBIOS.TypeInfo.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -240,6 +241,18 @@ PrintSmbiosTable(
                         printf(" (%hs)", TypeInfo->Fields[i].AdditionalInfo.Enum.Values[j].Name);
                         break;
                     }
+                }
+            }
+        } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeOther)
+        {
+            BYTE j, *p;
+            p = AddPtr(Table, TypeInfo->Fields[i].Offset);
+            for (j = 0; j < TypeInfo->Fields[i].Size; j++)
+            {
+                printf("%02X", p[j]);
+                if (j != TypeInfo->Fields[i].Size - 1)
+                {
+                    putchar(' ');
                 }
             }
         } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUuid && TypeInfo->Fields[i].Size == 16)

@@ -5,5 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SMBIOS.h" />
+    <ClInclude Include="..\SMBIOS.TypeInfo.h" />
   </ItemGroup>
 </Project>

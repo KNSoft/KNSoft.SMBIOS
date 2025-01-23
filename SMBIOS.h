@@ -13,10 +13,6 @@
 
 #pragma region Preparations
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdlib.h>
-
 /* Version Control */
 #ifndef SMBIOS_VERSION
 #define SMBIOS_VERSION 0x03080000 // 0x(Major)(Minor)(Revision)(WIP)
@@ -743,9 +739,9 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
         struct
         {
             BYTE CPUStatus : 3;             // 0:2 SMBIOS_PROCESSOR_CPU_STATUS_*
-            BYTE Reserved2 : 3;             // 3:5 Reserved, must be zero
+            BYTE Reserved0 : 3;             // 3:5 Reserved, must be zero
             BYTE CPUSocketPopulated : 1;    // 6 CPU Socket Populated
-            BYTE Reserved3 : 1;             // 7 Reserved, must be zero
+            BYTE Reserved1 : 1;             // 7 Reserved, must be zero
         };
     } Status;
     BYTE Upgrade; // SMBIOS_PROCESSOR_UPGRADE_*
@@ -766,7 +762,7 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
         WORD Value;
         struct
         {
-            WORD Reserved4 : 1;                 // 00 Reserved
+            WORD Reserved0 : 1;                 // 00 Reserved
             WORD Unknown : 1;                   // 01 Unknown
             WORD _64BitCapable : 1;             // 02 64-bit Capable
             WORD MultiCore : 1;                 // 03 Multi-Core
@@ -776,7 +772,7 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
             WORD PowerPerformanceControl : 1;   // 07 Power/Performance Control
             WORD _128BitCapable : 1;            // 08 128-bit Capable
             WORD Arm64SoCId : 1;                // 09 Arm64 SoC ID
-            WORD Reserved5 : 6;                 // 10:15 Reserved
+            WORD Reserved1 : 6;                 // 10:15 Reserved
         };
     } Characteristics;
 #if SMBIOS_VERSION >= 0x02060000
@@ -805,18 +801,18 @@ typedef union _SMBIOS_MEMORY_TYPE
     WORD Value;
     struct
     {
-        WORD Other;         // 00 Other
-        WORD Unknown;       // 01 Unknown
-        WORD Standard;      // 02 Standard
-        WORD FastPageMode;  // 03 Fast Page Mode
-        WORD EDO;           // 04 EDO
-        WORD Parity;        // 05 Parity
-        WORD ECC;           // 06 ECC
-        WORD SIMM;          // 07 SIMM
-        WORD DIMM;          // 08 DIMM
-        WORD BurstEDO;      // 09 Burst EDO
-        WORD SDRAM;         // 10 SDRAM
-        WORD Reserved;      // 11:15 Reserved, must be zero
+        WORD Other : 1;          // 00 Other
+        WORD Unknown : 1;        // 01 Unknown
+        WORD Standard : 1;       // 02 Standard
+        WORD FastPageMode : 1;   // 03 Fast Page Mode
+        WORD EDO : 1;            // 04 EDO
+        WORD Parity : 1;         // 05 Parity
+        WORD ECC : 1;            // 06 ECC
+        WORD SIMM : 1;           // 07 SIMM
+        WORD DIMM : 1;           // 08 DIMM
+        WORD BurstEDO : 1;       // 09 Burst EDO
+        WORD SDRA : 1;           // 10 SDRAM
+        WORD Reserved : 5;       // 11:15 Reserved, must be zero
     };
 } SMBIOS_MEMORY_TYPE, *PSMBIOS_MEMORY_TYPE;
 
@@ -892,12 +888,12 @@ typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
         WORD Value;
         struct
         {
-            WORD Other;     // 00 Other
-            WORD Unknown;   // 01 Unknown
-            WORD _70ns;     // 02 70ns
-            WORD _60ns;     // 03 60ns
-            WORD _50ns;     // 04 50ns
-            WORD Reserved;  // 05:15 Reserved, must be zero
+            WORD Other : 1;     // 00 Other
+            WORD Unknown : 1;   // 01 Unknown
+            WORD _70ns : 1;     // 02 70ns
+            WORD _60ns : 1;     // 03 60ns
+            WORD _50ns : 1;     // 04 50ns
+            WORD Reserved : 11; // 05:15 Reserved, must be zero
         };
     } SupportedSpeeds;
     SMBIOS_MEMORY_TYPE SupportedMemoryTypes;
@@ -906,10 +902,10 @@ typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
         BYTE Value;
         struct
         {
-            BYTE _5V;       // 0 5V
-            BYTE _3Dot3V;   // 1 3.3V
-            BYTE _2Dot9V;   // 2 2.9V
-            BYTE Reserved;  // 3:7 Reserved, must be zero
+            BYTE _5V : 1;       // 0 5V
+            BYTE _3Dot3V : 1;   // 1 3.3V
+            BYTE _2Dot9V : 1;   // 2 2.9V
+            BYTE Reserved : 5;  // 3:7 Reserved, must be zero
         };
     } MemoryModuleVoltage;
     BYTE NumberOfAssociatedMemorySlots;
@@ -969,15 +965,15 @@ typedef struct _SMBIOS_MEMORY_MODULE_INFORMATION
 
 #define SMBIOS_TYPE_CACHE_INFORMATION ((BYTE)7)
 
-#define SMBIOS_CACHE_LOCATION_INTERNAL    ((WORD)0b00)
-#define SMBIOS_CACHE_LOCATION_EXTERNAL    ((WORD)0b01)
-#define SMBIOS_CACHE_LOCATION_RESERVED    ((WORD)0b10)
-#define SMBIOS_CACHE_LOCATION_UNKNOWN     ((WORD)0b11)
+#define SMBIOS_CACHE_LOCATION_INTERNAL    ((WORD)0b00) // Internal
+#define SMBIOS_CACHE_LOCATION_EXTERNAL    ((WORD)0b01) // External
+#define SMBIOS_CACHE_LOCATION_RESERVED    ((WORD)0b10) // Reserved
+#define SMBIOS_CACHE_LOCATION_UNKNOWN     ((WORD)0b11) // Unknown
 
-#define SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_THROUGH                 ((WORD)0b00)
-#define SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_BACK                    ((WORD)0b01)
-#define SMBIOS_CACHE_OPERATIONAL_MODE_VARIES_WITH_MEMORY_ADDRESS    ((WORD)0b10)
-#define SMBIOS_CACHE_OPERATIONAL_MODE_UNKNOWN                       ((WORD)0b11)
+#define SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_THROUGH                 ((WORD)0b00) // Write Through
+#define SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_BACK                    ((WORD)0b01) // Write Back
+#define SMBIOS_CACHE_OPERATIONAL_MODE_VARIES_WITH_MEMORY_ADDRESS    ((WORD)0b10) // Varies with Memory Address
+#define SMBIOS_CACHE_OPERATIONAL_MODE_UNKNOWN                       ((WORD)0b11) // Unknown
 
 typedef union _SMBIOS_CACHE_SIZE
 {
@@ -999,16 +995,20 @@ typedef union _SMBIOS_CACHE_SIZE2
     };
 } SMBIOS_CACHE_SIZE2, *PSMBIOS_CACHE_SIZE2;
 
-typedef struct _SMBIOS_CACHE_SRAM_TYPE
+typedef union _SMBIOS_CACHE_SRAM_TYPE
 {
-    WORD Other : 1;         // 00 Other
-    WORD Unknown : 1;       // 01 Unknown
-    WORD NonBurst : 1;      // 02 Non-Burst
-    WORD Burst : 1;         // 03 Burst
-    WORD PipelineBurst : 1; // 04 Pipeline Burst
-    WORD Synchronous : 1;   // 05 Synchronous
-    WORD Asynchronous : 1;  // 06 Asynchronous
-    WORD Reserved : 9;      // 07:15 Reserved, must be zero
+    WORD Value;
+    struct
+    {
+        WORD Other : 1;         // 00 Other
+        WORD Unknown : 1;       // 01 Unknown
+        WORD NonBurst : 1;      // 02 Non-Burst
+        WORD Burst : 1;         // 03 Burst
+        WORD PipelineBurst : 1; // 04 Pipeline Burst
+        WORD Synchronous : 1;   // 05 Synchronous
+        WORD Asynchronous : 1;  // 06 Asynchronous
+        WORD Reserved : 9;      // 07:15 Reserved, must be zero
+    };
 } SMBIOS_CACHE_SRAM_TYPE, *PSMBIOS_CACHE_SRAM_TYPE;
 
 #define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_OTHER            ((BYTE)0x01) // Other
@@ -1016,7 +1016,7 @@ typedef struct _SMBIOS_CACHE_SRAM_TYPE
 #define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_NONE             ((BYTE)0x03) // None
 #define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_PARITY           ((BYTE)0x04) // Parity
 #define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_SINGLE_BIT_ECC   ((BYTE)0x05) // Single-bit ECC
-#define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_MULTI_BIT_ECC    ((BYTE)0x06) // Multi-bit ECC 
+#define SMBIOS_CACHE_ERROR_CORRECTION_TYPE_MULTI_BIT_ECC    ((BYTE)0x06) // Multi-bit ECC
 
 #define SMBIOS_CACHE_SYSTEM_CACHE_TYPE_OTHER        ((BYTE)0x01) // Other
 #define SMBIOS_CACHE_SYSTEM_CACHE_TYPE_UNKNOWN      ((BYTE)0x02) // Unknown
@@ -1290,7 +1290,6 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
 {
     SMBIOS_HEADER Header;
     BYTE Designation;
-
     BYTE Type;          // SMBIOS_SYSTEM_SLOTS_TYPE_*
     BYTE DataBusWidth;  // SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_*
     BYTE CurrentUsage;  // SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_*
@@ -1304,7 +1303,7 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
             BYTE Unknown : 1;                       // Characteristics unknown
             BYTE Provides5Dot0Volts : 1;            // Provides 5.0 volts
             BYTE Provides3Dot3Volts : 1;            // Provides 3.3 volts
-            BYTE OpeningSharedWithAnother : 1;      // Slot’s opening is shared with another slot
+            BYTE OpeningSharedWithAnother : 1;      // Slot's opening is shared with another slot
             BYTE PCCardSupportsPCCard16 : 1;        // PC Card slot supports PC Card-16
             BYTE PCCardSupportsCardBus : 1;         // PC Card slot supports CardBus
             BYTE PCCardSupportsZoomVideo : 1;       // PC Card slot supports Zoom Video
@@ -1335,8 +1334,8 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
         BYTE Value;
         struct
         {
-            BYTE FunctionNumber : 3;
-            BYTE DeviceNumber : 5;
+            BYTE FunctionNumber : 3;    // 0:2 Function number
+            BYTE DeviceNumber : 5;      // 3:7 Device number
         };
     } DeviceFunctionNumber;
 #if SMBIOS_VERSION >= 0x03020000
@@ -1364,16 +1363,16 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
 
 #define SMBIOS_TYPE_ONBOARD_DEVICES_INFORMATION ((BYTE)10)
 
-#define SMBIOS_ONBOARD_DEVICES_TYPE_OTHER           ((BYTE)0x01)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_UNKNOWN         ((BYTE)0x02)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_VIDEO           ((BYTE)0x03)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_SCSI_CONTROLLER ((BYTE)0x04)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_ETHERNET        ((BYTE)0x05)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_TOKEN_RING      ((BYTE)0x06)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_SOUND           ((BYTE)0x07)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_PATA_CONTROLLER ((BYTE)0x08)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_SATA_CONTROLLER ((BYTE)0x09)
-#define SMBIOS_ONBOARD_DEVICES_TYPE_SAS_CONTROLLER  ((BYTE)0x0A)
+#define SMBIOS_ONBOARD_DEVICES_TYPE_OTHER           ((BYTE)0x01) // Other
+#define SMBIOS_ONBOARD_DEVICES_TYPE_UNKNOWN         ((BYTE)0x02) // Unknown
+#define SMBIOS_ONBOARD_DEVICES_TYPE_VIDEO           ((BYTE)0x03) // Video
+#define SMBIOS_ONBOARD_DEVICES_TYPE_SCSI_CONTROLLER ((BYTE)0x04) // SCSI Controller
+#define SMBIOS_ONBOARD_DEVICES_TYPE_ETHERNET        ((BYTE)0x05) // Ethernet
+#define SMBIOS_ONBOARD_DEVICES_TYPE_TOKEN_RING      ((BYTE)0x06) // Token Ring
+#define SMBIOS_ONBOARD_DEVICES_TYPE_SOUND           ((BYTE)0x07) // Sound
+#define SMBIOS_ONBOARD_DEVICES_TYPE_PATA_CONTROLLER ((BYTE)0x08) // PATA Controller
+#define SMBIOS_ONBOARD_DEVICES_TYPE_SATA_CONTROLLER ((BYTE)0x09) // SATA Controller
+#define SMBIOS_ONBOARD_DEVICES_TYPE_SAS_CONTROLLER  ((BYTE)0x0A) // SAS Controller
 
 typedef struct _SMBIOS_ONBOARD_DEVICES_ENTRY
 {
@@ -1435,14 +1434,14 @@ typedef struct _SMBIOS_FIRMWARE_LANGUAGE_INFORMATION
         BYTE Value;
         struct
         {
-            BYTE AbbreviatedFormat : 1;
-            BYTE Reserved : 7;
+            BYTE AbbreviatedFormat : 1; // 0 Use the abbreviated format
+            BYTE Reserved : 7;          // 1:7 Reserved
         };
     } Flags;
 #else
     BYTE Reserved0;
 #endif // SMBIOS_VERSION >= 0x02010000
-    BYTE Reserved1[15];
+    BYTE Reserved[15];
     BYTE CurrentLanguage;
 } SMBIOS_FIRMWARE_LANGUAGE_INFORMATION, *PSMBIOS_FIRMWARE_LANGUAGE_INFORMATION, SMBIOS_TYPE_13, *PSMBIOS_TYPE_13;
 
@@ -1594,39 +1593,39 @@ typedef struct _SMBIOS_PHYSICAL_MEMORY_ARRAY
 #define SMBIOS_MEMORY_DEVICE_FORM_FACTOR_DIE                ((BYTE)0x10) // Die
 #define SMBIOS_MEMORY_DEVICE_FORM_FACTOR_CAMM               ((BYTE)0x11) // CAMM
 
-#define SMBIOS_MEMORY_DEVICE_TYPE_OTHER                         ((BYTE)0x01)
-#define SMBIOS_MEMORY_DEVICE_TYPE_UNKNOWN                       ((BYTE)0x02)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DRAM                          ((BYTE)0x03)
-#define SMBIOS_MEMORY_DEVICE_TYPE_EDRAM                         ((BYTE)0x04)
-#define SMBIOS_MEMORY_DEVICE_TYPE_VRAM                          ((BYTE)0x05)
-#define SMBIOS_MEMORY_DEVICE_TYPE_SRAM                          ((BYTE)0x06)
-#define SMBIOS_MEMORY_DEVICE_TYPE_RAM                           ((BYTE)0x07)
-#define SMBIOS_MEMORY_DEVICE_TYPE_ROM                           ((BYTE)0x08)
-#define SMBIOS_MEMORY_DEVICE_TYPE_FLASH                         ((BYTE)0x09)
-#define SMBIOS_MEMORY_DEVICE_TYPE_EEPROM                        ((BYTE)0x0A)
-#define SMBIOS_MEMORY_DEVICE_TYPE_FEPROM                        ((BYTE)0x0B)
-#define SMBIOS_MEMORY_DEVICE_TYPE_EPROM                         ((BYTE)0x0C)
-#define SMBIOS_MEMORY_DEVICE_TYPE_CDRAM                         ((BYTE)0x0D)
-#define SMBIOS_MEMORY_DEVICE_TYPE_3DRAM                         ((BYTE)0x0E)
-#define SMBIOS_MEMORY_DEVICE_TYPE_SDRAM                         ((BYTE)0x0F)
-#define SMBIOS_MEMORY_DEVICE_TYPE_SGRAM                         ((BYTE)0x10)
-#define SMBIOS_MEMORY_DEVICE_TYPE_RDRAM                         ((BYTE)0x11)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR                           ((BYTE)0x12)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR2                          ((BYTE)0x13)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR2_FB_DIMM                  ((BYTE)0x14)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR3                          ((BYTE)0x18)
-#define SMBIOS_MEMORY_DEVICE_TYPE_FBD2                          ((BYTE)0x19)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR4                          ((BYTE)0x1A)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR                         ((BYTE)0x1B)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR2                        ((BYTE)0x1C)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR3                        ((BYTE)0x1D)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR4                        ((BYTE)0x1E)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LOGICAL_NON_VOLATILE_DEVICE   ((BYTE)0x1F)
-#define SMBIOS_MEMORY_DEVICE_TYPE_HBM                           ((BYTE)0x20)
-#define SMBIOS_MEMORY_DEVICE_TYPE_HBM2                          ((BYTE)0x21)
-#define SMBIOS_MEMORY_DEVICE_TYPE_DDR5                          ((BYTE)0x22)
-#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR5                        ((BYTE)0x23)
-#define SMBIOS_MEMORY_DEVICE_TYPE_HBM3                          ((BYTE)0x24)
+#define SMBIOS_MEMORY_DEVICE_TYPE_OTHER                         ((BYTE)0x01) // Other
+#define SMBIOS_MEMORY_DEVICE_TYPE_UNKNOWN                       ((BYTE)0x02) // Unknown
+#define SMBIOS_MEMORY_DEVICE_TYPE_DRAM                          ((BYTE)0x03) // DRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_EDRAM                         ((BYTE)0x04) // EDRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_VRAM                          ((BYTE)0x05) // VRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_SRAM                          ((BYTE)0x06) // SRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_RAM                           ((BYTE)0x07) // RAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_ROM                           ((BYTE)0x08) // ROM
+#define SMBIOS_MEMORY_DEVICE_TYPE_FLASH                         ((BYTE)0x09) // FLASH
+#define SMBIOS_MEMORY_DEVICE_TYPE_EEPROM                        ((BYTE)0x0A) // EEPROM
+#define SMBIOS_MEMORY_DEVICE_TYPE_FEPROM                        ((BYTE)0x0B) // FEPROM
+#define SMBIOS_MEMORY_DEVICE_TYPE_EPROM                         ((BYTE)0x0C) // EPROM
+#define SMBIOS_MEMORY_DEVICE_TYPE_CDRAM                         ((BYTE)0x0D) // CDRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_3DRAM                         ((BYTE)0x0E) // 3DRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_SDRAM                         ((BYTE)0x0F) // SDRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_SGRAM                         ((BYTE)0x10) // SGRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_RDRAM                         ((BYTE)0x11) // RDRAM
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR                           ((BYTE)0x12) // DDR
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR2                          ((BYTE)0x13) // DDR2
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR2_FB_DIMM                  ((BYTE)0x14) // DDR2 FB-DIMM
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR3                          ((BYTE)0x18) // DDR3
+#define SMBIOS_MEMORY_DEVICE_TYPE_FBD2                          ((BYTE)0x19) // FBD2
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR4                          ((BYTE)0x1A) // DDR4
+#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR                         ((BYTE)0x1B) // LPDDR
+#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR2                        ((BYTE)0x1C) // LPDDR2
+#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR3                        ((BYTE)0x1D) // LPDDR3
+#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR4                        ((BYTE)0x1E) // LPDDR4
+#define SMBIOS_MEMORY_DEVICE_TYPE_LOGICAL_NON_VOLATILE_DEVICE   ((BYTE)0x1F) // Logical non-volatile device
+#define SMBIOS_MEMORY_DEVICE_TYPE_HBM                           ((BYTE)0x20) // HBM (High Bandwidth Memory)
+#define SMBIOS_MEMORY_DEVICE_TYPE_HBM2                          ((BYTE)0x21) // HBM2 (High Bandwidth Memory Generation 2)
+#define SMBIOS_MEMORY_DEVICE_TYPE_DDR5                          ((BYTE)0x22) // DDR5
+#define SMBIOS_MEMORY_DEVICE_TYPE_LPDDR5                        ((BYTE)0x23) // LPDDR5
+#define SMBIOS_MEMORY_DEVICE_TYPE_HBM3                          ((BYTE)0x24) // HBM3 (High Bandwidth Memory Generation 3)
 
 #define SMBIOS_MEMORY_DEVICE_TECHNOLOGY_OTHER                           ((BYTE)0x01) // Other
 #define SMBIOS_MEMORY_DEVICE_TECHNOLOGY_UNKNOWN                         ((BYTE)0x02) // Unknown
@@ -1698,7 +1697,15 @@ typedef struct _SMBIOS_MEMORY_DEVICE
         };
     } Attributes;
 #if SMBIOS_VERSION >= 0x02070000
-    DWORD ExtendedSize;
+    union
+    {
+        DWORD Value;
+        struct
+        {
+            DWORD SizeInMb : 31;    // 00:30 Size in MB
+            DWORD Reserved : 1;     // 31 Reserved
+        };
+    } ExtendedSize;
     WORD ConfiguredMemorySpeed;
 #if SMBIOS_VERSION >= 0x02080000
     WORD MinimumVoltage;
@@ -1724,6 +1731,7 @@ typedef struct _SMBIOS_MEMORY_DEVICE
     WORD ModuleManufacturerID;
     WORD ModuleProductID;
     WORD SubsystemControllerManufacturerID;
+    WORD SubsystemControllerProductID;
     QWORD NonVolatileSize;
     QWORD VolatileSize;
     QWORD CacheSize;
@@ -2009,7 +2017,7 @@ typedef struct _SMBIOS_VOLTAGE_PROBE
     WORD Tolerance;
     WORD Accuracy;
     DWORD OEMDefined;
-    WORD NominalValue; // Present only if the structure’s length is larger than 14h
+    WORD NominalValue; // Present only if the structure's length is larger than 14h
 } SMBIOS_VOLTAGE_PROBE, *PSMBIOS_VOLTAGE_PROBE, SMBIOS_TYPE_26, *PSMBIOS_TYPE_26;
 
 #pragma endregion
@@ -2489,8 +2497,8 @@ typedef struct _SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION
         BYTE Value;
         struct
         {
-            BYTE FunctionNumber : 3;    // 0：2 Function number
-            BYTE DeviceNumber : 5;      // 3：7 Device number
+            BYTE FunctionNumber : 3;    // 0:2 Function number
+            BYTE DeviceNumber : 5;      // 3:7 Device number
         };
     } DeviceFunctionNumber;
 } SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION, *PSMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION, SMBIOS_TYPE_41, *PSMBIOS_TYPE_41;
@@ -2750,742 +2758,6 @@ typedef union _SMBIOS_TABLE
 } SMBIOS_TABLE, *PSMBIOS_TABLE;
 
 #pragma pack(pop)
-
-#pragma endregion
-
-#pragma region SMBIOS Type Data
-
-#if !defined(SMBIOS_NO_TYPE_DATA)
-
-typedef enum _SMBIOS_DATA_TYPE
-{
-    SmbiosDataTypeOther,
-    SmbiosDataTypeString,
-    SmbiosDataTypeUInt,
-    SmbiosDataTypeBit,
-    SmbiosDataTypeEnum,
-    SmbiosDataTypeUuid,
-} SMBIOS_DATA_TYPE, *PSMBIOS_DATA_TYPE;
-
-typedef struct _SMBIOS_FIELD_ENUM
-{
-    const char* Name;
-    QWORD Value;
-} SMBIOS_FIELD_ENUM, *PSMBIOS_FIELD_ENUM;
-
-typedef struct _SMBIOS_FIELD_TYPE_INFO
-{
-    const char* Name;
-    BYTE IsBitField;
-    WORD Offset;
-    BYTE Size;
-    SMBIOS_DATA_TYPE Type;
-    union
-    {
-        struct
-        {
-            WORD Count;
-            _Field_size_(Count) PSMBIOS_FIELD_ENUM Values;
-        } Enum;
-    } AdditionalInfo;
-} SMBIOS_FIELD_TYPE_INFO, *PSMBIOS_FIELD_TYPE_INFO;
-
-typedef struct _SMBIOS_TYPE_INFO
-{
-    BYTE Type;          // Type number in SMBIOS spec.
-    const char* Name;   // Type name in SMBIOS spec.
-    WORD FieldCount;    // Number of Fields
-    _Field_size_(FieldCount) PSMBIOS_FIELD_TYPE_INFO Fields;  // Field information in type structure
-} SMBIOS_TYPE_INFO, *PSMBIOS_TYPE_INFO;
-
-#define SMBIOS_DEFINE_FIELD(Type, Name, Field, FieldType, ...) { Name, false, offsetof(SMBIOS_TYPE_##Type, Field), sizeof(((SMBIOS_TYPE_##Type*)0)->Field), FieldType, __VA_ARGS__ }
-#define SMBIOS_DEFINE_BIT_FIELD(Name, BitOffset, BitSize, FieldType, ...) { Name, true, BitOffset, BitSize, FieldType, __VA_ARGS__ }
-#define SMBIOS_FIELD_ENUM_VALUES(EnumName) { _countof(EnumName), EnumName }
-
-#define SMBIOS_DEFINE_FIELD_STRING(Type, Name, Field) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeString)
-#define SMBIOS_DEFINE_FIELD_UINT(Type, Name, Field) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeUInt)
-#define SMBIOS_DEFINE_FIELD_ENUM(Type, Name, Field, EnumName) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(EnumName))
-#define SMBIOS_DEFINE_FIELD_BIT(Name, BitOffset) SMBIOS_DEFINE_BIT_FIELD(Name, BitOffset, 1, SmbiosDataTypeBit)
-
-#define SMBIOS_DEFINE_TYPE(Type, Name) { Type, Name, _countof(SmbiosType##Type##FieldInfo), SmbiosType##Type##FieldInfo }
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType0ExtendedROMSizeUnitEnum[] = {
-    { "MB", SMBIOS_PLATFORM_FIRMWARE_EXTENDEDROMSIZE_UNIT_MB },
-    { "GB", SMBIOS_PLATFORM_FIRMWARE_EXTENDEDROMSIZE_UNIT_GB },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_TYPE_INFO SmbiosType0FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_STRING(0, "Vendor", Vendor),
-    SMBIOS_DEFINE_FIELD_STRING(0, "Firmware Version", Version),
-    SMBIOS_DEFINE_FIELD_UINT(0, "BIOS Starting Address Segment", BIOSStartingAddressSegment),
-    SMBIOS_DEFINE_FIELD_STRING(0, "Firmware Release Date", ReleaseDate),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Firmware ROM Size", ROMSize),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Firmware Characteristics", Characteristics),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved", 0),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved", 1),
-    SMBIOS_DEFINE_FIELD_BIT("Unknown", 2),
-    SMBIOS_DEFINE_FIELD_BIT("Firmware Characteristics are not supported", 3),
-    SMBIOS_DEFINE_FIELD_BIT("ISA is supported", 4),
-    SMBIOS_DEFINE_FIELD_BIT("MCA is supported", 5),
-    SMBIOS_DEFINE_FIELD_BIT("EISA is supported", 6),
-    SMBIOS_DEFINE_FIELD_BIT("PCI is supported", 7),
-    SMBIOS_DEFINE_FIELD_BIT("PC card (PCMCIA) is supported", 8),
-    SMBIOS_DEFINE_FIELD_BIT("Plug and Play is supported", 9),
-    SMBIOS_DEFINE_FIELD_BIT("APM is supported", 10),
-    SMBIOS_DEFINE_FIELD_BIT("Firmware is upgradeable (Flash)", 11),
-    SMBIOS_DEFINE_FIELD_BIT("Firmware shadowing is allowed", 12),
-    SMBIOS_DEFINE_FIELD_BIT("VL-VESA is supported", 13),
-    SMBIOS_DEFINE_FIELD_BIT("ESCD support is available", 14),
-    SMBIOS_DEFINE_FIELD_BIT("Boot from CD is supported", 15),
-    SMBIOS_DEFINE_FIELD_BIT("Selectable boot is supported", 16),
-    SMBIOS_DEFINE_FIELD_BIT("Firmware ROM is socketed (e.g., PLCC or SOP socket)", 17),
-    SMBIOS_DEFINE_FIELD_BIT("Boot from PC card (PCMCIA) is supported", 18),
-    SMBIOS_DEFINE_FIELD_BIT("EDD specification is supported", 19),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — Japanese floppy for NEC 9800 1.2 MB (3.5\", 1K bytes/sector, 360 RPM) is supported", 20),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — Japanese floppy for Toshiba 1.2 MB (3.5\", 360 RPM) is supported", 21),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — 5.25\" / 360 KB floppy services are supported", 22),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — 5.25\" / 1.2 MB floppy services are supported", 23),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — 3.5\" / 720 KB floppy services are supported", 24),
-    SMBIOS_DEFINE_FIELD_BIT("Int 13h — 3.5\" / 2.88 MB floppy services are supported", 25),
-    SMBIOS_DEFINE_FIELD_BIT("Int 5h, print screen service is supported", 26),
-    SMBIOS_DEFINE_FIELD_BIT("Int 9h, 8042 keyboard services are supported", 27),
-    SMBIOS_DEFINE_FIELD_BIT("Int 14h, serial services are supported", 28),
-    SMBIOS_DEFINE_FIELD_BIT("Int 17h, printer services are supported", 29),
-    SMBIOS_DEFINE_FIELD_BIT("Int 10h, CGA/Mono Video Services are supported", 30),
-    SMBIOS_DEFINE_FIELD_BIT("NEC PC-98", 31),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Firmware Characteristics Extension Byte 1", CharacteristicsExtensionByte1),
-    SMBIOS_DEFINE_FIELD_BIT("ACPI is supported", 0),
-    SMBIOS_DEFINE_FIELD_BIT("USB Legacy is supported", 1),
-    SMBIOS_DEFINE_FIELD_BIT("AGP is supported", 2),
-    SMBIOS_DEFINE_FIELD_BIT("I2O boot is supported", 3),
-    SMBIOS_DEFINE_FIELD_BIT("LS-120 SuperDisk boot is supported", 4),
-    SMBIOS_DEFINE_FIELD_BIT("ATAPI ZIP drive boot is supported", 5),
-    SMBIOS_DEFINE_FIELD_BIT("1394 boot is supported", 6),
-    SMBIOS_DEFINE_FIELD_BIT("Smart battery is supported", 7),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Firmware Characteristics Extension Byte 2", CharacteristicsExtensionByte2),
-    SMBIOS_DEFINE_FIELD_BIT("BIOS Boot Specification is supported", 0),
-    SMBIOS_DEFINE_FIELD_BIT("Function key-initiated network service boot is supported", 1),
-    SMBIOS_DEFINE_FIELD_BIT("Enable targeted content distribution", 2),
-    SMBIOS_DEFINE_FIELD_BIT("UEFI Specification is supported", 3),
-    SMBIOS_DEFINE_FIELD_BIT("SMBIOS table describes a virtual machine", 4),
-    SMBIOS_DEFINE_FIELD_BIT("Manufacturing mode is supported", 5),
-    SMBIOS_DEFINE_FIELD_BIT("Manufacturing mode is enabled", 6),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved", 7),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Platform Firmware Major Release", MajorRelease),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Platform Firmware Minor Release", MinorRelease),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Embedded Controller Firmware Major Release", ECFirmwareMajorRelease),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Embedded Controller Firmware Minor Release", ECFirmwareMinorRelease),
-    SMBIOS_DEFINE_FIELD_UINT(0, "Extended Firmware ROM Size", ExtendedROMSize.Value),
-    SMBIOS_DEFINE_BIT_FIELD("Size", 0, 14, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_BIT_FIELD("Unit", 14, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosType0ExtendedROMSizeUnitEnum)),
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType1WakeUpTypeEnum[] = {
-    { "Reserved", SMBIOS_SYSTEM_WAKEUPTYPE_RESERVED },
-    { "Other", SMBIOS_SYSTEM_WAKEUPTYPE_OTHER },
-    { "Unknown", SMBIOS_SYSTEM_WAKEUPTYPE_UNKNOW },
-    { "APM Timer", SMBIOS_SYSTEM_WAKEUPTYPE_APM_TIMER },
-    { "Modem Ring", SMBIOS_SYSTEM_WAKEUPTYPE_MODEM_RING },
-    { "LAN Remote", SMBIOS_SYSTEM_WAKEUPTYPE_LAN_REMOTE },
-    { "Power Switch", SMBIOS_SYSTEM_WAKEUPTYPE_POWER_SWITCH },
-    { "PCI PME#", SMBIOS_SYSTEM_WAKEUPTYPE_PCI_PME },
-    { "AC Power Restored", SMBIOS_SYSTEM_WAKEUPTYPE_AC_POWER_RESTORED },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_TYPE_INFO SmbiosType1FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_STRING(1, "Manufacturer", Manufacturer),
-    SMBIOS_DEFINE_FIELD_STRING(1, "Product Name", ProductName),
-    SMBIOS_DEFINE_FIELD_STRING(1, "Version", Version),
-    SMBIOS_DEFINE_FIELD_STRING(1, "Serial Number", SerialNumber),
-    SMBIOS_DEFINE_FIELD(1, "UUID", UUID, SmbiosDataTypeUuid),
-    SMBIOS_DEFINE_FIELD_ENUM(1, "Wake-up Type", WakeUpType, SmbiosType1WakeUpTypeEnum),
-    SMBIOS_DEFINE_FIELD_STRING(1, "SKU Number", SKUNumber),
-    SMBIOS_DEFINE_FIELD_STRING(1, "Family", Family),
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType2BoardTypeEnum[] = {
-    { "Unknown", SMBIOS_BASEBOARD_TYPE_UNKNOWN },
-    { "Other", SMBIOS_BASEBOARD_TYPE_OTHER },
-    { "Server Blade", SMBIOS_BASEBOARD_TYPE_SERVER_BLADE },
-    { "Connectivity Switch", SMBIOS_BASEBOARD_TYPE_CONNECTIVITY_SWITCH },
-    { "System Management Module", SMBIOS_BASEBOARD_TYPE_SYSTEM_MANAGEMENT_MODULE },
-    { "Processor Module", SMBIOS_BASEBOARD_TYPE_PROCESSOR_MODULE },
-    { "I/O Module", SMBIOS_BASEBOARD_TYPE_IO_MODULE },
-    { "Memory Module", SMBIOS_BASEBOARD_TYPE_MEMORY_MODULE },
-    { "Daughter board", SMBIOS_BASEBOARD_TYPE_DAUGHTER_BOARD },
-    { "Motherboard (includes processor, memory, and I/O)", SMBIOS_BASEBOARD_TYPE_MOTHERBOARD },
-    { "Processor/Memory Module", SMBIOS_BASEBOARD_TYPE_PROCESSOR_MEMORY_MODULE },
-    { "Processor/IO Module", SMBIOS_BASEBOARD_TYPE_PROCESSOR_IO_MODULE },
-    { "Interconnect board", SMBIOS_BASEBOARD_TYPE_INTERCONNECT_BOARD },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_TYPE_INFO SmbiosType2FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_STRING(2, "Manufacturer", Manufacturer),
-    SMBIOS_DEFINE_FIELD_STRING(2, "Product", Product),
-    SMBIOS_DEFINE_FIELD_STRING(2, "Version", Version),
-    SMBIOS_DEFINE_FIELD_STRING(2, "Serial Number", SerialNumber),
-    SMBIOS_DEFINE_FIELD_STRING(2, "Asset Tag", AssetTag),
-    SMBIOS_DEFINE_FIELD(2, "Feature Flags", FeatureFlags, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_BIT("The board is a hosting board (for example, a motherboard)", 0),
-    SMBIOS_DEFINE_FIELD_BIT("The board requires at least one daughter board or auxiliary card to function properly", 1),
-    SMBIOS_DEFINE_FIELD_BIT("The board is removable", 2),
-    SMBIOS_DEFINE_FIELD_BIT("The board is replaceable", 3),
-    SMBIOS_DEFINE_FIELD_BIT("The board is s hot swappable", 4),
-    SMBIOS_DEFINE_FIELD_STRING(2, "Location in Chassis", LocationInChassis),
-    SMBIOS_DEFINE_FIELD(2, "Chassis Handle", ChassisHandle, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_ENUM(2, "Board Type", BoardType, SmbiosType2BoardTypeEnum),
-    SMBIOS_DEFINE_FIELD(2, "Number of Contained Object Handles", NumberOfContainedObjectHandles, SmbiosDataTypeUInt),
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType3TypeEnum[] = {
-    { "Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_OTHER },
-    { "Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_UNKNOWN },
-    { "Desktop", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_DESKTOP },
-    { "Low Profile Desktop", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_LOW_PROFILE_DESKTOP },
-    { "Pizza Box", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_PIZZA_BOX },
-    { "Mini Tower", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_MINI_TOWER },
-    { "Tower", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_TOWER },
-    { "Portable", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_PORTABLE },
-    { "Laptop", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_LAPTOP },
-    { "Notebook", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_NOTEBOOK },
-    { "Hand Held", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_HAND_HELD },
-    { "Docking Station", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_DOCKING_STATION },
-    { "All in One", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_ALL_IN_ONE },
-    { "Sub Notebook", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_SUB_NOTEBOOK },
-    { "Space-saving", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_SPACE_SAVING },
-    { "Lunch Box", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_LUNCH_BOX },
-    { "Main Server Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_MAIN_SERVER_CHASSIS },
-    { "Expansion Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_EXPANSION_CHASSIS },
-    { "SubChassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_SUB_CHASSIS },
-    { "Bus Expansion Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_BUS_EXPANSION_CHASSIS },
-    { "Peripheral Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_PERIPHERAL_CHASSIS },
-    { "RAID Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_RAID_CHASSIS },
-    { "Rack Mount Chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_RACK_MOUNT_CHASSIS },
-    { "Sealed-case PC", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_SEALED_CASE_PC },
-    { "Multi-system chassis", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_MULTI_SYSTEM_CHASSIS },
-    { "Compact PCI", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_COMPACT_PCI },
-    { "Advanced TCA", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_ADVANCED_TCA },
-    { "Blade", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_BLADE },
-    { "Blade Enclosure", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_BLADE_ENCLOSURE },
-    { "Tablet", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_TABLET },
-    { "Convertible", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_CONVERTIBLE },
-    { "Detachable", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_DETACHABLE },
-    { "IoT Gateway", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_IOT_GATEWAY },
-    { "Embedded PC", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_EMBEDDED_PC },
-    { "Mini PC", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_MINI_PC },
-    { "Stick PC", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_STICK_PC }
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType3StateEnum[] = {
-    { "Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_OTHER },
-    { "Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_UNKNOWN },
-    { "Safe", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_SAFE },
-    { "Warning", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_WARNING },
-    { "Critical", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_CRITICAL },
-    { "Non-recoverable", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_NON_RECOVERABLE },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType3SecurityStatusEnum[] = {
-    { "Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_OTHER },
-    { "Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_UNKNOWN },
-    { "None", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_NONE },
-    { "External interface locked out", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_EXTERNAL_INTERFACE_LOCKED_OUT },
-    { "External interface enabled", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_EXTERNAL_INTERFACE_ENABLED },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_TYPE_INFO SmbiosType3FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_STRING(3, "Manufacturer", Manufacturer),
-    SMBIOS_DEFINE_FIELD_UINT(3, "Type", Type.Value),
-    SMBIOS_DEFINE_BIT_FIELD("Type", 0, 7, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosType3SecurityStatusEnum)),
-    SMBIOS_DEFINE_FIELD_BIT("Chassis lock is present", 7),
-    SMBIOS_DEFINE_FIELD_STRING(3, "Version", Version),
-    SMBIOS_DEFINE_FIELD_STRING(3, "Serial Number", SerialNumber),
-    SMBIOS_DEFINE_FIELD_STRING(3, "Asset Tag Number", AssetTagNumber),
-    SMBIOS_DEFINE_FIELD_ENUM(3, "Boot-up State", BootUpState, SmbiosType3StateEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(3, "Power Supply State", PowerSupplyState, SmbiosType3StateEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(3, "Thermal State", ThermalState, SmbiosType3StateEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(3, "Security Status", SecurityStatus, SmbiosType3SecurityStatusEnum),
-    SMBIOS_DEFINE_FIELD_UINT(3, "OEM-defined", OEMDefined),
-    SMBIOS_DEFINE_FIELD_UINT(3, "Height", Height),
-    SMBIOS_DEFINE_FIELD_UINT(3, "Number of Power Cords", NumberOfPowerCords),
-    SMBIOS_DEFINE_FIELD_UINT(3, "Contained Element Count", ContainedElementCount),
-    SMBIOS_DEFINE_FIELD_UINT(3, "Contained Element Record Length", ContainedElementRecordLength),
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType4TypeEnum[] = {
-    { "Other", SMBIOS_PROCESSOR_TYPE_OTHER },
-    { "Unknown", SMBIOS_PROCESSOR_TYPE_UNKNOWN },
-    { "Central Processor", SMBIOS_PROCESSOR_TYPE_CENTRAL_PROCESSOR },
-    { "Math Processor", SMBIOS_PROCESSOR_TYPE_MATH_PROCESSOR },
-    { "DSP Processor", SMBIOS_PROCESSOR_TYPE_DSP_PROCESSOR },
-    { "Video Processor", SMBIOS_PROCESSOR_TYPE_VIDEO_PROCESSOR },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType4FamilyEnum[] = {
-    { u8"Other", SMBIOS_PROCESSOR_FAMILY_OTHER },
-    { u8"Unknown", SMBIOS_PROCESSOR_FAMILY_UNKNOWN },
-    { u8"8086", SMBIOS_PROCESSOR_FAMILY_8086 },
-    { u8"80286", SMBIOS_PROCESSOR_FAMILY_80286 },
-    { u8"Intel386™ processor", SMBIOS_PROCESSOR_FAMILY_INTEL386_PROCESSOR },
-    { u8"Intel486™ processor", SMBIOS_PROCESSOR_FAMILY_INTEL486_PROCESSOR },
-    { u8"8087", SMBIOS_PROCESSOR_FAMILY_8087 },
-    { u8"80287", SMBIOS_PROCESSOR_FAMILY_80287 },
-    { u8"80387", SMBIOS_PROCESSOR_FAMILY_80387 },
-    { u8"80487", SMBIOS_PROCESSOR_FAMILY_80487 },
-    { u8"Intel® Pentium® processor", SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR },
-    { u8"Pentium® Pro processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_PRO_PROCESSOR },
-    { u8"Pentium® II processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_PROCESSOR },
-    { u8"Pentium® processor with MMX™ technology", SMBIOS_PROCESSOR_FAMILY_PENTIUM_PROCESSOR_WITH_MMX_TECHNOLOGY },
-    { u8"Intel® Celeron® processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_PROCESSOR },
-    { u8"Pentium® II Xeon® processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_XEON_PROCESSOR },
-    { u8"Pentium® III processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR },
-    { u8"M1 Family", SMBIOS_PROCESSOR_FAMILY_M1_FAMILY },
-    { u8"M2 Family", SMBIOS_PROCESSOR_FAMILY_M2_FAMILY },
-    { u8"Intel® Celeron® M processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_M_PROCESSOR },
-    { u8"Intel® Pentium® 4 HT processor", SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_4_HT_PROCESSOR },
-    { u8"Intel® Processor", SMBIOS_PROCESSOR_FAMILY_INTEL_PROCESSOR },
-    { u8"AMD Duron™ Processor Family [1]", SMBIOS_PROCESSOR_FAMILY_AMD_DURON_PROCESSOR_FAMILY_1 },
-    { u8"K5 Family [1]", SMBIOS_PROCESSOR_FAMILY_K5_FAMILY_1 },
-    { u8"K6 Family [1]", SMBIOS_PROCESSOR_FAMILY_K6_FAMILY_1 },
-    { u8"K6-2 [1]", SMBIOS_PROCESSOR_FAMILY_K6_2_1 },
-    { u8"K6-3 [1]", SMBIOS_PROCESSOR_FAMILY_K6_3_1 },
-    { u8"AMD Athlon™ Processor Family [1]", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_PROCESSOR_FAMILY_1 },
-    { u8"AMD29000 Family", SMBIOS_PROCESSOR_FAMILY_AMD29000_FAMILY },
-    { u8"K6-2+", SMBIOS_PROCESSOR_FAMILY_K6_2_PLUS },
-    { u8"Power PC Family", SMBIOS_PROCESSOR_FAMILY_POWER_PC_FAMILY },
-    { u8"Power PC 601", SMBIOS_PROCESSOR_FAMILY_POWER_PC_601 },
-    { u8"Power PC 603", SMBIOS_PROCESSOR_FAMILY_POWER_PC_603 },
-    { u8"Power PC 603+", SMBIOS_PROCESSOR_FAMILY_POWER_PC_603_PLUS },
-    { u8"Power PC 604", SMBIOS_PROCESSOR_FAMILY_POWER_PC_604 },
-    { u8"Power PC 620", SMBIOS_PROCESSOR_FAMILY_POWER_PC_620 },
-    { u8"Power PC x704", SMBIOS_PROCESSOR_FAMILY_POWER_PC_X704 },
-    { u8"Power PC 750", SMBIOS_PROCESSOR_FAMILY_POWER_PC_750 },
-    { u8"Intel® Core™ Duo processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_PROCESSOR },
-    { u8"Intel® Core™ Duo mobile processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_MOBILE_PROCESSOR },
-    { u8"Intel® Core™ Solo mobile processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_MOBILE_PROCESSOR },
-    { u8"Intel® Atom™ processor", SMBIOS_PROCESSOR_FAMILY_INTEL_ATOM_PROCESSOR },
-    { u8"Intel® Core™ M processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M_PROCESSOR },
-    { u8"Intel® Core™ m3 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M3_PROCESSOR },
-    { u8"Intel® Core™ m5 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M5_PROCESSOR },
-    { u8"Intel® Core™ m7 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M7_PROCESSOR },
-    { u8"Alpha Family [2]", SMBIOS_PROCESSOR_FAMILY_ALPHA_FAMILY_2 },
-    { u8"Alpha 21064", SMBIOS_PROCESSOR_FAMILY_ALPHA_21064 },
-    { u8"Alpha 21066", SMBIOS_PROCESSOR_FAMILY_ALPHA_21066 },
-    { u8"Alpha 21164", SMBIOS_PROCESSOR_FAMILY_ALPHA_21164 },
-    { u8"Alpha 21164PC", SMBIOS_PROCESSOR_FAMILY_ALPHA_21164PC },
-    { u8"Alpha 21164a", SMBIOS_PROCESSOR_FAMILY_ALPHA_21164A },
-    { u8"Alpha 21264", SMBIOS_PROCESSOR_FAMILY_ALPHA_21264 },
-    { u8"Alpha 21364", SMBIOS_PROCESSOR_FAMILY_ALPHA_21364 },
-    { u8"AMD Turion™ II Ultra Dual-Core Mobile M Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_ULTRA_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY },
-    { u8"AMD Turion™ II Dual-Core Mobile M Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ II Dual-Core M Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_DUAL_CORE_M_PROCESSOR_FAMILY },
-    { u8"AMD Opteron™ 6100 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6100_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 4100 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4100_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 6200 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6200_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 4200 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4200_SERIES_PROCESSOR },
-    { u8"AMD FX™ Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_FX_SERIES_PROCESSOR },
-    { u8"MIPS Family", SMBIOS_PROCESSOR_FAMILY_MIPS_FAMILY },
-    { u8"MIPS R4000", SMBIOS_PROCESSOR_FAMILY_MIPS_R4000 },
-    { u8"MIPS R4200", SMBIOS_PROCESSOR_FAMILY_MIPS_R4200 },
-    { u8"MIPS R4400", SMBIOS_PROCESSOR_FAMILY_MIPS_R4400 },
-    { u8"MIPS R4600", SMBIOS_PROCESSOR_FAMILY_MIPS_R4600 },
-    { u8"MIPS R10000", SMBIOS_PROCESSOR_FAMILY_MIPS_R10000 },
-    { u8"AMD C-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_C_SERIES_PROCESSOR },
-    { u8"AMD E-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_E_SERIES_PROCESSOR },
-    { u8"AMD A-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_A_SERIES_PROCESSOR },
-    { u8"AMD G-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_G_SERIES_PROCESSOR },
-    { u8"AMD Z-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_Z_SERIES_PROCESSOR },
-    { u8"AMD R-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_R_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 4300 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4300_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 6300 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6300_SERIES_PROCESSOR },
-    { u8"AMD Opteron™ 3300 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3300_SERIES_PROCESSOR },
-    { u8"AMD FirePro™ Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_FIREPRO_SERIES_PROCESSOR },
-    { u8"SPARC Family", SMBIOS_PROCESSOR_FAMILY_SPARC_FAMILY },
-    { u8"SuperSPARC", SMBIOS_PROCESSOR_FAMILY_SUPERSPARC },
-    { u8"microSPARC II", SMBIOS_PROCESSOR_FAMILY_MICROSPARC_II },
-    { u8"microSPARC IIep", SMBIOS_PROCESSOR_FAMILY_MICROSPARC_IIEP },
-    { u8"UltraSPARC", SMBIOS_PROCESSOR_FAMILY_ULTRASPARC },
-    { u8"UltraSPARC II", SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_II },
-    { u8"UltraSPARC Iii", SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_Iii },
-    { u8"UltraSPARC III", SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_III },
-    { u8"UltraSPARC IIIi", SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_IIIi },
-    { u8"68040 Family", SMBIOS_PROCESSOR_FAMILY_68040_FAMILY },
-    { u8"68xxx", SMBIOS_PROCESSOR_FAMILY_68XXX },
-    { u8"68000", SMBIOS_PROCESSOR_FAMILY_68000 },
-    { u8"68010", SMBIOS_PROCESSOR_FAMILY_68010 },
-    { u8"68020", SMBIOS_PROCESSOR_FAMILY_68020 },
-    { u8"68030", SMBIOS_PROCESSOR_FAMILY_68030 },
-    { u8"AMD Athlon(TM) X4 Quad-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X4_QUAD_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Opteron(TM) X1000 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X1000_SERIES_PROCESSOR },
-    { u8"AMD Opteron(TM) X2000 Series APU", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X2000_SERIES_APU },
-    { u8"AMD Opteron(TM) A-Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_A_SERIES_PROCESSOR },
-    { u8"AMD Opteron(TM) X3000 Series APU", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X3000_SERIES_APU },
-    { u8"AMD Zen Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ZEN_PROCESSOR_FAMILY },
-    { u8"Hobbit Family", SMBIOS_PROCESSOR_FAMILY_HOBBIT_FAMILY },
-    { u8"Crusoe™ TM5000 Family", SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM5000_FAMILY },
-    { u8"Crusoe™ TM3000 Family", SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM3000_FAMILY },
-    { u8"Efficeon™ TM8000 Family", SMBIOS_PROCESSOR_FAMILY_EFFICEON_TM8000_FAMILY },
-    { u8"Weitek", SMBIOS_PROCESSOR_FAMILY_WEITEK },
-    { u8"Itanium™ processor", SMBIOS_PROCESSOR_FAMILY_ITANIUM_PROCESSOR },
-    { u8"AMD Athlon™ 64 Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_PROCESSOR_FAMILY },
-    { u8"AMD Opteron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_PROCESSOR_FAMILY },
-    { u8"AMD Sempron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_PROCESSOR_FAMILY },
-    { u8"AMD Turion™ 64 Mobile Technology", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_MOBILE_TECHNOLOGY },
-    { u8"Dual-Core AMD Opteron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_AMD_OPTERON_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ 64 X2 Dual-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_X2_DUAL_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Turion™ 64 X2 Mobile Technology", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_X2_MOBILE_TECHNOLOGY },
-    { u8"Quad-Core AMD Opteron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_AMD_OPTERON_PROCESSOR_FAMILY },
-    { u8"Third-Generation AMD Opteron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_THIRD_GENERATION_AMD_OPTERON_PROCESSOR_FAMILY },
-    { u8"AMD Phenom™ FX Quad-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_FX_QUAD_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Phenom™ X4 Quad-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X4_QUAD_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Phenom™ X2 Dual-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X2_DUAL_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ X2 Dual-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X2_DUAL_CORE_PROCESSOR_FAMILY },
-    { u8"PA-RISC Family", SMBIOS_PROCESSOR_FAMILY_PA_RISC_FAMILY },
-    { u8"PA-RISC 8500", SMBIOS_PROCESSOR_FAMILY_PA_RISC_8500 },
-    { u8"PA-RISC 8000", SMBIOS_PROCESSOR_FAMILY_PA_RISC_8000 },
-    { u8"PA-RISC 7300LC", SMBIOS_PROCESSOR_FAMILY_PA_RISC_7300LC },
-    { u8"PA-RISC 7200", SMBIOS_PROCESSOR_FAMILY_PA_RISC_7200 },
-    { u8"PA-RISC 7100LC", SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100LC },
-    { u8"PA-RISC 7100", SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100 },
-    { u8"V30 Family", SMBIOS_PROCESSOR_FAMILY_V30_FAMILY },
-    { u8"Quad-Core Intel® Xeon® processor 3200 Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3200_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor 3000 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3000_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 5300 Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5300_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor 5100 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5100_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor 5000 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5000_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor LV", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_LV },
-    { u8"Dual-Core Intel® Xeon® processor ULV", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_ULV },
-    { u8"Dual-Core Intel® Xeon® processor 7100 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7100_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 5400 Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5400_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR },
-    { u8"Dual-Core Intel® Xeon® processor 5200 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5200_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor 7200 Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7200_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 7300 Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7300_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 7400 Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7400_SERIES },
-    { u8"Multi-Core Intel® Xeon® processor 7400 Series", SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7400_SERIES },
-    { u8"Pentium® III Xeon® processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_XEON_PROCESSOR },
-    { u8"Pentium® III Processor with Intel® SpeedStep™ Technology", SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR_WITH_INTEL_SPEEDSTEP_TECHNOLOGY },
-    { u8"Pentium® 4 Processor", SMBIOS_PROCESSOR_FAMILY_PENTIUM_4_PROCESSOR },
-    { u8"Intel® Xeon® processor", SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR },
-    { u8"AS400 Family", SMBIOS_PROCESSOR_FAMILY_AS400_FAMILY },
-    { u8"Intel® Xeon® processor MP", SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR_MP },
-    { u8"AMD Athlon™ XP Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_XP_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ MP Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_MP_PROCESSOR_FAMILY },
-    { u8"Intel® Itanium® 2 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_ITANIUM_2_PROCESSOR },
-    { u8"Intel® Pentium® M processor", SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_M_PROCESSOR },
-    { u8"Intel® Celeron® D processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_D_PROCESSOR },
-    { u8"Intel® Pentium® D processor", SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_D_PROCESSOR },
-    { u8"Intel® Pentium® Processor Extreme Edition", SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR_EXTREME_EDITION },
-    { u8"Intel® Core™ Solo Processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_PROCESSOR },
-    { u8"Intel® Core™ 2 Duo Processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_PROCESSOR },
-    { u8"Intel® Core™ 2 Solo processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_PROCESSOR },
-    { u8"Intel® Core™ 2 Extreme processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_PROCESSOR },
-    { u8"Intel® Core™ 2 Quad processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_QUAD_PROCESSOR },
-    { u8"Intel® Core™ 2 Extreme mobile processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_MOBILE_PROCESSOR },
-    { u8"Intel® Core™ 2 Duo mobile processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_MOBILE_PROCESSOR },
-    { u8"Intel® Core™ 2 Solo mobile processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_MOBILE_PROCESSOR },
-    { u8"Intel® Core™ i7 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I7_PROCESSOR },
-    { u8"Dual-Core Intel® Celeron® processor", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_CELERON_PROCESSOR },
-    { u8"IBM390 Family", SMBIOS_PROCESSOR_FAMILY_IBM390_FAMILY },
-    { u8"G4", SMBIOS_PROCESSOR_FAMILY_G4 },
-    { u8"G5", SMBIOS_PROCESSOR_FAMILY_G5 },
-    { u8"ESA/390 G6", SMBIOS_PROCESSOR_FAMILY_ESA_390_G6 },
-    { u8"z/Architecture base", SMBIOS_PROCESSOR_FAMILY_Z_ARCHITECTURE_BASE },
-    { u8"Intel® Core™ i5 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I5_PROCESSOR },
-    { u8"Intel® Core™ i3 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I3_PROCESSOR },
-    { u8"Intel® Core™ i9 processor", SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I9_PROCESSOR },
-    { u8"Intel® Xeon® D Processor family", SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_D_PROCESSOR_FAMILY },
-    { u8"VIA C7™-M Processor Family", SMBIOS_PROCESSOR_FAMILY_VIA_C7_M_PROCESSOR_FAMILY },
-    { u8"VIA C7™-D Processor Family", SMBIOS_PROCESSOR_FAMILY_VIA_C7_D_PROCESSOR_FAMILY },
-    { u8"VIA C7™ Processor Family", SMBIOS_PROCESSOR_FAMILY_VIA_C7_PROCESSOR_FAMILY },
-    { u8"VIA Eden™ Processor Family", SMBIOS_PROCESSOR_FAMILY_VIA_EDEN_PROCESSOR_FAMILY },
-    { u8"Multi-Core Intel® Xeon® processor", SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR },
-    { u8"Dual-Core Intel® Xeon® processor 3xxx Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 3xxx Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES },
-    { u8"VIA Nano™ Processor Family", SMBIOS_PROCESSOR_FAMILY_VIA_NANO_PROCESSOR_FAMILY },
-    { u8"Dual-Core Intel® Xeon® processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES },
-    { u8"Dual-Core Intel® Xeon® processor 7xxx Series", SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES },
-    { u8"Quad-Core Intel® Xeon® processor 7xxx Series", SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES },
-    { u8"Multi-Core Intel® Xeon® processor 7xxx Series", SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES },
-    { u8"Multi-Core Intel® Xeon® processor 3400 Series", SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_3400_SERIES },
-    { u8"AMD Opteron™ 3000 Series Processor", SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3000_SERIES_PROCESSOR },
-    { u8"AMD Sempron™ II Processor", SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_II_PROCESSOR },
-    { u8"Embedded AMD Opteron™ Quad-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_EMBEDDED_AMD_OPTERON_QUAD_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Phenom™ Triple-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_TRIPLE_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Turion™ Ultra Dual-Core Mobile Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_ULTRA_DUAL_CORE_MOBILE_PROCESSOR_FAMILY },
-    { u8"AMD Turion™ Dual-Core Mobile Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_TURION_DUAL_CORE_MOBILE_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ Dual-Core Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_DUAL_CORE_PROCESSOR_FAMILY },
-    { u8"AMD Sempron™ SI Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_SI_PROCESSOR_FAMILY },
-    { u8"AMD Phenom™ II Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_II_PROCESSOR_FAMILY },
-    { u8"AMD Athlon™ II Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_PROCESSOR_FAMILY },
-    { u8"Six-Core AMD Opteron™ Processor Family", SMBIOS_PROCESSOR_FAMILY_SIX_CORE_AMD_OPTERON_PROCESSOR_FAMILY },
-    { u8"AMD Sempron™ M Processor Family", SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_M_PROCESSOR_FAMILY },
-    { u8"i860", SMBIOS_PROCESSOR_FAMILY_I860 },
-    { u8"i960", SMBIOS_PROCESSOR_FAMILY_I960 },
-    { u8"(See Processor Family 2)", SMBIOS_PROCESSOR_FAMILY_EXTENSION_INDICATOR },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType4CpuStatusEnum[] = {
-    { "Unknown", SMBIOS_PROCESSOR_CPU_STATUS_UNKNOWN },
-    { "CPU Enabled", SMBIOS_PROCESSOR_CPU_STATUS_ENABLED },
-    { "CPU Disabled by User through Firmware Setup", SMBIOS_PROCESSOR_CPU_STATUS_DISABLED_BY_USER },
-    { "CPU Disabled By firmware (POST Error)", SMBIOS_PROCESSOR_CPU_STATUS_DISABLED_BY_FIRMWARE },
-    { "CPU is Idle, waiting to be enabled", SMBIOS_PROCESSOR_CPU_STATUS_IDLE },
-    { "Other", SMBIOS_PROCESSOR_CPU_STATUS_OTHER },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType4UpgradeEnum[] = {
-    { "Other", SMBIOS_PROCESSOR_UPGRADE_OTHER },
-    { "Unknown", SMBIOS_PROCESSOR_UPGRADE_UNKNOWN },
-    { "Daughter Board", SMBIOS_PROCESSOR_UPGRADE_DAUGHTER_BOARD },
-    { "ZIF Socket", SMBIOS_PROCESSOR_UPGRADE_ZIF_SOCKET },
-    { "Replaceable Piggy Back", SMBIOS_PROCESSOR_UPGRADE_REPLACEABLE_PIGGY_BACK },
-    { "None", SMBIOS_PROCESSOR_UPGRADE_NONE },
-    { "LIF Socket", SMBIOS_PROCESSOR_UPGRADE_LIF_SOCKET },
-    { "Slot 1", SMBIOS_PROCESSOR_UPGRADE_SLOT_1 },
-    { "Slot 2", SMBIOS_PROCESSOR_UPGRADE_SLOT_2 },
-    { "370-pin socket", SMBIOS_PROCESSOR_UPGRADE_370_PIN_SOCKET },
-    { "Slot A", SMBIOS_PROCESSOR_UPGRADE_SLOT_A },
-    { "Slot M", SMBIOS_PROCESSOR_UPGRADE_SLOT_M },
-    { "Socket 423", SMBIOS_PROCESSOR_UPGRADE_SOCKET_423 },
-    { "Socket A (Socket 462)", SMBIOS_PROCESSOR_UPGRADE_SOCKET_A },
-    { "Socket 478", SMBIOS_PROCESSOR_UPGRADE_SOCKET_478 },
-    { "Socket 754", SMBIOS_PROCESSOR_UPGRADE_SOCKET_754 },
-    { "Socket 940", SMBIOS_PROCESSOR_UPGRADE_SOCKET_940 },
-    { "Socket 939", SMBIOS_PROCESSOR_UPGRADE_SOCKET_939 },
-    { "Socket mPGA604", SMBIOS_PROCESSOR_UPGRADE_SOCKET_mPGA604 },
-    { "Socket LGA771", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA771 },
-    { "Socket LGA775", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA775 },
-    { "Socket S1", SMBIOS_PROCESSOR_UPGRADE_SOCKET_S1 },
-    { "Socket AM2", SMBIOS_PROCESSOR_UPGRADE_SOCKET_AM2 },
-    { "Socket F (1207)", SMBIOS_PROCESSOR_UPGRADE_SOCKET_F },
-    { "Socket LGA1366", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1366 },
-    { "Socket G34", SMBIOS_PROCESSOR_UPGRADE_SOCKET_G34 },
-    { "Socket AM3", SMBIOS_PROCESSOR_UPGRADE_SOCKET_AM3 },
-    { "Socket C32", SMBIOS_PROCESSOR_UPGRADE_SOCKET_C32 },
-    { "Socket LGA1156", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1156 },
-    { "Socket LGA1567", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1567 },
-    { "Socket PGA988A", SMBIOS_PROCESSOR_UPGRADE_SOCKET_PGA988A },
-    { "Socket BGA1288", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1288 },
-    { "Socket rPGA988B", SMBIOS_PROCESSOR_UPGRADE_SOCKET_rPGA988B },
-    { "Socket BGA1023", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1023 },
-    { "Socket BGA1224", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1224 },
-    { "Socket LGA1155", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1155 },
-    { "Socket LGA1356", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1356 },
-    { "Socket LGA2011", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA2011 },
-    { "Socket FS1", SMBIOS_PROCESSOR_UPGRADE_SOCKET_FS1 },
-    { "Socket FS2", SMBIOS_PROCESSOR_UPGRADE_SOCKET_FS2 },
-    { "Socket FM1", SMBIOS_PROCESSOR_UPGRADE_SOCKET_FM1 },
-    { "Socket FM2", SMBIOS_PROCESSOR_UPGRADE_SOCKET_FM2 },
-    { "Socket LGA2011-3", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA2011_3 },
-    { "Socket LGA2011-3", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1356_3 },
-    { "Socket LGA1150", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1150 },
-    { "Socket BGA1168", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1168 },
-    { "Socket BGA1234", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1234 },
-    { "Socket BGA1364", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1364 },
-    { "Socket AM4", SMBIOS_PROCESSOR_UPGRADE_SOCKET_AM4 },
-    { "Socket LGA1151", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1151 },
-    { "Socket BGA1356", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1356 },
-    { "Socket BGA1440", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1440 },
-    { "Socket BGA1515", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1515 },
-    { "Socket LGA3647-1", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA3647_1 },
-    { "Socket SP3", SMBIOS_PROCESSOR_UPGRADE_SOCKET_SP3 },
-    { "Socket SP3r2", SMBIOS_PROCESSOR_UPGRADE_SOCKET_SP3r2 },
-    { "Socket LGA2066", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA2066 },
-    { "Socket BGA1392", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1392 },
-    { "Socket BGA1510", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1510 },
-    { "Socket BGA1528", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1528 },
-    { "Socket LGA4189", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA4189 },
-    { "Socket LGA1200", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1200 },
-    { "Socket LGA4677", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA4677 },
-    { "Socket LGA1700", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1700 },
-    { "Socket BGA1744", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1744 },
-    { "Socket BGA1781", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1781 },
-    { "Socket BGA1211", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1211 },
-    { "Socket BGA2422", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA2422 },
-    { "Socket LGA1211", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1211 },
-    { "Socket LGA2422", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA2422 },
-    { "Socket LGA5773", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA5773 },
-    { "Socket BGA5773", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA5773 },
-    { "Socket AM5", SMBIOS_PROCESSOR_UPGRADE_SOCKET_AM5 },
-    { "Socket SP5", SMBIOS_PROCESSOR_UPGRADE_SOCKET_SP5 },
-    { "Socket SP6", SMBIOS_PROCESSOR_UPGRADE_SOCKET_SP6 },
-    { "Socket BGA883", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA883 },
-    { "Socket BGA1190", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1190 },
-    { "Socket BGA4129", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA4129 },
-    { "Socket LGA4710", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA4710 },
-    { "Socket LGA7529", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA7529 },
-    { "Socket BGA1964", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1964 },
-    { "Socket BGA1792", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA1792 },
-    { "Socket BGA2049", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA2049 },
-    { "Socket BGA2551", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA2551 },
-    { "Socket LGA1851", SMBIOS_PROCESSOR_UPGRADE_SOCKET_LGA1851 },
-    { "Socket BGA2114", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA2114 },
-    { "Socket BGA2833", SMBIOS_PROCESSOR_UPGRADE_SOCKET_BGA2833 },
-    { "Invalid", SMBIOS_PROCESSOR_UPGRADE_INVALID },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_ENUM SmbiosType4Family2Enum[] = {
-    { u8"ARMv7", SMBIOS_PROCESSOR_FAMILY_2_ARMV7 },
-    { u8"ARMv8", SMBIOS_PROCESSOR_FAMILY_2_ARMV8 },
-    { u8"ARMv9", SMBIOS_PROCESSOR_FAMILY_2_ARMV9 },
-    { u8"SH-3", SMBIOS_PROCESSOR_FAMILY_2_SH_3 },
-    { u8"SH-4", SMBIOS_PROCESSOR_FAMILY_2_SH_4 },
-    { u8"ARM", SMBIOS_PROCESSOR_FAMILY_2_ARM },
-    { u8"StrongARM", SMBIOS_PROCESSOR_FAMILY_2_STRONGARM },
-    { u8"6x86", SMBIOS_PROCESSOR_FAMILY_2_6X86 },
-    { u8"MediaGX", SMBIOS_PROCESSOR_FAMILY_2_MEDIAGX },
-    { u8"MII", SMBIOS_PROCESSOR_FAMILY_2_MII },
-    { u8"WinChip", SMBIOS_PROCESSOR_FAMILY_2_WINCHIP },
-    { u8"DSP", SMBIOS_PROCESSOR_FAMILY_2_DSP },
-    { u8"Video Processor", SMBIOS_PROCESSOR_FAMILY_2_VIDEO_PROCESSOR },
-    { u8"RISC-V RV32", SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV32 },
-    { u8"RISC-V RV64", SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV64 },
-    { u8"RISC-V RV128", SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV128 },
-    { u8"LoongArch", SMBIOS_PROCESSOR_FAMILY_2_LOONGARCH },
-    { u8"Loongson™ 1 Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_1_PROCESSOR_FAMILY },
-    { u8"Loongson™ 2 Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_2_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3 Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3_PROCESSOR_FAMILY },
-    { u8"Loongson™ 2K Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_2K_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3A Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3A_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3B Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3B_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3C Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3C_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3D Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3D_PROCESSOR_FAMILY },
-    { u8"Loongson™ 3E Processor Family", SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3E_PROCESSOR_FAMILY },
-    { u8"Dual-Core Loongson™ 2K Processor 2xxx Series", SMBIOS_PROCESSOR_FAMILY_2_DUAL_CORE_LOONGSON_2K_PROCESSOR_2XXX_SERIES },
-    { u8"Quad-Core Loongson™ 3A Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_QUAD_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES },
-    { u8"Multi-Core Loongson™ 3A Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES },
-    { u8"Quad-Core Loongson™ 3B Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_QUAD_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES },
-    { u8"Multi-Core Loongson™ 3B Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES },
-    { u8"Multi-Core Loongson™ 3C Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3C_PROCESSOR_5XXX_SERIES },
-    { u8"Multi-Core Loongson™ 3D Processor 5xxx Series", SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3D_PROCESSOR_5XXX_SERIES },
-    { u8"Intel® Core™ 3", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_3 },
-    { u8"Intel® Core™ 5", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_5 },
-    { u8"Intel® Core™ 7", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_7 },
-    { u8"Intel® Core™ 9", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_9 },
-    { u8"Intel® Core™ Ultra 3", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_3 },
-    { u8"Intel® Core™ Ultra 5", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_5 },
-    { u8"Intel® Core™ Ultra 7", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_7 },
-    { u8"Intel® Core™ Ultra 9", SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_9 },
-};
-
-__declspec(selectany)
-SMBIOS_FIELD_TYPE_INFO SmbiosType4FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_STRING(4, "Socket Designation", SocketDesignation),
-    SMBIOS_DEFINE_FIELD_ENUM(4, "Processor Type", Type, SmbiosType4TypeEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(4, "Processor Family", Family, SmbiosType4FamilyEnum),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Processor Manufacturer", Manufacturer),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Processor ID", ID),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Processor Version", Version),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Voltage", Voltage),
-    SMBIOS_DEFINE_FIELD_UINT(4, "External Clock", ExternalClock),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Max Speed", MaxSpeed),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Current Speed", CurrentSpeed),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Status", Status.Value),
-    SMBIOS_DEFINE_BIT_FIELD("CPU Status", 0, 3, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosType4CpuStatusEnum)),
-    SMBIOS_DEFINE_BIT_FIELD("Reserved", 3, 3, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_BIT("CPU Socket Populated", 6),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved", 7),
-    SMBIOS_DEFINE_FIELD_ENUM(4, "Processor Upgrade", Upgrade, SmbiosType4UpgradeEnum),
-    SMBIOS_DEFINE_FIELD_UINT(4, "L1 Cache Handle", L1CacheHandle),
-    SMBIOS_DEFINE_FIELD_UINT(4, "L2 Cache Handle", L2CacheHandle),
-    SMBIOS_DEFINE_FIELD_UINT(4, "L3 Cache Handle", L3CacheHandle),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Serial Number", SerialNumber),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Asset Tag", AssetTag),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Part Number", PartNumber),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Core Count", CoreCount),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Core Enabled", CoreEnabled),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Thread Count", ThreadCount),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Processor Characteristics", Characteristics.Value),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved", 0),
-    SMBIOS_DEFINE_FIELD_BIT("Unknown", 1),
-    SMBIOS_DEFINE_FIELD_BIT("64-bit Capable", 2),
-    SMBIOS_DEFINE_FIELD_BIT("Multi-Core", 3),
-    SMBIOS_DEFINE_FIELD_BIT("Hardware Thread", 4),
-    SMBIOS_DEFINE_FIELD_BIT("Execute Protection", 5),
-    SMBIOS_DEFINE_FIELD_BIT("Enhanced Virtualization", 6),
-    SMBIOS_DEFINE_FIELD_BIT("Power/Performance Control", 7),
-    SMBIOS_DEFINE_FIELD_BIT("128-bit Capable", 8),
-    SMBIOS_DEFINE_FIELD_BIT("Arm64 SoC ID", 9),
-    SMBIOS_DEFINE_BIT_FIELD("Reserved", 10, 6, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_ENUM(4, "Processor Family 2", Family2, SmbiosType4Family2Enum),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Core Count 2", CoreCount2),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Core Enabled 2", CoreEnabled2),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Thread Count 2", ThreadCount2),
-    SMBIOS_DEFINE_FIELD_UINT(4, "Thread Enabled", ThreadEnabled),
-    SMBIOS_DEFINE_FIELD_STRING(4, "Socket Type", SocketType),
-};
-
-__declspec(selectany)
-SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
-    SMBIOS_DEFINE_TYPE(0, "Platform Firmware Information"),
-    SMBIOS_DEFINE_TYPE(1, "System Information"),
-    SMBIOS_DEFINE_TYPE(2, "Baseboard Information"),
-    SMBIOS_DEFINE_TYPE(3, "System Enclosure or Chassis"),
-    SMBIOS_DEFINE_TYPE(4, "Processor Information"),
-    { 5, "Memory Controller Information (Obsolete)", 0, (void*)0 },
-    { 6, "Memory Module Information (Obsolete)", 0, (void*)0 },
-    { 7, "Cache Information", 0, (void*)0 },
-    { 8, "Port Connector Information", 0, (void*)0 },
-    { 9, "System Slots", 0, (void*)0 },
-    { 10, "On Board Devices Information (Obsolete)", 0, (void*)0 },
-    { 11, "OEM Strings", 0, (void*)0 },
-    { 12, "System Configuration Options", 0, (void*)0 },
-    { 13, "Firmware Language Information", 0, (void*)0 },
-    { 14, "Group Associations", 0, (void*)0 },
-    { 15, "System Event Log", 0, (void*)0 },
-    { 16, "Physical Memory Array", 0, (void*)0 },
-    { 17, "Memory Device", 0, (void*)0 },
-    { 18, "32-Bit Memory Error Information", 0, (void*)0 },
-    { 19, "Memory Array Mapped Address", 0, (void*)0 },
-    { 20, "Memory Device Mapped Address", 0, (void*)0 },
-    { 21, "Built-in Pointing Device", 0, (void*)0 },
-    { 22, "Portable Battery", 0, (void*)0 },
-    { 23, "System Reset", 0, (void*)0 },
-    { 24, "Hardware Security", 0, (void*)0 },
-    { 25, "System Power Controls", 0, (void*)0 },
-    { 26, "Voltage Probe", 0, (void*)0 },
-    { 27, "Cooling Device", 0, (void*)0 },
-    { 28, "Temperature Probe", 0, (void*)0 },
-    { 29, "Electrical Current Probe", 0, (void*)0 },
-    { 30, "Out-of-Band Remote Access", 0, (void*)0 },
-    { 31, "oot Integrity Services (BIS) Entry Point", 0, (void*)0 },
-    { 32, "System Boot Information", 0, (void*)0 },
-    { 33, "64-Bit Memory Error Information", 0, (void*)0 },
-    { 34, "Management Device", 0, (void*)0 },
-    { 35, "Management Device Component", 0, (void*)0 },
-    { 36, "Management Device Threshold Data", 0, (void*)0 },
-    { 37, "Memory Channel", 0, (void*)0 },
-    { 38, "IPMI Device Information", 0, (void*)0 },
-    { 39, "System Power Supply", 0, (void*)0 },
-    { 40, "Additional Information", 0, (void*)0 },
-    { 41, "Onboard Devices Extended Information", 0, (void*)0 },
-    { 42, "Management Controller Host Interface", 0, (void*)0 },
-    { 43, "TPM Device", 0, (void*)0 },
-    { 44, "Processor Additional Information", 0, (void*)0 },
-    { 45, "Firmware Inventory Information", 0, (void*)0 },
-    { 46, "String Property", 0, (void*)0 },
-    { 126, "Inactive", 0, (void*)0 },
-    { 127, "End-of-Table", 0, (void*)0 },
-};
-
-#endif
 
 #pragma endregion
 
