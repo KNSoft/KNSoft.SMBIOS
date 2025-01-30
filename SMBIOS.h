@@ -20,10 +20,11 @@
 static_assert(SMBIOS_VERSION >= 0x02000000);
 
 /* Basic Types */
-typedef unsigned char       BYTE;
-typedef unsigned short      WORD;
-typedef unsigned long       DWORD;
-typedef unsigned __int64    QWORD;
+typedef unsigned char       UCHAR; // String
+typedef unsigned char       BYTE;  // UINT8
+typedef unsigned short      WORD;  // UINT16
+typedef unsigned long       DWORD; // UINT32
+typedef unsigned __int64    QWORD; // UINT64
 
 /* For code analysis */
 #ifdef _MSC_VER
@@ -70,17 +71,17 @@ static_assert(sizeof(SMBIOS_HEADER) == 4);
 
 #define SMBIOS_TYPE_PLATFORM_FIRMWARE_INFORMATION ((BYTE)0)
 
-#define SMBIOS_PLATFORM_FIRMWARE_EXTENDEDROMSIZE_UNIT_MB ((WORD)0b00) // Unit is MB
-#define SMBIOS_PLATFORM_FIRMWARE_EXTENDEDROMSIZE_UNIT_GB ((WORD)0b01) // Unit is GB
+#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_MB ((WORD)0b00) // Unit is MB
+#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_GB ((WORD)0b01) // Unit is GB
 
 typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Vendor;
-    BYTE Version;
-    WORD BIOSStartingAddressSegment;
-    BYTE ReleaseDate;
-    BYTE ROMSize;
+    UCHAR Vendor;                       // Vendor
+    UCHAR Version;                      // Firmware Version
+    WORD BIOSStartingAddressSegment;    // BIOS Starting Address Segment
+    UCHAR ReleaseDate;                  // Firmware Release Date
+    BYTE ROMSize;                       // Firmware ROM Size
     union
     {
         QWORD Value;
@@ -106,12 +107,12 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
             QWORD ROMIsSocketed : 1;                // 17 Firmware ROM is socketed (e.g., PLCC or SOP socket)
             QWORD BootFromPCCard : 1;               // 18 Boot from PC card (PCMCIA) is supported
             QWORD EDDSpecification : 1;             // 19 EDD specification is supported
-            QWORD FloppyForNEC9800_1Dot2MB : 1;     // 20 Int 13h — Japanese floppy for NEC 9800 1.2 MB (3.5”, 1K bytes/sector, 360 RPM) is supported
-            QWORD FloppyForToshiba_1Dot2MB : 1;     // 21 Int 13h — Japanese floppy for Toshiba 1.2 MB (3.5”, 360 RPM) is supported
-            QWORD Floppy_5Dot25Inch_360KB : 1;      // 22 Int 13h — 5.25” / 360 KB floppy services are supported
-            QWORD Floppy_5Dot25Inch_1Dot2MB : 1;    // 23 Int 13h — 5.25” / 1.2 MB floppy services are supported
-            QWORD Floppy_3Dot5Inch_720KB : 1;       // 24 Int 13h — 3.5” / 720 KB floppy services are supported
-            QWORD Floppy_3Dot5Inch_2Dot88MB : 1;    // 25 Int 13h — 3.5” / 2.88 MB floppy services are supported
+            QWORD FloppyForNEC9800_1Dot2MB : 1;     // 20 Int 13h — Japanese floppy for NEC 9800 1.2 MB (3.5", 1K bytes/sector, 360 RPM) is supported
+            QWORD FloppyForToshiba_1Dot2MB : 1;     // 21 Int 13h — Japanese floppy for Toshiba 1.2 MB (3.5", 360 RPM) is supported
+            QWORD Floppy_5Dot25Inch_360KB : 1;      // 22 Int 13h — 5.25" / 360 KB floppy services are supported
+            QWORD Floppy_5Dot25Inch_1Dot2MB : 1;    // 23 Int 13h — 5.25" / 1.2 MB floppy services are supported
+            QWORD Floppy_3Dot5Inch_720KB : 1;       // 24 Int 13h — 3.5" / 720 KB floppy services are supported
+            QWORD Floppy_3Dot5Inch_2Dot88MB : 1;    // 25 Int 13h — 3.5" / 2.88 MB floppy services are supported
             QWORD PrintScreenService : 1;           // 26 Int 5h, print screen service is supported
             QWORD _8042KeyboardServices : 1;        // 27 Int 9h, 8042 keyboard services are supported
             QWORD SerialServices : 1;               // 28 Int 14h, serial services are supported
@@ -121,7 +122,7 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
             QWORD ReservedForBIOSVendor : 16;       // 32:47 Reserved for platform firmware vendor
             QWORD ReservedForSystemVendor : 16;     // 48:63 Reserved for system vendor
         };
-    } Characteristics;
+    } Characteristics; // Firmware Characteristics
 #if SMBIOS_VERSION >= 0x02010000
     union
     {
@@ -137,7 +138,7 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
             BYTE _1394Boot : 1;             // 06 1394 boot is supported
             BYTE SmartBattery : 1;          // 07 Smart battery is supported
         };
-    } CharacteristicsExtensionByte1;
+    } CharacteristicsExtensionByte1; // Firmware Characteristics Extension Byte 1
 #if SMBIOS_VERSION >= 0x02030000
     union
     {
@@ -153,12 +154,12 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
             BYTE ManufacturingModeEnabled : 1;                  // 06 Manufacturing mode is enabled
             BYTE Reserved : 1;                                  // 07 Reserved
         };
-    } CharacteristicsExtensionByte2;
+    } CharacteristicsExtensionByte2; // Firmware Characteristics Extension Byte 2
 #if SMBIOS_VERSION >= 0x02040000
-    BYTE MajorRelease;
-    BYTE MinorRelease;
-    BYTE ECFirmwareMajorRelease;
-    BYTE ECFirmwareMinorRelease;
+    BYTE MajorRelease; // Platform Firmware Major Release
+    BYTE MinorRelease; // Platform Firmware Minor Release
+    BYTE ECFirmwareMajorRelease; // Embedded Controller Firmware Major Release
+    BYTE ECFirmwareMinorRelease; // Embedded Controller Firmware Minor Release
 #if SMBIOS_VERSION >= 0x03010000
     union
     {
@@ -166,9 +167,9 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
         struct
         {
             WORD Size : 14; // 00:13 Size
-            WORD Unit : 2;  // 14:15 Unit, SMBIOS_PLATFORM_FIRMWARE_EXTENDEDROMSIZE_UNIT_*
+            WORD Unit : 2;  // 14:15 Unit, SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_*
         };
-    } ExtendedROMSize;
+    } ExtendedROMSize; // Extended Firmware ROM Size
 #endif // SMBIOS_VERSION >= 0x03010000
 #endif // SMBIOS_VERSION >= 0x02040000
 #endif // SMBIOS_VERSION >= 0x02030000
@@ -1921,7 +1922,7 @@ typedef struct _SMBIOS_SYSTEM_RESET
             BYTE BootOption : 2;                    // 1:2 SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
             BYTE BootOptionOnLimit : 2;             // 3:4 SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
             BYTE SystemContainsAWatchdogTimer : 1;  // 5 True (1) or False (0)
-            BYTE Reserved : 2;                      // 6:7 Reserved for future assignment by this specification; set to 00b
+            BYTE Reserved : 2;                      // 6:7 Reserved for future assignment by this specification, set to 00b
         };
     } Capabilities;
     WORD ResetCount;
@@ -2160,7 +2161,7 @@ typedef struct _SMBIOS_OUT_OF_BAND_REMOTE_ACCESS
         {
             BYTE InboundConnectionEnabled : 1;  // 0  Inbound Connection Enabled
             BYTE OutboundConnectionEnabled : 1; // 1  Outbound Connection Enabled
-            BYTE Reserved : 6;                  // 2:7 Reserved for future definition by this specification; set to all zeros
+            BYTE Reserved : 6;                  // 2:7 Reserved for future definition by this specification, set to all zeros
         };
     } Connections;
 } SMBIOS_OUT_OF_BAND_REMOTE_ACCESS, *PSMBIOS_OUT_OF_BAND_REMOTE_ACCESS, SMBIOS_TYPE_30, *PSMBIOS_TYPE_30;
@@ -2421,7 +2422,7 @@ typedef struct _SMBIOS_SYSTEM_POWER_SUPPLY
             WORD InputVoltageRangeSwitching : 4;    // 03:06 SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_*
             WORD Status : 3;                        // 07:09 SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_*
             WORD Type : 4;                          // 10:13 SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_*
-            WORD Reserved : 2;                      // 14:15 Reserved; set to 00b
+            WORD Reserved : 2;                      // 14:15 Reserved, set to 00b
         };
     } Characteristics;
     WORD InputVoltageProbeHandle;
@@ -2629,12 +2630,12 @@ typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
     SMBIOS_HEADER Header;
     BYTE ComponentName;
     BYTE Version;
-    BYTE VersionFormat;                         // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*, 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    BYTE VersionFormat;                     // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*, 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
     BYTE ID;
-    BYTE IDFormat;                              // SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_*, 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    BYTE IDFormat;                          // SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_*, 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
     BYTE ReleaseDate;
     BYTE Manufacturer;
-    BYTE LowestSupportedFirmwareVersion;  // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*
+    BYTE LowestSupportedFirmwareVersion;    // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*
     QWORD ImageSize;
     union
     {
@@ -2700,7 +2701,7 @@ typedef union _SMBIOS_TABLE
     SMBIOS_TYPE_0 PlatformFirmwareInformation;
     SMBIOS_TYPE_1 SystemInformation;
     SMBIOS_TYPE_2 BaseboardInformation;
-    SMBIOS_TYPE_3  SystemEnclosureOrChassis;
+    SMBIOS_TYPE_3 SystemEnclosureOrChassis;
     SMBIOS_TYPE_4 ProcessorInformation;
     SMBIOS_TYPE_5 MemoryControllerInformation; // Obsolete
     SMBIOS_TYPE_6 MemoryModuleInformation; // Obsolete

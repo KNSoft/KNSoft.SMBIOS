@@ -27,18 +27,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sample.c" />
+    <ClCompile Include="..\SmbiosDecode.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SMBIOS.h" />
     <ClInclude Include="..\SMBIOS.TypeInfo.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SMBIOS.TypeInfo.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{28468506-07f8-4cbb-8d72-1ee9d6e045c8}</ProjectGuid>
-    <RootNamespace>Sample</RootNamespace>
+    <RootNamespace>SmbiosDecode</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SmbiosDecode</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
