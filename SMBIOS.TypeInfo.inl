@@ -18,7 +18,7 @@ typedef enum _SMBIOS_DATA_TYPE
 
 typedef struct _SMBIOS_FIELD_ENUM
 {
-    const char* Name;
+    const char8_t* Name;
     QWORD Value;
 } SMBIOS_FIELD_ENUM, *PSMBIOS_FIELD_ENUM;
 

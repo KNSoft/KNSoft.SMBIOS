@@ -2,7 +2,7 @@
  * KNSoft.SMBIOS (https://github.com/KNSoft/KNSoft.SMBIOS)
  *
  * Definitions for SMBIOS Reference Specification (DMTF DSP0134, https://www.dmtf.org/standards/smbios).
- * See the repository for more information with usage and sample.
+ * See the repository for more information with usage, sample and corresponding type information header.
  * Updated to SMBIOS 3.8.0.
  *
  * Licensed under the MIT license.
@@ -20,7 +20,7 @@
 static_assert(SMBIOS_VERSION >= 0x02000000);
 
 /* Basic Types */
-typedef unsigned char       UCHAR; // String
+typedef unsigned char       UCHAR; // STRING
 typedef unsigned char       BYTE;  // UINT8
 typedef unsigned short      WORD;  // UINT16
 typedef unsigned long       DWORD; // UINT32
@@ -67,12 +67,17 @@ typedef struct _SMBIOS_HEADER
 } SMBIOS_HEADER, *PSMBIOS_HEADER;
 static_assert(sizeof(SMBIOS_HEADER) == 4);
 
+typedef struct _SMBIOS_UUID
+{
+    BYTE Bytes[16];
+} SMBIOS_UUID, *PSMBIOS_UUID;
+
 #pragma region Platform Firmware Information (Type 0)
 
 #define SMBIOS_TYPE_PLATFORM_FIRMWARE_INFORMATION ((BYTE)0)
 
-#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_MB ((WORD)0b00) // Unit is MB
-#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_GB ((WORD)0b01) // Unit is GB
+#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_MB ((WORD)0b00) // MB
+#define SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_GB ((WORD)0b01) // GB
 
 typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
 {
@@ -195,16 +200,16 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
 typedef struct _SMBIOS_SYSTEM_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Manufacturer;
-    BYTE ProductName;
-    BYTE Version;
-    BYTE SerialNumber;
+    UCHAR Manufacturer; // Manufacturer
+    UCHAR ProductName;  // Product Name
+    UCHAR Version;      // Version
+    UCHAR SerialNumber; // Serial Number
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE UUID[16];
-    BYTE WakeUpType; // SMBIOS_SYSTEM_WAKEUPTYPE_*
+    SMBIOS_UUID UUID;   // UUID
+    BYTE WakeUpType;    // Wake-up Type, SMBIOS_SYSTEM_WAKEUPTYPE_*
 #if SMBIOS_VERSION >= 0x02040000
-    BYTE SKUNumber;
-    BYTE Family;
+    UCHAR SKUNumber;    // SKU Number
+    UCHAR Family;       // Family
 #endif // SMBIOS_VERSION >= 0x02040000
 #endif // SMBIOS_VERSION >= 0x02010000
 } SMBIOS_SYSTEM_INFORMATION, *PSMBIOS_SYSTEM_INFORMATION, SMBIOS_TYPE_1, *PSMBIOS_TYPE_1;
@@ -232,11 +237,11 @@ typedef struct _SMBIOS_SYSTEM_INFORMATION
 typedef struct _SMBIOS_BASEBOARD_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Manufacturer;
-    BYTE Product;
-    BYTE Version;
-    BYTE SerialNumber;
-    BYTE AssetTag;
+    UCHAR Manufacturer;  // Manufacturer
+    UCHAR Product;       // Product
+    UCHAR Version;       // Version
+    UCHAR SerialNumber;  // Serial Number
+    UCHAR AssetTag;      // Asset Tag
     union
     {
         BYTE Value;
@@ -249,11 +254,11 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
             BYTE HotSwappable : 1;      // 04 The board is s hot swappable
             BYTE Reserved : 3;          // 05:07 Reserved for future definition by this specification
         };
-    } FeatureFlags;
-    BYTE LocationInChassis;
-    WORD ChassisHandle;
-    BYTE BoardType; // SMBIOS_BASEBOARD_TYPE_*
-    BYTE NumberOfContainedObjectHandles;
+    } FeatureFlags;         // Feature Flags
+    UCHAR LocationInChassis; // Location in Chassis
+    WORD ChassisHandle;     // Chassis Handle
+    BYTE BoardType;         // Board Type, SMBIOS_BASEBOARD_TYPE_*
+    BYTE NumberOfContainedObjectHandles;    // Number of Contained Object Handles
     _Field_size_(NumberOfContainedObjectHandles) WORD ContainedObjectHandles[];
 } SMBIOS_BASEBOARD_INFORMATION, *PSMBIOS_BASEBOARD_INFORMATION, SMBIOS_TYPE_2, *PSMBIOS_TYPE_2;
 
@@ -322,7 +327,7 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
         BYTE Value;
         struct
         {
-            BYTE Type : 7;          // 00:06: SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
+            BYTE Type : 7;          // 00:06 SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
             BYTE ChassisLock : 1;   // 07 Chassis lock is present
         };
     } Type;
