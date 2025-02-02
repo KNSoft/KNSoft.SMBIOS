@@ -252,7 +252,7 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
             BYTE Removable : 1;         // 02 The board is removable
             BYTE Replaceable : 1;       // 03 The board is replaceable
             BYTE HotSwappable : 1;      // 04 The board is s hot swappable
-            BYTE Reserved : 3;          // 05:07 Reserved for future definition by this specification
+            BYTE Reserved : 3;          // 05:07 Reserved
         };
     } FeatureFlags;         // Feature Flags
     UCHAR LocationInChassis; // Location in Chassis
@@ -321,30 +321,30 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
 typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
 {
     SMBIOS_HEADER Header;
-    BYTE Manufacturer;
+    UCHAR Manufacturer;     // Manufacturer
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Type : 7;          // 00:06 SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
+            BYTE Type : 7;          // 00:06 Type, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
             BYTE ChassisLock : 1;   // 07 Chassis lock is present
         };
-    } Type;
-    BYTE Version;
-    BYTE SerialNumber;
-    BYTE AssetTagNumber;
+    } Type; // Type
+    UCHAR Version;          // Version
+    UCHAR SerialNumber;     // Serial Number
+    UCHAR AssetTagNumber;   // Asset Tag Number
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE BootUpState;       // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE PowerSupplyState;  // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE ThermalState;      // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE SecurityStatus;    // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_*
+    BYTE BootUpState;       // Boot-up State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE PowerSupplyState;  // Power Supply State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE ThermalState;      // Thermal State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE SecurityStatus;    // Security Status, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_*
 #if SMBIOS_VERSION >= 0x02030000
-    DWORD OEMDefined;
-    BYTE Height;
-    BYTE NumberOfPowerCords;
-    BYTE ContainedElementCount;
-    BYTE ContainedElementRecordLength;
+    DWORD OEMDefined;       // OEM-defined
+    BYTE Height;            // Height
+    BYTE NumberOfPowerCords;            // Number of Power Cords
+    BYTE ContainedElementCount;         // Contained Element Count
+    BYTE ContainedElementRecordLength;  // Contained Element Record Length
     _Field_size_bytes_(ContainedElementCount * ContainedElementRecordLength) BYTE ContainedElements[];
 /*
 #if SMBIOS_VERSION >= 0x02070000
@@ -368,250 +368,250 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
 #define SMBIOS_PROCESSOR_TYPE_DSP_PROCESSOR     ((BYTE)0x05) // DSP Processor
 #define SMBIOS_PROCESSOR_TYPE_VIDEO_PROCESSOR   ((BYTE)0x06) // Video Processor
 
-#define SMBIOS_PROCESSOR_FAMILY_OTHER                                                   ((BYTE)0x01)    // Other
-#define SMBIOS_PROCESSOR_FAMILY_UNKNOWN                                                 ((BYTE)0x02)    // Unknown
-#define SMBIOS_PROCESSOR_FAMILY_8086                                                    ((BYTE)0x03)    // 8086
-#define SMBIOS_PROCESSOR_FAMILY_80286                                                   ((BYTE)0x04)    // 80286
-#define SMBIOS_PROCESSOR_FAMILY_INTEL386_PROCESSOR                                      ((BYTE)0x05)    // Intel386™ processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL486_PROCESSOR                                      ((BYTE)0x06)    // Intel486™ processor
-#define SMBIOS_PROCESSOR_FAMILY_8087                                                    ((BYTE)0x07)    // 8087
-#define SMBIOS_PROCESSOR_FAMILY_80287                                                   ((BYTE)0x08)    // 80287
-#define SMBIOS_PROCESSOR_FAMILY_80387                                                   ((BYTE)0x09)    // 80387
-#define SMBIOS_PROCESSOR_FAMILY_80487                                                   ((BYTE)0x0A)    // 80487
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR                                 ((BYTE)0x0B)    // Intel® Pentium® processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_PRO_PROCESSOR                                   ((BYTE)0x0C)    // Pentium® Pro processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_PROCESSOR                                    ((BYTE)0x0D)    // Pentium® II processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_PROCESSOR_WITH_MMX_TECHNOLOGY                   ((BYTE)0x0E)    // Pentium® processor with MMX™ technology
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_PROCESSOR                                 ((BYTE)0x0F)    // Intel® Celeron® processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_XEON_PROCESSOR                               ((BYTE)0x10)    // Pentium® II Xeon® processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR                                   ((BYTE)0x11)    // Pentium® III processor
-#define SMBIOS_PROCESSOR_FAMILY_M1_FAMILY                                               ((BYTE)0x12)    // M1 Family
-#define SMBIOS_PROCESSOR_FAMILY_M2_FAMILY                                               ((BYTE)0x13)    // M2 Family
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_M_PROCESSOR                               ((BYTE)0x14)    // Intel® Celeron® M processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_4_HT_PROCESSOR                            ((BYTE)0x15)    // Intel® Pentium® 4 HT processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PROCESSOR                                         ((BYTE)0x16)    // Intel® Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_DURON_PROCESSOR_FAMILY_1                            ((BYTE)0x18)    // AMD Duron™ Processor Family [1]
-#define SMBIOS_PROCESSOR_FAMILY_K5_FAMILY_1                                             ((BYTE)0x19)    // K5 Family [1]
-#define SMBIOS_PROCESSOR_FAMILY_K6_FAMILY_1                                             ((BYTE)0x1A)    // K6 Family [1]
-#define SMBIOS_PROCESSOR_FAMILY_K6_2_1                                                  ((BYTE)0x1B)    // K6-2 [1]
-#define SMBIOS_PROCESSOR_FAMILY_K6_3_1                                                  ((BYTE)0x1C)    // K6-3 [1]
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_PROCESSOR_FAMILY_1                           ((BYTE)0x1D)    // AMD Athlon™ Processor Family [1]
-#define SMBIOS_PROCESSOR_FAMILY_AMD29000_FAMILY                                         ((BYTE)0x1E)    // AMD29000 Family
-#define SMBIOS_PROCESSOR_FAMILY_K6_2_PLUS                                               ((BYTE)0x1F)    // K6-2+
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_FAMILY                                         ((BYTE)0x20)    // Power PC Family
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_601                                            ((BYTE)0x21)    // Power PC 601
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_603                                            ((BYTE)0x22)    // Power PC 603
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_603_PLUS                                       ((BYTE)0x23)    // Power PC 603+
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_604                                            ((BYTE)0x24)    // Power PC 604
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_620                                            ((BYTE)0x25)    // Power PC 620
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_X704                                           ((BYTE)0x26)    // Power PC x704
-#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_750                                            ((BYTE)0x27)    // Power PC 750
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_PROCESSOR                                ((BYTE)0x28)    // Intel® Core™ Duo processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_MOBILE_PROCESSOR                         ((BYTE)0x29)    // Intel® Core™ Duo mobile processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_MOBILE_PROCESSOR                        ((BYTE)0x2A)    // Intel® Core™ Solo mobile processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_ATOM_PROCESSOR                                    ((BYTE)0x2B)    // Intel® Atom™ processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M_PROCESSOR                                  ((BYTE)0x2C)    // Intel® Core™ M processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M3_PROCESSOR                                 ((BYTE)0x2D)    // Intel® Core™ m3 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M5_PROCESSOR                                 ((BYTE)0x2E)    // Intel® Core™ m5 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M7_PROCESSOR                                 ((BYTE)0x2F)    // Intel® Core™ m7 processor
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_FAMILY_2                                          ((BYTE)0x30)    // Alpha Family [2]
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21064                                             ((BYTE)0x31)    // Alpha 21064
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21066                                             ((BYTE)0x32)    // Alpha 21066
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164                                             ((BYTE)0x33)    // Alpha 21164
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164PC                                           ((BYTE)0x34)    // Alpha 21164PC
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164A                                            ((BYTE)0x35)    // Alpha 21164a
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21264                                             ((BYTE)0x36)    // Alpha 21264
-#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21364                                             ((BYTE)0x37)    // Alpha 21364
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_ULTRA_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY ((BYTE)0x38)    // AMD Turion™ II Ultra Dual-Core Mobile M Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY       ((BYTE)0x39)    // AMD Turion™ II Dual-Core Mobile M Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_DUAL_CORE_M_PROCESSOR_FAMILY              ((BYTE)0x3A)    // AMD Athlon™ II Dual-Core M Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6100_SERIES_PROCESSOR                       ((BYTE)0x3B)    // AMD Opteron™ 6100 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4100_SERIES_PROCESSOR                       ((BYTE)0x3C)    // AMD Opteron™ 4100 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6200_SERIES_PROCESSOR                       ((BYTE)0x3D)    // AMD Opteron™ 6200 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4200_SERIES_PROCESSOR                       ((BYTE)0x3E)    // AMD Opteron™ 4200 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_FX_SERIES_PROCESSOR                                 ((BYTE)0x3F)    // AMD FX™ Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_FAMILY                                             ((BYTE)0x40)    // MIPS Family
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4000                                              ((BYTE)0x41)    // MIPS R4000
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4200                                              ((BYTE)0x42)    // MIPS R4200
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4400                                              ((BYTE)0x43)    // MIPS R4400
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4600                                              ((BYTE)0x44)    // MIPS R4600
-#define SMBIOS_PROCESSOR_FAMILY_MIPS_R10000                                             ((BYTE)0x45)    // MIPS R10000
-#define SMBIOS_PROCESSOR_FAMILY_AMD_C_SERIES_PROCESSOR                                  ((BYTE)0x46)    // AMD C-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_E_SERIES_PROCESSOR                                  ((BYTE)0x47)    // AMD E-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_A_SERIES_PROCESSOR                                  ((BYTE)0x48)    // AMD A-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_G_SERIES_PROCESSOR                                  ((BYTE)0x49)    // AMD G-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_Z_SERIES_PROCESSOR                                  ((BYTE)0x4A)    // AMD Z-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_R_SERIES_PROCESSOR                                  ((BYTE)0x4B)    // AMD R-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4300_SERIES_PROCESSOR                       ((BYTE)0x4C)    // AMD Opteron™ 4300 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6300_SERIES_PROCESSOR                       ((BYTE)0x4D)    // AMD Opteron™ 6300 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3300_SERIES_PROCESSOR                       ((BYTE)0x4E)    // AMD Opteron™ 3300 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_FIREPRO_SERIES_PROCESSOR                            ((BYTE)0x4F)    // AMD FirePro™ Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_SPARC_FAMILY                                            ((BYTE)0x50)    // SPARC Family
-#define SMBIOS_PROCESSOR_FAMILY_SUPERSPARC                                              ((BYTE)0x51)    // SuperSPARC
-#define SMBIOS_PROCESSOR_FAMILY_MICROSPARC_II                                           ((BYTE)0x52)    // microSPARC II
-#define SMBIOS_PROCESSOR_FAMILY_MICROSPARC_IIEP                                         ((BYTE)0x53)    // microSPARC IIep
-#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC                                              ((BYTE)0x54)    // UltraSPARC
-#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_II                                           ((BYTE)0x55)    // UltraSPARC II
-#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_Iii                                          ((BYTE)0x56)    // UltraSPARC Iii
-#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_III                                          ((BYTE)0x57)    // UltraSPARC III
-#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_IIIi                                         ((BYTE)0x58)    // UltraSPARC IIIi
-#define SMBIOS_PROCESSOR_FAMILY_68040_FAMILY                                            ((BYTE)0x60)    // 68040 Family
-#define SMBIOS_PROCESSOR_FAMILY_68XXX                                                   ((BYTE)0x61)    // 68xxx
-#define SMBIOS_PROCESSOR_FAMILY_68000                                                   ((BYTE)0x62)    // 68000
-#define SMBIOS_PROCESSOR_FAMILY_68010                                                   ((BYTE)0x63)    // 68010
-#define SMBIOS_PROCESSOR_FAMILY_68020                                                   ((BYTE)0x64)    // 68020
-#define SMBIOS_PROCESSOR_FAMILY_68030                                                   ((BYTE)0x65)    // 68030
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X4_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x66)    // AMD Athlon(TM) X4 Quad-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X1000_SERIES_PROCESSOR                      ((BYTE)0x67)    // AMD Opteron(TM) X1000 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X2000_SERIES_APU                            ((BYTE)0x68)    // AMD Opteron(TM) X2000 Series APU
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_A_SERIES_PROCESSOR                          ((BYTE)0x69)    // AMD Opteron(TM) A-Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X3000_SERIES_APU                            ((BYTE)0x6A)    // AMD Opteron(TM) X3000 Series APU
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ZEN_PROCESSOR_FAMILY                                ((BYTE)0x6B)    // AMD Zen Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_HOBBIT_FAMILY                                           ((BYTE)0x70)    // Hobbit Family
-#define SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM5000_FAMILY                                    ((BYTE)0x78)    // Crusoe™ TM5000 Family
-#define SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM3000_FAMILY                                    ((BYTE)0x79)    // Crusoe™ TM3000 Family
-#define SMBIOS_PROCESSOR_FAMILY_EFFICEON_TM8000_FAMILY                                  ((BYTE)0x7A)    // Efficeon™ TM8000 Family
-#define SMBIOS_PROCESSOR_FAMILY_WEITEK                                                  ((BYTE)0x80)    // Weitek
-#define SMBIOS_PROCESSOR_FAMILY_ITANIUM_PROCESSOR                                       ((BYTE)0x82)    // Itanium™ processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_PROCESSOR_FAMILY                          ((BYTE)0x83)    // AMD Athlon™ 64 Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_PROCESSOR_FAMILY                            ((BYTE)0x84)    // AMD Opteron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_PROCESSOR_FAMILY                            ((BYTE)0x85)    // AMD Sempron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_MOBILE_TECHNOLOGY                         ((BYTE)0x86)    // AMD Turion™ 64 Mobile Technology
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_AMD_OPTERON_PROCESSOR_FAMILY                  ((BYTE)0x87)    // Dual-Core AMD Opteron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_X2_DUAL_CORE_PROCESSOR_FAMILY             ((BYTE)0x88)    // AMD Athlon™ 64 X2 Dual-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_X2_MOBILE_TECHNOLOGY                      ((BYTE)0x89)    // AMD Turion™ 64 X2 Mobile Technology
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_AMD_OPTERON_PROCESSOR_FAMILY                  ((BYTE)0x8A)    // Quad-Core AMD Opteron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_THIRD_GENERATION_AMD_OPTERON_PROCESSOR_FAMILY           ((BYTE)0x8B)    // Third-Generation AMD Opteron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_FX_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x8C)    // AMD Phenom™ FX Quad-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X4_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x8D)    // AMD Phenom™ X4 Quad-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X2_DUAL_CORE_PROCESSOR_FAMILY                ((BYTE)0x8E)    // AMD Phenom™ X2 Dual-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X2_DUAL_CORE_PROCESSOR_FAMILY                ((BYTE)0x8F)    // AMD Athlon™ X2 Dual-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_FAMILY                                          ((BYTE)0x90)    // PA-RISC Family
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_8500                                            ((BYTE)0x91)    // PA-RISC 8500
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_8000                                            ((BYTE)0x92)    // PA-RISC 8000
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7300LC                                          ((BYTE)0x93)    // PA-RISC 7300LC
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7200                                            ((BYTE)0x94)    // PA-RISC 7200
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100LC                                          ((BYTE)0x95)    // PA-RISC 7100LC
-#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100                                            ((BYTE)0x96)    // PA-RISC 7100
-#define SMBIOS_PROCESSOR_FAMILY_V30_FAMILY                                              ((BYTE)0xA0)    // V30 Family
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3200_SERIES              ((BYTE)0xA1)    // Quad-Core Intel® Xeon® processor 3200 Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3000_SERIES              ((BYTE)0xA2)    // Dual-Core Intel® Xeon® processor 3000 Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5300_SERIES              ((BYTE)0xA3)    // Quad-Core Intel® Xeon® processor 5300 Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5100_SERIES              ((BYTE)0xA4)    // Dual-Core Intel® Xeon® processor 5100 Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5000_SERIES              ((BYTE)0xA5)    // Dual-Core Intel® Xeon® processor 5000 Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_LV                       ((BYTE)0xA6)    // Dual-Core Intel® Xeon® processor LV
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_ULV                      ((BYTE)0xA7)    // Dual-Core Intel® Xeon® processor ULV
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7100_SERIES              ((BYTE)0xA8)    // Dual-Core Intel® Xeon® processor 7100 Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5400_SERIES              ((BYTE)0xA9)    // Quad-Core Intel® Xeon® processor 5400 Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR                          ((BYTE)0xAA)    // Quad-Core Intel® Xeon® processor
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5200_SERIES              ((BYTE)0xAB)    // Dual-Core Intel® Xeon® processor 5200 Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7200_SERIES              ((BYTE)0xAC)    // Dual-Core Intel® Xeon® processor 7200 Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7300_SERIES              ((BYTE)0xAD)    // Quad-Core Intel® Xeon® processor 7300 Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7400_SERIES              ((BYTE)0xAE)    // Quad-Core Intel® Xeon® processor 7400 Series
-#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7400_SERIES             ((BYTE)0xAF)    // Multi-Core Intel® Xeon® processor 7400 Series
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_XEON_PROCESSOR                              ((BYTE)0xB0)    // Pentium® III Xeon® processor
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR_WITH_INTEL_SPEEDSTEP_TECHNOLOGY   ((BYTE)0xB1)    // Pentium® III Processor with Intel® SpeedStep™ Technology
-#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_4_PROCESSOR                                     ((BYTE)0xB2)    // Pentium® 4 Processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR                                    ((BYTE)0xB3)    // Intel® Xeon® processor
-#define SMBIOS_PROCESSOR_FAMILY_AS400_FAMILY                                            ((BYTE)0xB4)    // AS400 Family
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR_MP                                 ((BYTE)0xB5)    // Intel® Xeon® processor MP
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_XP_PROCESSOR_FAMILY                          ((BYTE)0xB6)    // AMD Athlon™ XP Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_MP_PROCESSOR_FAMILY                          ((BYTE)0xB7)    // AMD Athlon™ MP Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_ITANIUM_2_PROCESSOR                               ((BYTE)0xB8)    // Intel® Itanium® 2 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_M_PROCESSOR                               ((BYTE)0xB9)    // Intel® Pentium® M processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_D_PROCESSOR                               ((BYTE)0xBA)    // Intel® Celeron® D processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_D_PROCESSOR                               ((BYTE)0xBB)    // Intel® Pentium® D processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR_EXTREME_EDITION                 ((BYTE)0xBC)    // Intel® Pentium® Processor Extreme Edition
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_PROCESSOR                               ((BYTE)0xBD)    // Intel® Core™ Solo Processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_PROCESSOR                              ((BYTE)0xBF)    // Intel® Core™ 2 Duo Processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_PROCESSOR                             ((BYTE)0xC0)    // Intel® Core™ 2 Solo processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_PROCESSOR                          ((BYTE)0xC1)    // Intel® Core™ 2 Extreme processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_QUAD_PROCESSOR                             ((BYTE)0xC2)    // Intel® Core™ 2 Quad processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_MOBILE_PROCESSOR                   ((BYTE)0xC3)    // Intel® Core™ 2 Extreme mobile processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_MOBILE_PROCESSOR                       ((BYTE)0xC4)    // Intel® Core™ 2 Duo mobile processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_MOBILE_PROCESSOR                      ((BYTE)0xC5)    // Intel® Core™ 2 Solo mobile processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I7_PROCESSOR                                 ((BYTE)0xC6)    // Intel® Core™ i7 processor
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_CELERON_PROCESSOR                       ((BYTE)0xC7)    // Dual-Core Intel® Celeron® processor
-#define SMBIOS_PROCESSOR_FAMILY_IBM390_FAMILY                                           ((BYTE)0xC8)    // IBM390 Family
-#define SMBIOS_PROCESSOR_FAMILY_G4                                                      ((BYTE)0xC9)    // G4
-#define SMBIOS_PROCESSOR_FAMILY_G5                                                      ((BYTE)0xCA)    // G5
-#define SMBIOS_PROCESSOR_FAMILY_ESA_390_G6                                              ((BYTE)0xCB)    // ESA/390 G6
-#define SMBIOS_PROCESSOR_FAMILY_Z_ARCHITECTURE_BASE                                     ((BYTE)0xCC)    // z/Architecture base
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I5_PROCESSOR                                 ((BYTE)0xCD)    // Intel® Core™ i5 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I3_PROCESSOR                                 ((BYTE)0xCE)    // Intel® Core™ i3 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I9_PROCESSOR                                 ((BYTE)0xCF)    // Intel® Core™ i9 processor
-#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_D_PROCESSOR_FAMILY                           ((BYTE)0xD0)    // Intel® Xeon® D Processor family
-#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_M_PROCESSOR_FAMILY                               ((BYTE)0xD2)    // VIA C7™-M Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_D_PROCESSOR_FAMILY                               ((BYTE)0xD3)    // VIA C7™-D Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_PROCESSOR_FAMILY                                 ((BYTE)0xD4)    // VIA C7™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_VIA_EDEN_PROCESSOR_FAMILY                               ((BYTE)0xD5)    // VIA Eden™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR                         ((BYTE)0xD6)    // Multi-Core Intel® Xeon® processor
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES              ((BYTE)0xD7)    // Dual-Core Intel® Xeon® processor 3xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES              ((BYTE)0xD8)    // Quad-Core Intel® Xeon® processor 3xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_VIA_NANO_PROCESSOR_FAMILY                               ((BYTE)0xD9)    // VIA Nano™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES              ((BYTE)0xDA)    // Dual-Core Intel® Xeon® processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES              ((BYTE)0xDB)    // Quad-Core Intel® Xeon® processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES              ((BYTE)0xDD)    // Dual-Core Intel® Xeon® processor 7xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES              ((BYTE)0xDE)    // Quad-Core Intel® Xeon® processor 7xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES             ((BYTE)0xDF)    // Multi-Core Intel® Xeon® processor 7xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_3400_SERIES             ((BYTE)0xE0)    // Multi-Core Intel® Xeon® processor 3400 Series
-#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3000_SERIES_PROCESSOR                       ((BYTE)0xE4)    // AMD Opteron™ 3000 Series Processor
-#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_II_PROCESSOR                                ((BYTE)0xE5)    // AMD Sempron™ II Processor
-#define SMBIOS_PROCESSOR_FAMILY_EMBEDDED_AMD_OPTERON_QUAD_CORE_PROCESSOR_FAMILY         ((BYTE)0xE6)    // Embedded AMD Opteron™ Quad-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_TRIPLE_CORE_PROCESSOR_FAMILY                 ((BYTE)0xE7)    // AMD Phenom™ Triple-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_ULTRA_DUAL_CORE_MOBILE_PROCESSOR_FAMILY      ((BYTE)0xE8)    // AMD Turion™ Ultra Dual-Core Mobile Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_DUAL_CORE_MOBILE_PROCESSOR_FAMILY            ((BYTE)0xE9)    // AMD Turion™ Dual-Core Mobile Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_DUAL_CORE_PROCESSOR_FAMILY                   ((BYTE)0xEA)    // AMD Athlon™ Dual-Core Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_SI_PROCESSOR_FAMILY                         ((BYTE)0xEB)    // AMD Sempron™ SI Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_II_PROCESSOR_FAMILY                          ((BYTE)0xEC)    // AMD Phenom™ II Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_PROCESSOR_FAMILY                          ((BYTE)0xED)    // AMD Athlon™ II Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_SIX_CORE_AMD_OPTERON_PROCESSOR_FAMILY                   ((BYTE)0xEE)    // Six-Core AMD Opteron™ Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_M_PROCESSOR_FAMILY                          ((BYTE)0xEF)    // AMD Sempron™ M Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_I860                                                    ((BYTE)0xFA)    // i860
-#define SMBIOS_PROCESSOR_FAMILY_I960                                                    ((BYTE)0xFB)    // i960
-#define SMBIOS_PROCESSOR_FAMILY_EXTENSION_INDICATOR                                     ((BYTE)0xFE)    // (See Processor Family 2)
+#define SMBIOS_PROCESSOR_FAMILY_OTHER                                                   ((BYTE)0x01) // Other
+#define SMBIOS_PROCESSOR_FAMILY_UNKNOWN                                                 ((BYTE)0x02) // Unknown
+#define SMBIOS_PROCESSOR_FAMILY_8086                                                    ((BYTE)0x03) // 8086
+#define SMBIOS_PROCESSOR_FAMILY_80286                                                   ((BYTE)0x04) // 80286
+#define SMBIOS_PROCESSOR_FAMILY_INTEL386_PROCESSOR                                      ((BYTE)0x05) // Intel386™ processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL486_PROCESSOR                                      ((BYTE)0x06) // Intel486™ processor
+#define SMBIOS_PROCESSOR_FAMILY_8087                                                    ((BYTE)0x07) // 8087
+#define SMBIOS_PROCESSOR_FAMILY_80287                                                   ((BYTE)0x08) // 80287
+#define SMBIOS_PROCESSOR_FAMILY_80387                                                   ((BYTE)0x09) // 80387
+#define SMBIOS_PROCESSOR_FAMILY_80487                                                   ((BYTE)0x0A) // 80487
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR                                 ((BYTE)0x0B) // Intel® Pentium® processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_PRO_PROCESSOR                                   ((BYTE)0x0C) // Pentium® Pro processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_PROCESSOR                                    ((BYTE)0x0D) // Pentium® II processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_PROCESSOR_WITH_MMX_TECHNOLOGY                   ((BYTE)0x0E) // Pentium® processor with MMX™ technology
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_PROCESSOR                                 ((BYTE)0x0F) // Intel® Celeron® processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_II_XEON_PROCESSOR                               ((BYTE)0x10) // Pentium® II Xeon® processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR                                   ((BYTE)0x11) // Pentium® III processor
+#define SMBIOS_PROCESSOR_FAMILY_M1_FAMILY                                               ((BYTE)0x12) // M1 Family
+#define SMBIOS_PROCESSOR_FAMILY_M2_FAMILY                                               ((BYTE)0x13) // M2 Family
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_M_PROCESSOR                               ((BYTE)0x14) // Intel® Celeron® M processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_4_HT_PROCESSOR                            ((BYTE)0x15) // Intel® Pentium® 4 HT processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PROCESSOR                                         ((BYTE)0x16) // Intel® Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_DURON_PROCESSOR_FAMILY_1                            ((BYTE)0x18) // AMD Duron™ Processor Family [1]
+#define SMBIOS_PROCESSOR_FAMILY_K5_FAMILY_1                                             ((BYTE)0x19) // K5 Family [1]
+#define SMBIOS_PROCESSOR_FAMILY_K6_FAMILY_1                                             ((BYTE)0x1A) // K6 Family [1]
+#define SMBIOS_PROCESSOR_FAMILY_K6_2_1                                                  ((BYTE)0x1B) // K6-2 [1]
+#define SMBIOS_PROCESSOR_FAMILY_K6_3_1                                                  ((BYTE)0x1C) // K6-3 [1]
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_PROCESSOR_FAMILY_1                           ((BYTE)0x1D) // AMD Athlon™ Processor Family [1]
+#define SMBIOS_PROCESSOR_FAMILY_AMD29000_FAMILY                                         ((BYTE)0x1E) // AMD29000 Family
+#define SMBIOS_PROCESSOR_FAMILY_K6_2_PLUS                                               ((BYTE)0x1F) // K6-2+
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_FAMILY                                         ((BYTE)0x20) // Power PC Family
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_601                                            ((BYTE)0x21) // Power PC 601
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_603                                            ((BYTE)0x22) // Power PC 603
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_603_PLUS                                       ((BYTE)0x23) // Power PC 603+
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_604                                            ((BYTE)0x24) // Power PC 604
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_620                                            ((BYTE)0x25) // Power PC 620
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_X704                                           ((BYTE)0x26) // Power PC x704
+#define SMBIOS_PROCESSOR_FAMILY_POWER_PC_750                                            ((BYTE)0x27) // Power PC 750
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_PROCESSOR                                ((BYTE)0x28) // Intel® Core™ Duo processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_DUO_MOBILE_PROCESSOR                         ((BYTE)0x29) // Intel® Core™ Duo mobile processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_MOBILE_PROCESSOR                        ((BYTE)0x2A) // Intel® Core™ Solo mobile processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_ATOM_PROCESSOR                                    ((BYTE)0x2B) // Intel® Atom™ processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M_PROCESSOR                                  ((BYTE)0x2C) // Intel® Core™ M processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M3_PROCESSOR                                 ((BYTE)0x2D) // Intel® Core™ m3 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M5_PROCESSOR                                 ((BYTE)0x2E) // Intel® Core™ m5 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_M7_PROCESSOR                                 ((BYTE)0x2F) // Intel® Core™ m7 processor
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_FAMILY_2                                          ((BYTE)0x30) // Alpha Family [2]
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21064                                             ((BYTE)0x31) // Alpha 21064
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21066                                             ((BYTE)0x32) // Alpha 21066
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164                                             ((BYTE)0x33) // Alpha 21164
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164PC                                           ((BYTE)0x34) // Alpha 21164PC
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21164A                                            ((BYTE)0x35) // Alpha 21164a
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21264                                             ((BYTE)0x36) // Alpha 21264
+#define SMBIOS_PROCESSOR_FAMILY_ALPHA_21364                                             ((BYTE)0x37) // Alpha 21364
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_ULTRA_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY ((BYTE)0x38) // AMD Turion™ II Ultra Dual-Core Mobile M Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_II_DUAL_CORE_MOBILE_M_PROCESSOR_FAMILY       ((BYTE)0x39) // AMD Turion™ II Dual-Core Mobile M Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_DUAL_CORE_M_PROCESSOR_FAMILY              ((BYTE)0x3A) // AMD Athlon™ II Dual-Core M Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6100_SERIES_PROCESSOR                       ((BYTE)0x3B) // AMD Opteron™ 6100 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4100_SERIES_PROCESSOR                       ((BYTE)0x3C) // AMD Opteron™ 4100 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6200_SERIES_PROCESSOR                       ((BYTE)0x3D) // AMD Opteron™ 6200 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4200_SERIES_PROCESSOR                       ((BYTE)0x3E) // AMD Opteron™ 4200 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_FX_SERIES_PROCESSOR                                 ((BYTE)0x3F) // AMD FX™ Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_FAMILY                                             ((BYTE)0x40) // MIPS Family
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4000                                              ((BYTE)0x41) // MIPS R4000
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4200                                              ((BYTE)0x42) // MIPS R4200
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4400                                              ((BYTE)0x43) // MIPS R4400
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_R4600                                              ((BYTE)0x44) // MIPS R4600
+#define SMBIOS_PROCESSOR_FAMILY_MIPS_R10000                                             ((BYTE)0x45) // MIPS R10000
+#define SMBIOS_PROCESSOR_FAMILY_AMD_C_SERIES_PROCESSOR                                  ((BYTE)0x46) // AMD C-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_E_SERIES_PROCESSOR                                  ((BYTE)0x47) // AMD E-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_A_SERIES_PROCESSOR                                  ((BYTE)0x48) // AMD A-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_G_SERIES_PROCESSOR                                  ((BYTE)0x49) // AMD G-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_Z_SERIES_PROCESSOR                                  ((BYTE)0x4A) // AMD Z-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_R_SERIES_PROCESSOR                                  ((BYTE)0x4B) // AMD R-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_4300_SERIES_PROCESSOR                       ((BYTE)0x4C) // AMD Opteron™ 4300 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_6300_SERIES_PROCESSOR                       ((BYTE)0x4D) // AMD Opteron™ 6300 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3300_SERIES_PROCESSOR                       ((BYTE)0x4E) // AMD Opteron™ 3300 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_FIREPRO_SERIES_PROCESSOR                            ((BYTE)0x4F) // AMD FirePro™ Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_SPARC_FAMILY                                            ((BYTE)0x50) // SPARC Family
+#define SMBIOS_PROCESSOR_FAMILY_SUPERSPARC                                              ((BYTE)0x51) // SuperSPARC
+#define SMBIOS_PROCESSOR_FAMILY_MICROSPARC_II                                           ((BYTE)0x52) // microSPARC II
+#define SMBIOS_PROCESSOR_FAMILY_MICROSPARC_IIEP                                         ((BYTE)0x53) // microSPARC IIep
+#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC                                              ((BYTE)0x54) // UltraSPARC
+#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_II                                           ((BYTE)0x55) // UltraSPARC II
+#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_Iii                                          ((BYTE)0x56) // UltraSPARC Iii
+#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_III                                          ((BYTE)0x57) // UltraSPARC III
+#define SMBIOS_PROCESSOR_FAMILY_ULTRASPARC_IIIi                                         ((BYTE)0x58) // UltraSPARC IIIi
+#define SMBIOS_PROCESSOR_FAMILY_68040_FAMILY                                            ((BYTE)0x60) // 68040 Family
+#define SMBIOS_PROCESSOR_FAMILY_68XXX                                                   ((BYTE)0x61) // 68xxx
+#define SMBIOS_PROCESSOR_FAMILY_68000                                                   ((BYTE)0x62) // 68000
+#define SMBIOS_PROCESSOR_FAMILY_68010                                                   ((BYTE)0x63) // 68010
+#define SMBIOS_PROCESSOR_FAMILY_68020                                                   ((BYTE)0x64) // 68020
+#define SMBIOS_PROCESSOR_FAMILY_68030                                                   ((BYTE)0x65) // 68030
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X4_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x66) // AMD Athlon(TM) X4 Quad-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X1000_SERIES_PROCESSOR                      ((BYTE)0x67) // AMD Opteron(TM) X1000 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X2000_SERIES_APU                            ((BYTE)0x68) // AMD Opteron(TM) X2000 Series APU
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_A_SERIES_PROCESSOR                          ((BYTE)0x69) // AMD Opteron(TM) A-Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_X3000_SERIES_APU                            ((BYTE)0x6A) // AMD Opteron(TM) X3000 Series APU
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ZEN_PROCESSOR_FAMILY                                ((BYTE)0x6B) // AMD Zen Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_HOBBIT_FAMILY                                           ((BYTE)0x70) // Hobbit Family
+#define SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM5000_FAMILY                                    ((BYTE)0x78) // Crusoe™ TM5000 Family
+#define SMBIOS_PROCESSOR_FAMILY_CRUSOE_TM3000_FAMILY                                    ((BYTE)0x79) // Crusoe™ TM3000 Family
+#define SMBIOS_PROCESSOR_FAMILY_EFFICEON_TM8000_FAMILY                                  ((BYTE)0x7A) // Efficeon™ TM8000 Family
+#define SMBIOS_PROCESSOR_FAMILY_WEITEK                                                  ((BYTE)0x80) // Weitek
+#define SMBIOS_PROCESSOR_FAMILY_ITANIUM_PROCESSOR                                       ((BYTE)0x82) // Itanium™ processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_PROCESSOR_FAMILY                          ((BYTE)0x83) // AMD Athlon™ 64 Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_PROCESSOR_FAMILY                            ((BYTE)0x84) // AMD Opteron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_PROCESSOR_FAMILY                            ((BYTE)0x85) // AMD Sempron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_MOBILE_TECHNOLOGY                         ((BYTE)0x86) // AMD Turion™ 64 Mobile Technology
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_AMD_OPTERON_PROCESSOR_FAMILY                  ((BYTE)0x87) // Dual-Core AMD Opteron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_64_X2_DUAL_CORE_PROCESSOR_FAMILY             ((BYTE)0x88) // AMD Athlon™ 64 X2 Dual-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_64_X2_MOBILE_TECHNOLOGY                      ((BYTE)0x89) // AMD Turion™ 64 X2 Mobile Technology
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_AMD_OPTERON_PROCESSOR_FAMILY                  ((BYTE)0x8A) // Quad-Core AMD Opteron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_THIRD_GENERATION_AMD_OPTERON_PROCESSOR_FAMILY           ((BYTE)0x8B) // Third-Generation AMD Opteron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_FX_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x8C) // AMD Phenom™ FX Quad-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X4_QUAD_CORE_PROCESSOR_FAMILY                ((BYTE)0x8D) // AMD Phenom™ X4 Quad-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_X2_DUAL_CORE_PROCESSOR_FAMILY                ((BYTE)0x8E) // AMD Phenom™ X2 Dual-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_X2_DUAL_CORE_PROCESSOR_FAMILY                ((BYTE)0x8F) // AMD Athlon™ X2 Dual-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_FAMILY                                          ((BYTE)0x90) // PA-RISC Family
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_8500                                            ((BYTE)0x91) // PA-RISC 8500
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_8000                                            ((BYTE)0x92) // PA-RISC 8000
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7300LC                                          ((BYTE)0x93) // PA-RISC 7300LC
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7200                                            ((BYTE)0x94) // PA-RISC 7200
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100LC                                          ((BYTE)0x95) // PA-RISC 7100LC
+#define SMBIOS_PROCESSOR_FAMILY_PA_RISC_7100                                            ((BYTE)0x96) // PA-RISC 7100
+#define SMBIOS_PROCESSOR_FAMILY_V30_FAMILY                                              ((BYTE)0xA0) // V30 Family
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3200_SERIES              ((BYTE)0xA1) // Quad-Core Intel® Xeon® processor 3200 Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3000_SERIES              ((BYTE)0xA2) // Dual-Core Intel® Xeon® processor 3000 Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5300_SERIES              ((BYTE)0xA3) // Quad-Core Intel® Xeon® processor 5300 Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5100_SERIES              ((BYTE)0xA4) // Dual-Core Intel® Xeon® processor 5100 Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5000_SERIES              ((BYTE)0xA5) // Dual-Core Intel® Xeon® processor 5000 Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_LV                       ((BYTE)0xA6) // Dual-Core Intel® Xeon® processor LV
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_ULV                      ((BYTE)0xA7) // Dual-Core Intel® Xeon® processor ULV
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7100_SERIES              ((BYTE)0xA8) // Dual-Core Intel® Xeon® processor 7100 Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5400_SERIES              ((BYTE)0xA9) // Quad-Core Intel® Xeon® processor 5400 Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR                          ((BYTE)0xAA) // Quad-Core Intel® Xeon® processor
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5200_SERIES              ((BYTE)0xAB) // Dual-Core Intel® Xeon® processor 5200 Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7200_SERIES              ((BYTE)0xAC) // Dual-Core Intel® Xeon® processor 7200 Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7300_SERIES              ((BYTE)0xAD) // Quad-Core Intel® Xeon® processor 7300 Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7400_SERIES              ((BYTE)0xAE) // Quad-Core Intel® Xeon® processor 7400 Series
+#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7400_SERIES             ((BYTE)0xAF) // Multi-Core Intel® Xeon® processor 7400 Series
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_XEON_PROCESSOR                              ((BYTE)0xB0) // Pentium® III Xeon® processor
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_III_PROCESSOR_WITH_INTEL_SPEEDSTEP_TECHNOLOGY   ((BYTE)0xB1) // Pentium® III Processor with Intel® SpeedStep™ Technology
+#define SMBIOS_PROCESSOR_FAMILY_PENTIUM_4_PROCESSOR                                     ((BYTE)0xB2) // Pentium® 4 Processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR                                    ((BYTE)0xB3) // Intel® Xeon® processor
+#define SMBIOS_PROCESSOR_FAMILY_AS400_FAMILY                                            ((BYTE)0xB4) // AS400 Family
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_PROCESSOR_MP                                 ((BYTE)0xB5) // Intel® Xeon® processor MP
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_XP_PROCESSOR_FAMILY                          ((BYTE)0xB6) // AMD Athlon™ XP Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_MP_PROCESSOR_FAMILY                          ((BYTE)0xB7) // AMD Athlon™ MP Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_ITANIUM_2_PROCESSOR                               ((BYTE)0xB8) // Intel® Itanium® 2 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_M_PROCESSOR                               ((BYTE)0xB9) // Intel® Pentium® M processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CELERON_D_PROCESSOR                               ((BYTE)0xBA) // Intel® Celeron® D processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_D_PROCESSOR                               ((BYTE)0xBB) // Intel® Pentium® D processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_PENTIUM_PROCESSOR_EXTREME_EDITION                 ((BYTE)0xBC) // Intel® Pentium® Processor Extreme Edition
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_SOLO_PROCESSOR                               ((BYTE)0xBD) // Intel® Core™ Solo Processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_PROCESSOR                              ((BYTE)0xBF) // Intel® Core™ 2 Duo Processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_PROCESSOR                             ((BYTE)0xC0) // Intel® Core™ 2 Solo processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_PROCESSOR                          ((BYTE)0xC1) // Intel® Core™ 2 Extreme processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_QUAD_PROCESSOR                             ((BYTE)0xC2) // Intel® Core™ 2 Quad processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_EXTREME_MOBILE_PROCESSOR                   ((BYTE)0xC3) // Intel® Core™ 2 Extreme mobile processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_DUO_MOBILE_PROCESSOR                       ((BYTE)0xC4) // Intel® Core™ 2 Duo mobile processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_2_SOLO_MOBILE_PROCESSOR                      ((BYTE)0xC5) // Intel® Core™ 2 Solo mobile processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I7_PROCESSOR                                 ((BYTE)0xC6) // Intel® Core™ i7 processor
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_CELERON_PROCESSOR                       ((BYTE)0xC7) // Dual-Core Intel® Celeron® processor
+#define SMBIOS_PROCESSOR_FAMILY_IBM390_FAMILY                                           ((BYTE)0xC8) // IBM390 Family
+#define SMBIOS_PROCESSOR_FAMILY_G4                                                      ((BYTE)0xC9) // G4
+#define SMBIOS_PROCESSOR_FAMILY_G5                                                      ((BYTE)0xCA) // G5
+#define SMBIOS_PROCESSOR_FAMILY_ESA_390_G6                                              ((BYTE)0xCB) // ESA/390 G6
+#define SMBIOS_PROCESSOR_FAMILY_Z_ARCHITECTURE_BASE                                     ((BYTE)0xCC) // z/Architecture base
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I5_PROCESSOR                                 ((BYTE)0xCD) // Intel® Core™ i5 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I3_PROCESSOR                                 ((BYTE)0xCE) // Intel® Core™ i3 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_CORE_I9_PROCESSOR                                 ((BYTE)0xCF) // Intel® Core™ i9 processor
+#define SMBIOS_PROCESSOR_FAMILY_INTEL_XEON_D_PROCESSOR_FAMILY                           ((BYTE)0xD0) // Intel® Xeon® D Processor family
+#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_M_PROCESSOR_FAMILY                               ((BYTE)0xD2) // VIA C7™-M Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_D_PROCESSOR_FAMILY                               ((BYTE)0xD3) // VIA C7™-D Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_VIA_C7_PROCESSOR_FAMILY                                 ((BYTE)0xD4) // VIA C7™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_VIA_EDEN_PROCESSOR_FAMILY                               ((BYTE)0xD5) // VIA Eden™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR                         ((BYTE)0xD6) // Multi-Core Intel® Xeon® processor
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES              ((BYTE)0xD7) // Dual-Core Intel® Xeon® processor 3xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_3XXX_SERIES              ((BYTE)0xD8) // Quad-Core Intel® Xeon® processor 3xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_VIA_NANO_PROCESSOR_FAMILY                               ((BYTE)0xD9) // VIA Nano™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES              ((BYTE)0xDA) // Dual-Core Intel® Xeon® processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_5XXX_SERIES              ((BYTE)0xDB) // Quad-Core Intel® Xeon® processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_DUAL_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES              ((BYTE)0xDD) // Dual-Core Intel® Xeon® processor 7xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_QUAD_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES              ((BYTE)0xDE) // Quad-Core Intel® Xeon® processor 7xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_7XXX_SERIES             ((BYTE)0xDF) // Multi-Core Intel® Xeon® processor 7xxx Series
+#define SMBIOS_PROCESSOR_FAMILY_MULTI_CORE_INTEL_XEON_PROCESSOR_3400_SERIES             ((BYTE)0xE0) // Multi-Core Intel® Xeon® processor 3400 Series
+#define SMBIOS_PROCESSOR_FAMILY_AMD_OPTERON_3000_SERIES_PROCESSOR                       ((BYTE)0xE4) // AMD Opteron™ 3000 Series Processor
+#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_II_PROCESSOR                                ((BYTE)0xE5) // AMD Sempron™ II Processor
+#define SMBIOS_PROCESSOR_FAMILY_EMBEDDED_AMD_OPTERON_QUAD_CORE_PROCESSOR_FAMILY         ((BYTE)0xE6) // Embedded AMD Opteron™ Quad-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_TRIPLE_CORE_PROCESSOR_FAMILY                 ((BYTE)0xE7) // AMD Phenom™ Triple-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_ULTRA_DUAL_CORE_MOBILE_PROCESSOR_FAMILY      ((BYTE)0xE8) // AMD Turion™ Ultra Dual-Core Mobile Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_TURION_DUAL_CORE_MOBILE_PROCESSOR_FAMILY            ((BYTE)0xE9) // AMD Turion™ Dual-Core Mobile Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_DUAL_CORE_PROCESSOR_FAMILY                   ((BYTE)0xEA) // AMD Athlon™ Dual-Core Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_SI_PROCESSOR_FAMILY                         ((BYTE)0xEB) // AMD Sempron™ SI Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_PHENOM_II_PROCESSOR_FAMILY                          ((BYTE)0xEC) // AMD Phenom™ II Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_ATHLON_II_PROCESSOR_FAMILY                          ((BYTE)0xED) // AMD Athlon™ II Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_SIX_CORE_AMD_OPTERON_PROCESSOR_FAMILY                   ((BYTE)0xEE) // Six-Core AMD Opteron™ Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_AMD_SEMPRON_M_PROCESSOR_FAMILY                          ((BYTE)0xEF) // AMD Sempron™ M Processor Family
+#define SMBIOS_PROCESSOR_FAMILY_I860                                                    ((BYTE)0xFA) // i860
+#define SMBIOS_PROCESSOR_FAMILY_I960                                                    ((BYTE)0xFB) // i960
+#define SMBIOS_PROCESSOR_FAMILY_EXTENSION_INDICATOR                                     ((BYTE)0xFE) // (See Processor Family 2)
 
-#define SMBIOS_PROCESSOR_FAMILY_2_ARMV7                                                 ((WORD)0x0100) // ARMv7
-#define SMBIOS_PROCESSOR_FAMILY_2_ARMV8                                                 ((WORD)0x0101) // ARMv8
-#define SMBIOS_PROCESSOR_FAMILY_2_ARMV9                                                 ((WORD)0x0102) // ARMv9
-#define SMBIOS_PROCESSOR_FAMILY_2_SH_3                                                  ((WORD)0x0104) // SH-3
-#define SMBIOS_PROCESSOR_FAMILY_2_SH_4                                                  ((WORD)0x0105) // SH-4
-#define SMBIOS_PROCESSOR_FAMILY_2_ARM                                                   ((WORD)0x0118) // ARM
-#define SMBIOS_PROCESSOR_FAMILY_2_STRONGARM                                             ((WORD)0x0119) // StrongARM
-#define SMBIOS_PROCESSOR_FAMILY_2_6X86                                                  ((WORD)0x012C) // 6x86
-#define SMBIOS_PROCESSOR_FAMILY_2_MEDIAGX                                               ((WORD)0x012D) // MediaGX
-#define SMBIOS_PROCESSOR_FAMILY_2_MII                                                   ((WORD)0x012E) // MII
-#define SMBIOS_PROCESSOR_FAMILY_2_WINCHIP                                               ((WORD)0x0140) // WinChip
-#define SMBIOS_PROCESSOR_FAMILY_2_DSP                                                   ((WORD)0x015E) // DSP
-#define SMBIOS_PROCESSOR_FAMILY_2_VIDEO_PROCESSOR                                       ((WORD)0x01F4) // Video Processor
-#define SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV32                                           ((WORD)0x0200) // RISC-V RV32
-#define SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV64                                           ((WORD)0x0201) // RISC-V RV64
-#define SMBIOS_PROCESSOR_FAMILY_2_RISC_V_RV128                                          ((WORD)0x0202) // RISC-V RV128
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGARCH                                             ((WORD)0x0258) // LoongArch
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_1_PROCESSOR_FAMILY                           ((WORD)0x0259) // Loongson™ 1 Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_2_PROCESSOR_FAMILY                           ((WORD)0x025A) // Loongson™ 2 Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3_PROCESSOR_FAMILY                           ((WORD)0x025B) // Loongson™ 3 Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_2K_PROCESSOR_FAMILY                          ((WORD)0x025C) // Loongson™ 2K Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3A_PROCESSOR_FAMILY                          ((WORD)0x025D) // Loongson™ 3A Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3B_PROCESSOR_FAMILY                          ((WORD)0x025E) // Loongson™ 3B Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3C_PROCESSOR_FAMILY                          ((WORD)0x025F) // Loongson™ 3C Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3D_PROCESSOR_FAMILY                          ((WORD)0x0260) // Loongson™ 3D Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_LOONGSON_3E_PROCESSOR_FAMILY                          ((WORD)0x0261) // Loongson™ 3E Processor Family
-#define SMBIOS_PROCESSOR_FAMILY_2_DUAL_CORE_LOONGSON_2K_PROCESSOR_2XXX_SERIES           ((WORD)0x0262) // Dual-Core Loongson™ 2K Processor 2xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_QUAD_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES           ((WORD)0x026C) // Quad-Core Loongson™ 3A Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES          ((WORD)0x026D) // Multi-Core Loongson™ 3A Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_QUAD_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES           ((WORD)0x026E) // Quad-Core Loongson™ 3B Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES          ((WORD)0x026F) // Multi-Core Loongson™ 3B Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3C_PROCESSOR_5XXX_SERIES          ((WORD)0x0270) // Multi-Core Loongson™ 3C Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_MULTI_CORE_LOONGSON_3D_PROCESSOR_5XXX_SERIES          ((WORD)0x0271) // Multi-Core Loongson™ 3D Processor 5xxx Series
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_3                                          ((WORD)0x0300) // Intel® Core™ 3
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_5                                          ((WORD)0x0301) // Intel® Core™ 5
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_7                                          ((WORD)0x0302) // Intel® Core™ 7
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_9                                          ((WORD)0x0303) // Intel® Core™ 9
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_3                                    ((WORD)0x0304) // Intel® Core™ Ultra 3
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_5                                    ((WORD)0x0305) // Intel® Core™ Ultra 5
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_7                                    ((WORD)0x0306) // Intel® Core™ Ultra 7
-#define SMBIOS_PROCESSOR_FAMILY_2_INTEL_CORE_ULTRA_9                                    ((WORD)0x0307) // Intel® Core™ Ultra 9
+#define SMBIOS_PROCESSOR_FAMILY2_ARMV7                                                  ((WORD)0x0100) // ARMv7
+#define SMBIOS_PROCESSOR_FAMILY2_ARMV8                                                  ((WORD)0x0101) // ARMv8
+#define SMBIOS_PROCESSOR_FAMILY2_ARMV9                                                  ((WORD)0x0102) // ARMv9
+#define SMBIOS_PROCESSOR_FAMILY2_SH_3                                                   ((WORD)0x0104) // SH-3
+#define SMBIOS_PROCESSOR_FAMILY2_SH_4                                                   ((WORD)0x0105) // SH-4
+#define SMBIOS_PROCESSOR_FAMILY2_ARM                                                    ((WORD)0x0118) // ARM
+#define SMBIOS_PROCESSOR_FAMILY2_STRONGARM                                              ((WORD)0x0119) // StrongARM
+#define SMBIOS_PROCESSOR_FAMILY2_6X86                                                   ((WORD)0x012C) // 6x86
+#define SMBIOS_PROCESSOR_FAMILY2_MEDIAGX                                                ((WORD)0x012D) // MediaGX
+#define SMBIOS_PROCESSOR_FAMILY2_MII                                                    ((WORD)0x012E) // MII
+#define SMBIOS_PROCESSOR_FAMILY2_WINCHIP                                                ((WORD)0x0140) // WinChip
+#define SMBIOS_PROCESSOR_FAMILY2_DSP                                                    ((WORD)0x015E) // DSP
+#define SMBIOS_PROCESSOR_FAMILY2_VIDEO_PROCESSOR                                        ((WORD)0x01F4) // Video Processor
+#define SMBIOS_PROCESSOR_FAMILY2_RISC_V_RV32                                            ((WORD)0x0200) // RISC-V RV32
+#define SMBIOS_PROCESSOR_FAMILY2_RISC_V_RV64                                            ((WORD)0x0201) // RISC-V RV64
+#define SMBIOS_PROCESSOR_FAMILY2_RISC_V_RV128                                           ((WORD)0x0202) // RISC-V RV128
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGARCH                                              ((WORD)0x0258) // LoongArch
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_1_PROCESSOR_FAMILY                            ((WORD)0x0259) // Loongson™ 1 Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_2_PROCESSOR_FAMILY                            ((WORD)0x025A) // Loongson™ 2 Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3_PROCESSOR_FAMILY                            ((WORD)0x025B) // Loongson™ 3 Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_2K_PROCESSOR_FAMILY                           ((WORD)0x025C) // Loongson™ 2K Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3A_PROCESSOR_FAMILY                           ((WORD)0x025D) // Loongson™ 3A Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3B_PROCESSOR_FAMILY                           ((WORD)0x025E) // Loongson™ 3B Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3C_PROCESSOR_FAMILY                           ((WORD)0x025F) // Loongson™ 3C Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3D_PROCESSOR_FAMILY                           ((WORD)0x0260) // Loongson™ 3D Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_LOONGSON_3E_PROCESSOR_FAMILY                           ((WORD)0x0261) // Loongson™ 3E Processor Family
+#define SMBIOS_PROCESSOR_FAMILY2_DUAL_CORE_LOONGSON_2K_PROCESSOR_2XXX_SERIES            ((WORD)0x0262) // Dual-Core Loongson™ 2K Processor 2xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_QUAD_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES            ((WORD)0x026C) // Quad-Core Loongson™ 3A Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_MULTI_CORE_LOONGSON_3A_PROCESSOR_5XXX_SERIES           ((WORD)0x026D) // Multi-Core Loongson™ 3A Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_QUAD_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES            ((WORD)0x026E) // Quad-Core Loongson™ 3B Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_MULTI_CORE_LOONGSON_3B_PROCESSOR_5XXX_SERIES           ((WORD)0x026F) // Multi-Core Loongson™ 3B Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_MULTI_CORE_LOONGSON_3C_PROCESSOR_5XXX_SERIES           ((WORD)0x0270) // Multi-Core Loongson™ 3C Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_MULTI_CORE_LOONGSON_3D_PROCESSOR_5XXX_SERIES           ((WORD)0x0271) // Multi-Core Loongson™ 3D Processor 5xxx Series
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_3                                           ((WORD)0x0300) // Intel® Core™ 3
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_5                                           ((WORD)0x0301) // Intel® Core™ 5
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_7                                           ((WORD)0x0302) // Intel® Core™ 7
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_9                                           ((WORD)0x0303) // Intel® Core™ 9
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_ULTRA_3                                     ((WORD)0x0304) // Intel® Core™ Ultra 3
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_ULTRA_5                                     ((WORD)0x0305) // Intel® Core™ Ultra 5
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_ULTRA_7                                     ((WORD)0x0306) // Intel® Core™ Ultra 7
+#define SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_ULTRA_9                                     ((WORD)0x0307) // Intel® Core™ Ultra 9
 
 #define SMBIOS_PROCESSOR_CPU_STATUS_UNKNOWN                 ((BYTE)0x0) // Unknown
 #define SMBIOS_PROCESSOR_CPU_STATUS_ENABLED                 ((BYTE)0x1) // CPU Enabled
@@ -712,12 +712,12 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
 typedef struct _SMBIOS_PROCESSOR_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE SocketDesignation;
-    BYTE Type; // SMBIOS_PROCESSOR_TYPE_*
-    BYTE Family; // SMBIOS_PROCESSOR_FAMILY_*
-    BYTE Manufacturer;
-    QWORD ID;
-    BYTE Version;
+    UCHAR SocketDesignation;    // Socket Designation
+    BYTE Type;                  // Processor Type, SMBIOS_PROCESSOR_TYPE_*
+    BYTE Family;                // Processor Family, SMBIOS_PROCESSOR_FAMILY_*
+    UCHAR Manufacturer;         // Processor Manufacturer
+    QWORD ID;                   // Processor ID
+    UCHAR Version;              // Processor Version
     union
     {
         BYTE Value;
@@ -726,43 +726,43 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
             BYTE _5V : 1;           // 00 5V
             BYTE _3Dot3V : 1;       // 01 3.3V
             BYTE _2Dot9V : 1;       // 02 2.9V
-            BYTE Reserved0 : 1;     // 03 Reserved, must be zero
-            BYTE Reserved1 : 3;     // 04:06 Reserved, must be zero
-            BYTE LegacyMode : 1;    // Should be 0
+            BYTE Reserved0 : 1;     // 03 Reserved
+            BYTE Reserved1 : 3;     // 04:06 Reserved
+            BYTE LegacyMode : 1;    // 07 Legacy Mode
         };
         struct
         {
-            BYTE Times10 : 7;       // Current voltage times 10
-            BYTE NotLegacyMode : 1; // Should be 1
+            BYTE Times10 : 7;       // 00:06 Current voltage times 10
+            BYTE NotLegacyMode : 1; // 07 Not Legacy Mode
         };
-    } Voltage; // Deprecated from version 3.8.0
-    WORD ExternalClock;
-    WORD MaxSpeed;
-    WORD CurrentSpeed;
+    } Voltage; // Voltage // Deprecated from version 3.8.0
+    WORD ExternalClock; // External Clock
+    WORD MaxSpeed;      // Max Speed
+    WORD CurrentSpeed;  // Current Speed
     union
     {
         BYTE Value;
         struct
         {
-            BYTE CPUStatus : 3;             // 0:2 SMBIOS_PROCESSOR_CPU_STATUS_*
-            BYTE Reserved0 : 3;             // 3:5 Reserved, must be zero
-            BYTE CPUSocketPopulated : 1;    // 6 CPU Socket Populated
-            BYTE Reserved1 : 1;             // 7 Reserved, must be zero
+            BYTE CPUStatus : 3;             // 00:02 CPU Status, SMBIOS_PROCESSOR_CPU_STATUS_*
+            BYTE Reserved0 : 3;             // 03:05 Reserved
+            BYTE CPUSocketPopulated : 1;    // 06 CPU Socket Populated
+            BYTE Reserved1 : 1;             // 07 Reserved
         };
-    } Status;
-    BYTE Upgrade; // SMBIOS_PROCESSOR_UPGRADE_*
+    } Status;   // Status
+    BYTE Upgrade;       // Processor Upgrade, SMBIOS_PROCESSOR_UPGRADE_*
 #if SMBIOS_VERSION >= 0x02010000
-    WORD L1CacheHandle;
-    WORD L2CacheHandle;
-    WORD L3CacheHandle;
+    WORD L1CacheHandle; // L1 Cache Handle
+    WORD L2CacheHandle; // L2 Cache Handle
+    WORD L3CacheHandle; // L3 Cache Handle
 #if SMBIOS_VERSION >= 0x02030000
-    BYTE SerialNumber;
-    BYTE AssetTag;
-    BYTE PartNumber;
+    UCHAR SerialNumber; // Serial Number
+    UCHAR AssetTag;     // Asset Tag
+    UCHAR PartNumber;   // Part Number
 #if SMBIOS_VERSION >= 0x02050000
-    BYTE CoreCount;
-    BYTE CoreEnabled;
-    BYTE ThreadCount;
+    BYTE CoreCount;     // Core Count
+    BYTE CoreEnabled;   // Core Enabled
+    BYTE ThreadCount;   // Thread Count
     union
     {
         WORD Value;
@@ -780,17 +780,17 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
             WORD Arm64SoCId : 1;                // 09 Arm64 SoC ID
             WORD Reserved1 : 6;                 // 10:15 Reserved
         };
-    } Characteristics;
+    } Characteristics;  // Processor Characteristics
 #if SMBIOS_VERSION >= 0x02060000
-    WORD Family2; // SMBIOS_PROCESSOR_FAMILY_2_*
+    WORD Family2;       // Processor Family 2, SMBIOS_PROCESSOR_FAMILY2_*
 #if SMBIOS_VERSION >= 0x03000000
-    WORD CoreCount2;
-    WORD CoreEnabled2;
-    WORD ThreadCount2;
+    WORD CoreCount2;    // Core Count 2
+    WORD CoreEnabled2;  // Core Enabled 2
+    WORD ThreadCount2;  // Thread Count 2
 #if SMBIOS_VERSION >= 0x03060000
-    WORD ThreadEnabled;
+    WORD ThreadEnabled; // Thread Enabled
 #if SMBIOS_VERSION >= 0x03080000
-    BYTE SocketType;
+    BYTE SocketType;    // Socket Type
 #endif // SMBIOS_VERSION >= 0x03080000
 #endif // SMBIOS_VERSION >= 0x03060000
 #endif // SMBIOS_VERSION >= 0x03000000

@@ -34,7 +34,7 @@ static String AddEnumType(String EnumName)
 
     for (UInt32 i = 1; i < Data.Length; i++)
     {
-        if (Data[i].Trim().StartsWith("#define " + EnumName))
+        if (Data[i].Trim().StartsWith("#define " + EnumName + '_'))
         {
             EnumTypeName = String.Empty;
             Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_ENUM "u8.ToArray());
