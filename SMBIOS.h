@@ -172,7 +172,7 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
         struct
         {
             WORD Size : 14; // 00:13 Size
-            WORD Unit : 2;  // 14:15 Unit, SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_*
+            WORD Unit : 2;  // 14:15 Unit // SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_*
         };
     } ExtendedROMSize; // Extended Firmware ROM Size
 #endif // SMBIOS_VERSION >= 0x03010000
@@ -206,7 +206,7 @@ typedef struct _SMBIOS_SYSTEM_INFORMATION
     UCHAR SerialNumber; // Serial Number
 #if SMBIOS_VERSION >= 0x02010000
     SMBIOS_UUID UUID;   // UUID
-    BYTE WakeUpType;    // Wake-up Type, SMBIOS_SYSTEM_WAKEUPTYPE_*
+    BYTE WakeUpType;    // Wake-up Type // SMBIOS_SYSTEM_WAKEUPTYPE_*
 #if SMBIOS_VERSION >= 0x02040000
     UCHAR SKUNumber;    // SKU Number
     UCHAR Family;       // Family
@@ -257,7 +257,7 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
     } FeatureFlags;         // Feature Flags
     UCHAR LocationInChassis; // Location in Chassis
     WORD ChassisHandle;     // Chassis Handle
-    BYTE BoardType;         // Board Type, SMBIOS_BASEBOARD_TYPE_*
+    BYTE BoardType;         // Board Type // SMBIOS_BASEBOARD_TYPE_*
     BYTE NumberOfContainedObjectHandles;    // Number of Contained Object Handles
     _Field_size_(NumberOfContainedObjectHandles) WORD ContainedObjectHandles[];
 } SMBIOS_BASEBOARD_INFORMATION, *PSMBIOS_BASEBOARD_INFORMATION, SMBIOS_TYPE_2, *PSMBIOS_TYPE_2;
@@ -327,7 +327,7 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
         BYTE Value;
         struct
         {
-            BYTE Type : 7;          // 00:06 Type, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
+            BYTE Type : 7;          // 00:06 Type // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_*
             BYTE ChassisLock : 1;   // 07 Chassis lock is present
         };
     } Type; // Type
@@ -335,10 +335,10 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
     UCHAR SerialNumber;     // Serial Number
     UCHAR AssetTagNumber;   // Asset Tag Number
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE BootUpState;       // Boot-up State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE PowerSupplyState;  // Power Supply State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE ThermalState;      // Thermal State, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
-    BYTE SecurityStatus;    // Security Status, SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_*
+    BYTE BootUpState;       // Boot-up State // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE PowerSupplyState;  // Power Supply State // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE ThermalState;      // Thermal State // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_*
+    BYTE SecurityStatus;    // Security Status // SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_*
 #if SMBIOS_VERSION >= 0x02030000
     DWORD OEMDefined;       // OEM-defined
     BYTE Height;            // Height
@@ -713,8 +713,8 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
 {
     SMBIOS_HEADER Header;
     UCHAR SocketDesignation;    // Socket Designation
-    BYTE Type;                  // Processor Type, SMBIOS_PROCESSOR_TYPE_*
-    BYTE Family;                // Processor Family, SMBIOS_PROCESSOR_FAMILY_*
+    BYTE Type;                  // Processor Type // SMBIOS_PROCESSOR_TYPE_*
+    BYTE Family;                // Processor Family // SMBIOS_PROCESSOR_FAMILY_*
     UCHAR Manufacturer;         // Processor Manufacturer
     QWORD ID;                   // Processor ID
     UCHAR Version;              // Processor Version
@@ -744,13 +744,13 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
         BYTE Value;
         struct
         {
-            BYTE CPUStatus : 3;             // 00:02 CPU Status, SMBIOS_PROCESSOR_CPU_STATUS_*
+            BYTE CPUStatus : 3;             // 00:02 CPU Status // SMBIOS_PROCESSOR_CPU_STATUS_*
             BYTE Reserved0 : 3;             // 03:05 Reserved
             BYTE CPUSocketPopulated : 1;    // 06 CPU Socket Populated
             BYTE Reserved1 : 1;             // 07 Reserved
         };
     } Status;   // Status
-    BYTE Upgrade;       // Processor Upgrade, SMBIOS_PROCESSOR_UPGRADE_*
+    BYTE Upgrade;       // Processor Upgrade // SMBIOS_PROCESSOR_UPGRADE_*
 #if SMBIOS_VERSION >= 0x02010000
     WORD L1CacheHandle; // L1 Cache Handle
     WORD L2CacheHandle; // L2 Cache Handle
@@ -782,7 +782,7 @@ typedef struct _SMBIOS_PROCESSOR_INFORMATION
         };
     } Characteristics;  // Processor Characteristics
 #if SMBIOS_VERSION >= 0x02060000
-    WORD Family2;       // Processor Family 2, SMBIOS_PROCESSOR_FAMILY2_*
+    WORD Family2;       // Processor Family 2 // SMBIOS_PROCESSOR_FAMILY2_*
 #if SMBIOS_VERSION >= 0x03000000
     WORD CoreCount2;    // Core Count 2
     WORD CoreEnabled2;  // Core Enabled 2
@@ -818,7 +818,7 @@ typedef union _SMBIOS_MEMORY_TYPE
         WORD DIMM : 1;           // 08 DIMM
         WORD BurstEDO : 1;       // 09 Burst EDO
         WORD SDRA : 1;           // 10 SDRAM
-        WORD Reserved : 5;       // 11:15 Reserved, must be zero
+        WORD Reserved : 5;       // 11:15 Reserved
     };
 } SMBIOS_MEMORY_TYPE, *PSMBIOS_MEMORY_TYPE;
 
@@ -872,23 +872,23 @@ typedef union _SMBIOS_MEMORY_TYPE
 typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE ErrorDetectingMethod;  // SMBIOS_MEMORY_CONTROLLER_ERROR_DETECTING_METHOD_*
+    BYTE ErrorDetectingMethod;  // Error Detecting Method // SMBIOS_MEMORY_CONTROLLER_ERROR_DETECTING_METHOD_*
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Other : 1;     // 0 Other
-            BYTE Unknown : 1;   // 1 Unknown
-            BYTE None : 1;      // 2 None
-            BYTE SingleBit : 1; // 3 Single-Bit Error Correcting
-            BYTE DoubleBit : 1; // 4 Double-Bit Error Correcting
-            BYTE Scrubbing : 1; // 5 Error Scrubbing
+            BYTE Other : 1;         // 00 Other
+            BYTE Unknown : 1;       // 01 Unknown
+            BYTE None : 1;          // 02 None
+            BYTE SingleBit : 1;     // 03 Single-Bit Error Correcting
+            BYTE DoubleBit : 1;     // 04 Double-Bit Error Correcting
+            BYTE Scrubbing : 1;     // 05 Error Scrubbing
         };
-    } ErrorCorrectingCapability;
-    BYTE SupportedInterleave;   // SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_*
-    BYTE CurrentInterleave;     // SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_*
-    BYTE MaximumMemoryModuleSize;
+    } ErrorCorrectingCapability;    // Error Correcting Capability
+    BYTE SupportedInterleave;       // Supported Interleave // SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_*
+    BYTE CurrentInterleave;         // Current Interleave // SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_*
+    BYTE MaximumMemoryModuleSize;   // Maximum Memory Module Size
     union
     {
         WORD Value;
@@ -899,26 +899,26 @@ typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
             WORD _70ns : 1;     // 02 70ns
             WORD _60ns : 1;     // 03 60ns
             WORD _50ns : 1;     // 04 50ns
-            WORD Reserved : 11; // 05:15 Reserved, must be zero
+            WORD Reserved : 11; // 05:15 Reserved
         };
-    } SupportedSpeeds;
-    SMBIOS_MEMORY_TYPE SupportedMemoryTypes;
+    } SupportedSpeeds;                          // Supported Speeds
+    SMBIOS_MEMORY_TYPE SupportedMemoryTypes;    // Supported Memory Types
     union
     {
         BYTE Value;
         struct
         {
-            BYTE _5V : 1;       // 0 5V
-            BYTE _3Dot3V : 1;   // 1 3.3V
-            BYTE _2Dot9V : 1;   // 2 2.9V
-            BYTE Reserved : 5;  // 3:7 Reserved, must be zero
+            BYTE _5V : 1;       // 00 5V
+            BYTE _3Dot3V : 1;   // 01 3.3V
+            BYTE _2Dot9V : 1;   // 02 2.9V
+            BYTE Reserved : 5;  // 03:07 Reserved
         };
-    } MemoryModuleVoltage;
-    BYTE NumberOfAssociatedMemorySlots;
-    _Field_size_(NumberOfAssociatedMemorySlots) WORD MemoryModuleConfigurationHandles[];
+    } MemoryModuleVoltage;              // Memory Module Voltage
+    BYTE NumberOfAssociatedMemorySlots; // Number of Associated Memory Slots
+    _Field_size_(NumberOfAssociatedMemorySlots) WORD MemoryModuleConfigurationHandles[];    // Memory Module Configuration Handles
 /*
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE EnabledErrorCorrectingCapabilities;
+    BYTE EnabledErrorCorrectingCapabilities;    // Enabled Error Correcting Capabilities
 #endif // SMBIOS_VERSION >= 0x02010000
 */
 } SMBIOS_MEMORY_CONTROLLER_INFORMATION, *PSMBIOS_MEMORY_CONTROLLER_INFORMATION, SMBIOS_TYPE_5, *PSMBIOS_TYPE_5;

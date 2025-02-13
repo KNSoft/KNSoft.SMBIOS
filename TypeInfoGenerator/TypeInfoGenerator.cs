@@ -103,7 +103,9 @@ for (UInt32 i = 1; i < Data.Length; i++)
     Boolean InCommentBlock = false;
     for (UInt32 k = i - 1; k > j; k--)
     {
-        String Field, Comment, Name, Count = String.Empty, EnumName = String.Empty, TypeInfo;
+        String Field, Comment = String.Empty, Name, Count = String.Empty, EnumName = String.Empty, TypeInfo;
+        String[] Comments;
+
         Field = Data[k].Trim();
 
         /* Skip comments */
@@ -143,7 +145,11 @@ for (UInt32 i = 1; i < Data.Length; i++)
         if (Field[0] == '}')
         {
             Parent = Field[1..Field.IndexOf(';')].Trim();
-            ParentComment = Field[(Field.IndexOf("// ") + 3)..Field.Length];
+            Comments = Field.Split(" // ");
+            if (Comments.Length > 1)
+            {
+                ParentComment = Comments[1];
+            }
             continue;
         }
 
@@ -174,15 +180,15 @@ for (UInt32 i = 1; i < Data.Length; i++)
             Count = String.Empty;
             Colon = Name.IndexOf(':');
         }
-        Comment = Match.Groups[3].Value.Trim();
-        if (Comment.StartsWith("// "))
+        Comments = Match.Groups[3].Value.Trim().Split("// ");
+        foreach (String Part in Comments)
         {
-            Comment = Comment[3..Comment.Length];
-            Match EnumMatch = RxEnumField().Match(Comment);
-            if (EnumMatch.Success && EnumMatch.Groups.Count == 3)
+            if (String.IsNullOrEmpty(EnumName) && Part.StartsWith("SMBIOS_") && Part.EndsWith("_*"))
             {
-                Comment = EnumMatch.Groups[1].Value;
-                EnumName = EnumMatch.Groups[2].Value;
+                EnumName = Part[0..(Part.Length - 2)];
+            } else if (String.IsNullOrEmpty(Comment))
+            {
+                Comment = Part.Trim();
             }
         }
         if (Colon == -1)
@@ -293,9 +299,6 @@ partial class Program
 
     [GeneratedRegex(@"(\w+) (.+);(.*)", RegexOptions.Compiled)]
     private static partial Regex RxField();
-
-    [GeneratedRegex(@"(.+), (SMBIOS_\w+)_\*", RegexOptions.Compiled)]
-    private static partial Regex RxEnumField();
 
     [GeneratedRegex(@"#define (SMBIOS_\w+) +\(\S+\) // (.+)", RegexOptions.Compiled)]
     private static partial Regex RxEnumDefine();
