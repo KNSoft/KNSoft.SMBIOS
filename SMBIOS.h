@@ -884,6 +884,7 @@ typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
             BYTE SingleBit : 1;     // 03 Single-Bit Error Correcting
             BYTE DoubleBit : 1;     // 04 Double-Bit Error Correcting
             BYTE Scrubbing : 1;     // 05 Error Scrubbing
+            BYTE Reserved : 2;      // 06:07 Reserved
         };
     } ErrorCorrectingCapability;    // Error Correcting Capability
     BYTE SupportedInterleave;       // Supported Interleave // SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_*

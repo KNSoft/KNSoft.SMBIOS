@@ -67,41 +67,68 @@ static String AddEnumType(String EnumName)
     return String.Empty;
 }
 
-for (UInt32 i = 1; i < Data.Length; i++)
+static String AddStructureType(String TypeNumber, String StructureName)
 {
-    UInt32 j;
-    Int32 Colon;
-    Match Match;
-    String TypeNumber;
+    UInt32 StartLine, EndLine;
+    List<String> Fields = [];
+    String Line;
 
-    /* Find type (line [j..i]) */
-    Match = RxType().Match(Data[i]);
-    if (!Match.Success || Match.Groups.Count != 5 ||
-        Match.Groups[1].Value != Match.Groups[2].Value ||
-        Match.Groups[3].Value != Match.Groups[4].Value)
+    if (Structures.TryGetValue(StructureName, out var StructureTypeName))
     {
-        continue;
+        return StructureTypeName;
     }
-    for (j = i - 1; j > 0; j--)
+
+    StructureTypeName = StructureName + "_FIELDS";
+    EndLine = (UInt32)Data.Length;
+    for (StartLine = 1; StartLine < Data.Length - 1; StartLine++)
     {
-        if (Data[j] == "typedef struct _SMBIOS_" + Match.Groups[1].Value)
+        Line = Data[StartLine].Trim();
+        if (Line.StartsWith("typedef ") && Line.EndsWith('_' + StructureName))
         {
-            break;
+            for (EndLine = StartLine + 1; EndLine < Data.Length; EndLine++)
+            {
+                if (Data[EndLine].Trim().StartsWith("} " + StructureName + ", *P" + StructureName + ";"))
+                {
+                    break;
+                }
+            }
+            if (EndLine < Data.Length)
+            {
+                break;
+            }
         }
     }
-    if (Data[j + 1] != "{" || Data[j + 2] != "    SMBIOS_HEADER Header;")
+    if (EndLine >= (UInt32)Data.Length)
     {
-        continue;
+        return String.Empty;
     }
-    j += 2;
-    TypeNumber = Match.Groups[3].Value;
 
-    /* Process each field */
+    Fields = ResolveStructure(TypeNumber, StartLine, EndLine);
+    Output.Write(Encoding.UTF8.GetBytes("#define " + StructureTypeName + "\\\r\n"));
+    for (Int32 i = Fields.Count - 1; i >= 0; i--)
+    {
+        Output.Write("    "u8.ToArray());
+        Output.Write(Encoding.UTF8.GetBytes(Fields[i]));
+        if (i > 0)
+        {
+            Output.Write(",\\\r\n"u8.ToArray());
+        }
+    }
+    Output.Write("\r\n\r\n"u8.ToArray());
+
+    return StructureTypeName;
+}
+
+static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32 EndLine)
+{
     List<String> Fields = [];
+    Int32 Colon;
+    Match Match;
     String Parent = String.Empty, ParentComment = String.Empty;
     UInt16 ParentBits = 0;
     Boolean InCommentBlock = false;
-    for (UInt32 k = i - 1; k > j; k--)
+
+    for (UInt32 k = EndLine - 1; k > StartLine; k--)
     {
         String Field, Comment = String.Empty, Name, Count = String.Empty, EnumName = String.Empty, TypeInfo;
         String[] Comments;
@@ -200,26 +227,37 @@ for (UInt32 i = 1; i < Data.Length; i++)
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_UINT(" +
                         TypeNumber + ", \"" + ParentComment + "\", " + Parent +
-                        ".Value),";
+                        ".Value)";
                 } else if (Match.Groups[1].Value == "BYTE" || Match.Groups[1].Value == "WORD" ||
                     Match.Groups[1].Value == "DWORD" || Match.Groups[1].Value == "QWORD")
                 {
+                    if (String.IsNullOrEmpty(Comment))
+                    {
+                        continue;
+                    }
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_UINT(" +
                         TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
-                        "),";
+                        ")";
                 } else if (Match.Groups[1].Value == "UCHAR")
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_STRING(" +
                         TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
-                        "),";
+                        ")";
                 } else if (Match.Groups[1].Value == "SMBIOS_UUID")
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD(" +
                         TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
-                        ", SmbiosDataTypeUuid),";
+                        ", SmbiosDataTypeUuid)";
+                } else if (Match.Groups[1].Value.StartsWith("SMBIOS_"))
+                {
+                    Fields.Add(AddStructureType(TypeNumber, Match.Groups[1].Value));
+                    TypeInfo =
+                        "SMBIOS_DEFINE_FIELD_UINT(" +
+                        TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
+                        ".Value)";
                 } else
                 {
                     Console.WriteLine("Cannot resolve line " + k.ToString() + ": " + Field);
@@ -230,7 +268,7 @@ for (UInt32 i = 1; i < Data.Length; i++)
                 TypeInfo =
                         "SMBIOS_DEFINE_FIELD_ENUM(" +
                         TypeNumber + ", \"" + Comment + "\", " +
-                        Match.Groups[2].Value + ", " + AddEnumType(EnumName) + "),";
+                        Match.Groups[2].Value + ", " + AddEnumType(EnumName) + ")";
             }
         } else
         {
@@ -253,7 +291,7 @@ for (UInt32 i = 1; i < Data.Length; i++)
                 TypeInfo =
                     "SMBIOS_DEFINE_FIELD_BIT(\"" +
                     Name + "\", " + ParentBits.ToString() +
-                    "),";
+                    ")";
             } else
             {
                 if (String.IsNullOrEmpty(EnumName))
@@ -261,20 +299,53 @@ for (UInt32 i = 1; i < Data.Length; i++)
                     TypeInfo =
                         "SMBIOS_DEFINE_BIT_FIELD(\"" +
                         Name + "\", " + ParentBits.ToString() + ", " + BitSize.ToString() +
-                        ", SmbiosDataTypeUInt),";
+                        ", SmbiosDataTypeUInt)";
                 } else
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_BIT_FIELD(\"" +
                         Name + "\", " + ParentBits.ToString() + ", " + BitSize.ToString() +
                         ", SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(" + AddEnumType(EnumName) +
-                        ")),";
+                        "))";
                 }
             }
         }
         Fields.Add(TypeInfo);
     }
 
+    return Fields;
+}
+
+for (UInt32 i = 1; i < Data.Length; i++)
+{
+    UInt32 j;
+    Match Match;
+    String TypeNumber;
+
+    /* Find type (line [j..i]) */
+    Match = RxType().Match(Data[i]);
+    if (!Match.Success || Match.Groups.Count != 5 ||
+        Match.Groups[1].Value != Match.Groups[2].Value ||
+        Match.Groups[3].Value != Match.Groups[4].Value)
+    {
+        continue;
+    }
+    for (j = i - 1; j > 0; j--)
+    {
+        if (Data[j] == "typedef struct _SMBIOS_" + Match.Groups[1].Value)
+        {
+            break;
+        }
+    }
+    if (Data[j + 1] != "{" || Data[j + 2] != "    SMBIOS_HEADER Header;")
+    {
+        continue;
+    }
+    j += 2;
+    TypeNumber = Match.Groups[3].Value;
+
+    /* Output fields */
+    List<String> Fields = ResolveStructure(TypeNumber, j, i);
     Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
     Output.Write(Encoding.UTF8.GetBytes(TypeNumber));
     Output.Write("FieldInfo[] = {\r\n"u8.ToArray());
@@ -282,9 +353,7 @@ for (UInt32 i = 1; i < Data.Length; i++)
     {
         for (Int32 k = Fields.Count - 1; k >= 0; k--)
         {
-            Output.Write("    "u8.ToArray());
-            Output.Write(Encoding.UTF8.GetBytes(Fields[k]));
-            Output.Write("\r\n"u8.ToArray());
+            Output.Write(Encoding.UTF8.GetBytes("    " + Fields[k] + ",\r\n"));
         }
     }
     Output.Write("};\r\n\r\n"u8.ToArray());
@@ -306,4 +375,5 @@ partial class Program
     private static readonly String[] Data = File.ReadAllLines("../../../../SMBIOS.h");
     private static readonly FileStream Output = File.Create("../../../../TypeInfo.h");
     private static readonly Dictionary<String, String> Enums = [];
+    private static readonly Dictionary<String, String> Structures = [];
 }
