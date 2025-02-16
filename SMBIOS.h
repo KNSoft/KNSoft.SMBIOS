@@ -939,31 +939,31 @@ typedef union _SMBIOS_MEMORY_MODULE_SIZE
     BYTE Value;
     struct
     {
-        BYTE Size : 7;          // 0:6 Indicates size (n), where 2**n is the size in MiB, or SMBIOS_MEMORY_MODULE_SIZE_*
-        BYTE DoubleBank : 1;    // 7 Single- (0) or double-bank (1) connection
+        BYTE Size : 7;          // 0:6 Size // Indicates size (n), where 2**n is the size in MiB, or SMBIOS_MEMORY_MODULE_SIZE_*
+        BYTE DoubleBank : 1;    // 7 Double-bank // Single- (0) or double-bank (1) connection
     };
 } SMBIOS_MEMORY_MODULE_SIZE, *PSMBIOS_MEMORY_MODULE_SIZE;
 
 typedef struct _SMBIOS_MEMORY_MODULE_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE SocketDesignation;
-    BYTE BankConnections;
-    BYTE CurrentSpeed;
-    SMBIOS_MEMORY_TYPE CurrentMemoryType;
-    SMBIOS_MEMORY_MODULE_SIZE InstalledSize;
-    SMBIOS_MEMORY_MODULE_SIZE EnabledSize;
+    UCHAR SocketDesignation;                    // Socket Designation
+    BYTE BankConnections;                       // Bank Connections
+    BYTE CurrentSpeed;                          // Current Speed
+    SMBIOS_MEMORY_TYPE CurrentMemoryType;       // Current Memory Type
+    SMBIOS_MEMORY_MODULE_SIZE InstalledSize;    // Installed Size
+    SMBIOS_MEMORY_MODULE_SIZE EnabledSize;      // Enabled Size
     union
     {
         BYTE Value;
         struct
         {
-            BYTE UncorrectableErrors : 1;   // 0 Uncorrectable errors received for the module
-            BYTE CorrectableErrors : 1;     // 1 Correctable errors received for the module
-            BYTE UseEventLog : 1;           // 2 Error Status information should be obtained from the event log
-            BYTE Reserved : 5;              // 3:7 Reserved, set to 0
+            BYTE UncorrectableErrors : 1;   // 00 Uncorrectable errors received for the module
+            BYTE CorrectableErrors : 1;     // 01 Correctable errors received for the module
+            BYTE UseEventLog : 1;           // 02 Error Status information should be obtained from the event log
+            BYTE Reserved : 5;              // 03:07 Reserved
         };
-    } ErrorStatus;
+    } ErrorStatus;  // Error Status
 } SMBIOS_MEMORY_MODULE_INFORMATION, *PSMBIOS_MEMORY_MODULE_INFORMATION, SMBIOS_TYPE_6, *PSMBIOS_TYPE_6;
 
 #pragma endregion Obsolete
@@ -987,8 +987,8 @@ typedef union _SMBIOS_CACHE_SIZE
     WORD Value;
     struct
     {
-        WORD Size : 15;             // 00:14 Max size in given granularity
-        WORD _64KGranularity : 1;   // 15 0 – 1K granularity, 1 – 64K granularity
+        WORD Size : 15;             // 00:14 Size // Max size in given granularity
+        WORD _64KGranularity : 1;   // 15 64K Granularity // 0 – 1K granularity, 1 – 64K granularity
     };
 } SMBIOS_CACHE_SIZE, *PSMBIOS_CACHE_SIZE;
 
@@ -997,8 +997,8 @@ typedef union _SMBIOS_CACHE_SIZE2
     DWORD Value;
     struct
     {
-        DWORD Size : 31;            // 00:30 Max size in given granularity
-        DWORD _64KGranularity : 1;  // 31 0 – 1K granularity, 1 – 64K granularity
+        DWORD Size : 31;            // 00:30 Size // Max size in given granularity
+        DWORD _64KGranularity : 1;  // 31 64K Granularity // 0 – 1K granularity, 1 – 64K granularity
     };
 } SMBIOS_CACHE_SIZE2, *PSMBIOS_CACHE_SIZE2;
 
@@ -1014,7 +1014,7 @@ typedef union _SMBIOS_CACHE_SRAM_TYPE
         WORD PipelineBurst : 1; // 04 Pipeline Burst
         WORD Synchronous : 1;   // 05 Synchronous
         WORD Asynchronous : 1;  // 06 Asynchronous
-        WORD Reserved : 9;      // 07:15 Reserved, must be zero
+        WORD Reserved : 9;      // 07:15 Reserved
     };
 } SMBIOS_CACHE_SRAM_TYPE, *PSMBIOS_CACHE_SRAM_TYPE;
 
@@ -1049,33 +1049,33 @@ typedef union _SMBIOS_CACHE_SRAM_TYPE
 typedef struct _SMBIOS_CACHE_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE SocketDesignation;
+    UCHAR SocketDesignation; // Socket Designation
     union
     {
         WORD Value;
         struct
         {
-            WORD Level : 3;             // 00:02 1 through 8
-            WORD Socketed : 1;          // 03 1b – Socketed, 0b – Not Socketed
-            WORD Reserved0 : 1;         // 04 Reserved, must be zero
-            WORD Location : 2;          // 05:06 SMBIOS_CACHE_LOCATION_*
-            WORD Enabled : 1;           // 07 1b – Enabled, 0b – Disabled (at boot time)
-            WORD OperationalMode : 2;   // 08:09 SMBIOS_CACHE_OPERATIONAL_MODE_*
-            WORD Reserved1 : 6;         // 10:15 Reserved, must be zero
+            WORD Level : 3;             // 00:02 Level // 1 through 8
+            WORD Socketed : 1;          // 03 Socketed // 1b – Socketed, 0b – Not Socketed
+            WORD Reserved0 : 1;         // 04 Reserved // Must be zero
+            WORD Location : 2;          // 05:06 Location // SMBIOS_CACHE_LOCATION_*
+            WORD Enabled : 1;           // 07 Enabled // 1b – Enabled, 0b – Disabled (at boot time)
+            WORD OperationalMode : 2;   // 08:09 Operational Mode // SMBIOS_CACHE_OPERATIONAL_MODE_*
+            WORD Reserved1 : 6;         // 10:15 Reserved // Must be zero
         };
-    } Configuration;
-    SMBIOS_CACHE_SIZE MaximumCacheSize;
-    SMBIOS_CACHE_SIZE InstalledSize;
-    SMBIOS_CACHE_SRAM_TYPE SupportedSRAMType;
-    SMBIOS_CACHE_SRAM_TYPE CurrentSRAMType;
+    } Configuration;                            // Cache Configuration
+    SMBIOS_CACHE_SIZE MaximumCacheSize;         // Maximum Cache Size
+    SMBIOS_CACHE_SIZE InstalledSize;            // Installed Size
+    SMBIOS_CACHE_SRAM_TYPE SupportedSRAMType;   // Supported SRAM Type
+    SMBIOS_CACHE_SRAM_TYPE CurrentSRAMType;     // Current SRAM Type
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE CacheSpeed;            // In nanoseconds, the value is 0 if the speed is unknown
-    BYTE ErrorCorrectionType;   // SMBIOS_CACHE_ERROR_CORRECTION_TYPE_*
-    BYTE SystemCacheType;       // SMBIOS_CACHE_SYSTEM_CACHE_TYPE_*
-    BYTE Associativity;         // SMBIOS_CACHE_ASSOCIATIVITY_*
+    BYTE CacheSpeed;                            // Cache Speed // In nanoseconds, the value is 0 if the speed is unknown
+    BYTE ErrorCorrectionType;                   // Error Correction Type // SMBIOS_CACHE_ERROR_CORRECTION_TYPE_*
+    BYTE SystemCacheType;                       // System Cache Type // SMBIOS_CACHE_SYSTEM_CACHE_TYPE_*
+    BYTE Associativity;                         // Associativity // SMBIOS_CACHE_ASSOCIATIVITY_*
 #if SMBIOS_VERSION >= 0x03010000
-    SMBIOS_CACHE_SIZE2 MaximumCacheSize2;
-    SMBIOS_CACHE_SIZE2 InstalledCacheSize2;
+    SMBIOS_CACHE_SIZE2 MaximumCacheSize2;       // Maximum Cache Size 2
+    SMBIOS_CACHE_SIZE2 InstalledCacheSize2;     // Installed Cache Size 2
 #endif // SMBIOS_VERSION >= 0x03010000
 #endif // SMBIOS_VERSION >= 0x02010000
 } SMBIOS_CACHE_INFORMATION, *PSMBIOS_CACHE_INFORMATION, SMBIOS_TYPE_7, *PSMBIOS_TYPE_7;
@@ -1172,11 +1172,11 @@ typedef struct _SMBIOS_CACHE_INFORMATION
 typedef struct _SMBIOS_PORT_CONNECTOR_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE InternalReferenceDesignator;
-    BYTE InternalConnectorType; // SMBIOS_PORT_CONNECTOR_TYPE_*
-    BYTE ExternalReferenceDesignator;
-    BYTE ExternalConnectorType; // SMBIOS_PORT_CONNECTOR_TYPE_*
-    BYTE PortType;              // SMBIOS_PORT_CONNECTOR_PORT_TYPE_*
+    UCHAR InternalReferenceDesignator;  // Internal Reference Designator
+    BYTE InternalConnectorType;         // Internal Connector Type // SMBIOS_PORT_CONNECTOR_TYPE_*
+    UCHAR ExternalReferenceDesignator;  // External Reference Designator
+    BYTE ExternalConnectorType;         // External Connector Type // SMBIOS_PORT_CONNECTOR_TYPE_*
+    BYTE PortType;                      // Port Type // SMBIOS_PORT_CONNECTOR_PORT_TYPE_*
 } SMBIOS_PORT_CONNECTOR_INFORMATION, *PSMBIOS_PORT_CONNECTOR_INFORMATION, SMBIOS_TYPE_8, *PSMBIOS_TYPE_8;
 
 #pragma endregion
@@ -1296,12 +1296,12 @@ typedef struct _SMBIOS_PORT_CONNECTOR_INFORMATION
 typedef struct _SMBIOS_SYSTEM_SLOTS
 {
     SMBIOS_HEADER Header;
-    BYTE Designation;
-    BYTE Type;          // SMBIOS_SYSTEM_SLOTS_TYPE_*
-    BYTE DataBusWidth;  // SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_*
-    BYTE CurrentUsage;  // SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_*
-    BYTE Length;        // SMBIOS_SYSTEM_SLOTS_LENGTH_*
-    WORD ID;
+    UCHAR Designation;  // Slot Designation
+    BYTE Type;          // Slot Type // SMBIOS_SYSTEM_SLOTS_TYPE_*
+    BYTE DataBusWidth;  // Slot Data Bus Width // SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_*
+    BYTE CurrentUsage;  // Current Usage // SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_*
+    BYTE Length;        // Slot Length // SMBIOS_SYSTEM_SLOTS_LENGTH_*
+    WORD ID;            // Slot ID
     union
     {
         BYTE Value;
@@ -1316,7 +1316,7 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
             BYTE PCCardSupportsZoomVideo : 1;       // PC Card slot supports Zoom Video
             BYTE PCCardSupportsModemRingResume : 1; // PC Card slot supports Modem Ring Resume
         };
-    } Characteristics1;
+    } Characteristics1; // Slot Characteristics 1
 #if SMBIOS_VERSION >= 0x02010000
     union
     {
@@ -1332,22 +1332,22 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
             BYTE FlexbusCXL2Capable : 1;                // Flexbus slot, CXL 2.0 capable
             BYTE FlexbusCXL3Capable : 1;                // Flexbus slot, CXL 3.0 capable
         };
-    } Characteristics2;
+    } Characteristics2;         // Slot Characteristics 2
 #if SMBIOS_VERSION >= 0x02060000
-    WORD SegmentGroupNumber;
-    BYTE BusNumber;
+    WORD SegmentGroupNumber;    // Segment Group Number (Base)
+    BYTE BusNumber;             // Bus Number (Base)     
     union
     {
         BYTE Value;
         struct
         {
-            BYTE FunctionNumber : 3;    // 0:2 Function number
-            BYTE DeviceNumber : 5;      // 3:7 Device number
+            BYTE FunctionNumber : 3;    // 00:02 Function number
+            BYTE DeviceNumber : 5;      // 03:07 Device number
         };
-    } DeviceFunctionNumber;
+    } DeviceFunctionNumber;     // Device/Function Number (Base)
 #if SMBIOS_VERSION >= 0x03020000
-    BYTE BaseDataBusWidth;
-    BYTE PeerGroupingCount;
+    BYTE BaseDataBusWidth;      // Data Bus Width (Base)
+    BYTE PeerGroupingCount;     // Peer (S/B/D/F/Width) grouping count
     _Field_size_bytes_(5 * PeerGroupingCount) BYTE PeerGroups[];
 /*
 #if SMBIOS_VERSION >= 0x03040000
@@ -1388,11 +1388,11 @@ typedef struct _SMBIOS_ONBOARD_DEVICES_ENTRY
         BYTE Value;
         struct
         {
-            BYTE DeviceType : 7; // SMBIOS_ONBOARD_DEVICES_TYPE_*
-            BYTE Enabled : 1;
+            BYTE DeviceType : 7;    // Device Type // SMBIOS_ONBOARD_DEVICES_TYPE_*
+            BYTE Enabled : 1;       // Enabled
         };
-    } Type;
-    BYTE Description;
+    } Type;             // Type
+    UCHAR Description;  // Description
 } SMBIOS_ONBOARD_DEVICES_ENTRY, *PSMBIOS_ONBOARD_DEVICES_ENTRY;
 
 typedef struct _SMBIOS_ONBOARD_DEVICES_INFORMATION
@@ -1410,7 +1410,7 @@ typedef struct _SMBIOS_ONBOARD_DEVICES_INFORMATION
 typedef struct _SMBIOS_OEM_STRINGS
 {
     SMBIOS_HEADER Header;
-    BYTE Count;
+    BYTE Count; // Count
 } SMBIOS_OEM_STRINGS, *PSMBIOS_OEM_STRINGS, SMBIOS_TYPE_11, *PSMBIOS_TYPE_11;
 
 #pragma endregion
@@ -1422,7 +1422,7 @@ typedef struct _SMBIOS_OEM_STRINGS
 typedef struct _SMBIOS_SYSTEM_CONFIGURATION_OPTIONS
 {
     SMBIOS_HEADER Header;
-    BYTE Count;
+    BYTE Count; // Count
 } SMBIOS_SYSTEM_CONFIGURATION_OPTIONS, *PSMBIOS_SYSTEM_CONFIGURATION_OPTIONS, SMBIOS_TYPE_12, *PSMBIOS_TYPE_12;
 
 #pragma endregion
@@ -1434,22 +1434,22 @@ typedef struct _SMBIOS_SYSTEM_CONFIGURATION_OPTIONS
 typedef struct _SMBIOS_FIRMWARE_LANGUAGE_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE InstallableLanguages;
+    BYTE InstallableLanguages;  // Installable Languages
 #if SMBIOS_VERSION >= 0x02010000
     union
     {
         BYTE Value;
         struct
         {
-            BYTE AbbreviatedFormat : 1; // 0 Use the abbreviated format
-            BYTE Reserved : 7;          // 1:7 Reserved
+            BYTE AbbreviatedFormat : 1; // 00 Use the abbreviated format
+            BYTE Reserved : 7;          // 01:07 Reserved
         };
-    } Flags;
+    } Flags;    // Flags
 #else
     BYTE Reserved0;
 #endif // SMBIOS_VERSION >= 0x02010000
-    BYTE Reserved[15];
-    BYTE CurrentLanguage;
+    BYTE Reserved[15];      // Reserved
+    UCHAR CurrentLanguage;  // Current Language
 } SMBIOS_FIRMWARE_LANGUAGE_INFORMATION, *PSMBIOS_FIRMWARE_LANGUAGE_INFORMATION, SMBIOS_TYPE_13, *PSMBIOS_TYPE_13;
 
 #pragma endregion
@@ -1467,7 +1467,7 @@ typedef struct _SMBIOS_GROUP_ASSOCIATIONS_ENTRY
 typedef struct _SMBIOS_GROUP_ASSOCIATIONS
 {
     SMBIOS_HEADER Header;
-    BYTE GroupName;
+    UCHAR GroupName;    // Group Name
     SMBIOS_GROUP_ASSOCIATIONS_ENTRY Items[];
 } SMBIOS_GROUP_ASSOCIATIONS, *PSMBIOS_GROUP_ASSOCIATIONS, SMBIOS_TYPE_14, *PSMBIOS_TYPE_14;
 
@@ -1489,23 +1489,24 @@ typedef struct _SMBIOS_GROUP_ASSOCIATIONS
 typedef struct _SMBIOS_SYSTEM_EVENT_LOG
 {
     SMBIOS_HEADER Header;
-    WORD AreaLength;
-    WORD HeaderStartOffset;
-    WORD DataStartOffset;
-    BYTE AccessMethod; // SMBIOS_SYSTEM_EVENT_LOG_ACCESSMETHOD_*
+    WORD AreaLength;        // Log Area Length
+    WORD HeaderStartOffset; // Log Header Start Offset
+    WORD DataStartOffset;   // Log Data Start Offset
+    BYTE AccessMethod;      // Access Method // SMBIOS_SYSTEM_EVENT_LOG_ACCESSMETHOD_*
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Valid : 1;     // 0 Log area valid
-            BYTE Full : 1;      // 1 Log area full
-            BYTE Reserved : 6;  // 2:7 Reserved, set to 0
+            BYTE Valid : 1;     // 00 Log area valid
+            BYTE Full : 1;      // 01 Log area full
+            BYTE Reserved : 6;  // 02:07 Reserved // Set to 0
         };
-    } Status;
-    DWORD ChangeToken;
+    } Status;           // Log Status
+    DWORD ChangeToken;  // Log Change Token
     union
     {
+        DWORD Value;
         struct
         {
             WORD IndexAddr;
@@ -1513,11 +1514,11 @@ typedef struct _SMBIOS_SYSTEM_EVENT_LOG
         } IO;
         DWORD PhysicalAddr32;
         WORD GPNVHandle;
-    } AccessMethodAddress;
+    } AccessMethodAddress;                  // Access Method Address
 #if SMBIOS_VERSION >= 0x02010000
-    BYTE HeaderFormat; // SMBIOS_SYSTEM_EVENT_LOG_HEADERFORMAT_*
-    BYTE NumberOfSupportedTypeDescriptors;
-    BYTE LengthOfTypeDescriptor; // Currently hard-coded as 2
+    BYTE HeaderFormat;                      // Log Header Format // SMBIOS_SYSTEM_EVENT_LOG_HEADERFORMAT_*
+    BYTE NumberOfSupportedTypeDescriptors;  // Number of Supported Log Type Descriptors
+    BYTE LengthOfTypeDescriptor;            // Length of each Log Type Descriptor // Currently hard-coded as 2
     _Field_size_bytes_(NumberOfSupportedTypeDescriptors * LengthOfTypeDescriptor) BYTE SupportedTypeDescriptors[];
 #endif // SMBIOS_VERSION >= 0x02010000
 } SMBIOS_SYSTEM_EVENT_LOG, *PSMBIOS_SYSTEM_EVENT_LOG, SMBIOS_TYPE_15, *PSMBIOS_TYPE_15;

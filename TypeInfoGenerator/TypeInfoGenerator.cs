@@ -57,7 +57,7 @@ static String AddEnumType(String EnumName)
                 }
                 Output.Write(Encoding.UTF8.GetBytes(
                     "    { u8\"" +
-                    Match.Groups[2].Value + "\", " +
+                    Match.Groups[2].Value.Replace("\"", "\\\"") + "\", " +
                     Match.Groups[1].Value + " },\r\n"));
                 i++;
             } while (i < Data.Length);
@@ -115,6 +115,7 @@ static String AddStructureType(String TypeNumber, String StructureName)
         }
     }
     Output.Write("\r\n\r\n"u8.ToArray());
+    Structures.Add(StructureName, StructureTypeName);
 
     return StructureTypeName;
 }
@@ -346,17 +347,17 @@ for (UInt32 i = 1; i < Data.Length; i++)
 
     /* Output fields */
     List<String> Fields = ResolveStructure(TypeNumber, j, i);
-    Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
-    Output.Write(Encoding.UTF8.GetBytes(TypeNumber));
-    Output.Write("FieldInfo[] = {\r\n"u8.ToArray());
     if (Fields.Count > 0)
     {
+        Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
+        Output.Write(Encoding.UTF8.GetBytes(TypeNumber));
+        Output.Write("FieldInfo[] = {\r\n"u8.ToArray());
         for (Int32 k = Fields.Count - 1; k >= 0; k--)
         {
             Output.Write(Encoding.UTF8.GetBytes("    " + Fields[k] + ",\r\n"));
         }
+        Output.Write("};\r\n\r\n"u8.ToArray());
     }
-    Output.Write("};\r\n\r\n"u8.ToArray());
 }
 
 Output.Dispose();
