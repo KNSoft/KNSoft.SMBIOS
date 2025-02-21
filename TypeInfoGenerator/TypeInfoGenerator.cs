@@ -57,7 +57,7 @@ static String AddEnumType(String EnumName)
                 }
                 Output.Write(Encoding.UTF8.GetBytes(
                     "    { u8\"" +
-                    Match.Groups[2].Value.Replace("\"", "\\\"") + "\", " +
+                    Match.Groups[2].Value.Split(" // ")[0].Replace("\"", "\\\"") + "\", " +
                     Match.Groups[1].Value + " },\r\n"));
                 i++;
             } while (i < Data.Length);
@@ -172,10 +172,10 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
         }
         if (Field[0] == '}')
         {
-            Parent = Field[1..Field.IndexOf(';')].Trim();
             Comments = Field.Split(" // ");
             if (Comments.Length > 1)
             {
+                Parent = Field[1..Field.IndexOf(';')].Trim();
                 ParentComment = Comments[1];
             }
             continue;

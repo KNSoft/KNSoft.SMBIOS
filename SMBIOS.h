@@ -1568,13 +1568,13 @@ typedef struct _SMBIOS_SYSTEM_EVENT_LOG
 typedef struct _SMBIOS_PHYSICAL_MEMORY_ARRAY
 {
     SMBIOS_HEADER Header;
-    BYTE Location;          // SMBIOS_PHYSICAL_MEMORY_ARRAY_LOCATION_*
-    BYTE Use;               // SMBIOS_PHYSICAL_MEMORY_ARRAY_USE_*
-    BYTE ErrorCorrection;   // SMBIOS_PHYSICAL_MEMORY_ARRAY_ERROR_CORRECTION_TYPE_*
-    DWORD MaximumCapacity;
-    WORD ErrorInformationHandle;
-    WORD NumberOfMemoryDevices;
-    QWORD ExtendedMaximumCapacity;
+    BYTE Location;                  // Location // SMBIOS_PHYSICAL_MEMORY_ARRAY_LOCATION_*
+    BYTE Use;                       // Use // SMBIOS_PHYSICAL_MEMORY_ARRAY_USE_*
+    BYTE ErrorCorrection;           // Memory Error Correction // SMBIOS_PHYSICAL_MEMORY_ARRAY_ERROR_CORRECTION_TYPE_*
+    DWORD MaximumCapacity;          // Maximum Capacity
+    WORD ErrorInformationHandle;    // Memory Error Information Handle
+    WORD NumberOfMemoryDevices;     // Number of Memory Devices
+    QWORD ExtendedMaximumCapacity;  // Extended Maximum Capacity
 } SMBIOS_PHYSICAL_MEMORY_ARRAY, *PSMBIOS_PHYSICAL_MEMORY_ARRAY, SMBIOS_TYPE_16, *PSMBIOS_TYPE_16;
 
 #pragma endregion
@@ -1647,30 +1647,30 @@ typedef struct _SMBIOS_PHYSICAL_MEMORY_ARRAY
 typedef struct _SMBIOS_MEMORY_DEVICE
 {
     SMBIOS_HEADER Header;
-    WORD PhysicalMemoryArrayHandle;
-    WORD ErrorInformationHandle;
-    WORD TotalWidth;
-    WORD DataWidth;
+    WORD PhysicalMemoryArrayHandle; // Physical Memory Array Handle
+    WORD ErrorInformationHandle;    // Memory Error Information Handle
+    WORD TotalWidth;                // Total Width
+    WORD DataWidth;                 // Data Width
     union
     {
         WORD Value; // 0 = no device, FFFFh = unknown, 7FFFh = see "ExtendedSize" field
         struct
         {
-            WORD Size : 15;
-            WORD Granularity : 1; // 0 = MB, 1 = KB
+            WORD Size : 15;         // 00:14 Size
+            WORD Granularity : 1;   // 15 KB Granularity in KB // 0 = MB, 1 = KB
         };
-    } Size;
-    BYTE FormFactor; // SMBIOS_MEMORY_DEVICE_FORM_FACTOR_*
-    BYTE DeviceSet;
-    BYTE DeviceLocator;
-    BYTE BankLocator;
-    BYTE Type; // SMBIOS_MEMORY_DEVICE_TYPE_*
+    } Size; // Size
+    BYTE FormFactor;        // Form Factor // SMBIOS_MEMORY_DEVICE_FORM_FACTOR_*
+    BYTE DeviceSet;         // Device Set
+    UCHAR DeviceLocator;    // Device Locator
+    UCHAR BankLocator;      // Bank Locator
+    BYTE Type;              // Memory Type // SMBIOS_MEMORY_DEVICE_TYPE_*
     union
     {
         WORD Value;
         struct
         {
-            WORD Reserved : 1;      // 00 Reserved, set to 0
+            WORD Reserved : 1;      // 00 Reserved // Set to 0
             WORD Other : 1;         // 01 Other
             WORD Unknow : 1;        // 02 Unknown
             WORD FastPaged : 1;     // 03 Fast-paged
@@ -1687,23 +1687,23 @@ typedef struct _SMBIOS_MEMORY_DEVICE
             WORD Unbuffered : 1;    // 14 Unbuffered (Unregistered)
             WORD LRDIMM : 1;        // 15 LRDIMM
         };
-    } TypeDetail;
+    } TypeDetail;       // Type Detail
 #if SMBIOS_VERSION >= 0x02030000
-    WORD Speed;
-    BYTE Manufacturer;
-    BYTE SerialNumber;
-    BYTE AssetTag;
-    BYTE PartNumber;
+    WORD Speed;         // Speed
+    UCHAR Manufacturer; // Manufacturer
+    UCHAR SerialNumber; // Serial Number
+    UCHAR AssetTag;     // Asset Tag
+    UCHAR PartNumber;   // Part Number
 #if SMBIOS_VERSION >= 0x02060000
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Rank : 4;      // 0:3 0 for unknown rank information
-            BYTE Reserved : 4;  // 4:7 Reserved
+            BYTE Rank : 4;      // 00:03 Rank // 0 for unknown rank information
+            BYTE Reserved : 4;  // 04:07 Reserved
         };
-    } Attributes;
+    } Attributes;   // Attributes
 #if SMBIOS_VERSION >= 0x02070000
     union
     {
@@ -1713,45 +1713,45 @@ typedef struct _SMBIOS_MEMORY_DEVICE
             DWORD SizeInMb : 31;    // 00:30 Size in MB
             DWORD Reserved : 1;     // 31 Reserved
         };
-    } ExtendedSize;
-    WORD ConfiguredMemorySpeed;
+    } ExtendedSize;             // Extended Size
+    WORD ConfiguredMemorySpeed; // Configured Memory Speed
 #if SMBIOS_VERSION >= 0x02080000
-    WORD MinimumVoltage;
-    WORD MaximumVoltage;
-    WORD ConfiguredVoltage;
+    WORD MinimumVoltage;        // Minimum voltage
+    WORD MaximumVoltage;        // Maximum voltage
+    WORD ConfiguredVoltage;     // Configured voltage
 #if SMBIOS_VERSION >= 0x03020000
-    BYTE Technology; // SMBIOS_MEMORY_DEVICE_TECHNOLOGY_*
+    BYTE Technology;            // Memory Technology // SMBIOS_MEMORY_DEVICE_TECHNOLOGY_*
     union
     {
         WORD Value;
         struct
         {
-            WORD Reserved0 : 1;                         // 00 Reserved, set to 0
+            WORD Reserved0 : 1;                         // 00 Reserved // Set to 0
             WORD Other : 1;                             // 01 Other
             WORD Unknown : 1;                           // 02 Unknown
             WORD VolatileMemory : 1;                    // 03 Volatile memory
             WORD ByteAccessiblePersistentMemory : 1;    // 04 Byte-accessible persistent memory
             WORD BlockAccessiblePersistentMemory : 1;   // 05 Block-accessible persistent memory
-            WORD Reserved1 : 10;                        // 06:15 Reserved, set to 0
+            WORD Reserved1 : 10;                        // 06:15 Reserved // Set to 0
         };
-    } OperatingModeCapability;
-    BYTE FirmwareVersion;
-    WORD ModuleManufacturerID;
-    WORD ModuleProductID;
-    WORD SubsystemControllerManufacturerID;
-    WORD SubsystemControllerProductID;
-    QWORD NonVolatileSize;
-    QWORD VolatileSize;
-    QWORD CacheSize;
-    QWORD LogicalSize;
+    } OperatingModeCapability;              // Memory Operating Mode Capability
+    UCHAR FirmwareVersion;                  // Firmware Version
+    WORD ModuleManufacturerID;              // Module Manufacturer ID
+    WORD ModuleProductID;                   // Module Product ID
+    WORD SubsystemControllerManufacturerID; // Memory Subsystem Controller Manufacturer ID
+    WORD SubsystemControllerProductID;      // Memory Subsystem Controller Product ID
+    QWORD NonVolatileSize;                  // Non-volatile Size
+    QWORD VolatileSize;                     // Volatile Size
+    QWORD CacheSize;                        // Cache Size
+    QWORD LogicalSize;                      // Logical Size
 #if SMBIOS_VERSION >= 0x03030000
-    DWORD ExtendedSpeed;
-    DWORD ExtendedConfiguredSpeed;
+    DWORD ExtendedSpeed;                    // Extended Speed
+    DWORD ExtendedConfiguredSpeed;          // Extended Configured Memory Speed
 #if SMBIOS_VERSION >= 0x03070000
-    WORD PMIC0ManufacturerID;
-    WORD PMIC0RevisionNumber;
-    WORD RCDManufacturerID;
-    WORD RCDRevisionNumber;
+    WORD PMIC0ManufacturerID;               // PMIC0 Manufacturer ID
+    WORD PMIC0RevisionNumber;               // PMIC0 Revision Number
+    WORD RCDManufacturerID;                 // RCD Manufacturer ID
+    WORD RCDRevisionNumber;                 // RCD Revision Number
 #endif // SMBIOS_VERSION >= 0x03070000
 #endif // SMBIOS_VERSION >= 0x03030000
 #endif // SMBIOS_VERSION >= 0x03020000
@@ -1770,13 +1770,13 @@ typedef struct _SMBIOS_MEMORY_DEVICE
 typedef struct _SMBIOS_32BIT_MEMORY_ERROR_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Type;          // SMBIOS_MEMORY_ERROR_TYPE_*
-    BYTE Granularity;   // SMBIOS_MEMORY_ERROR_GRANULARITY_*
-    BYTE Operation;     // SMBIOS_MEMORY_ERROR_OPERATION_*
-    DWORD VendorSyndrome;
-    DWORD MemoryArrayErrorAddress;
-    DWORD DeviceErrorAddress;
-    DWORD Resolution;
+    BYTE Type;                      // Error Type // SMBIOS_MEMORY_ERROR_TYPE_*
+    BYTE Granularity;               // Error Granularity // SMBIOS_MEMORY_ERROR_GRANULARITY_*
+    BYTE Operation;                 // Error Operation // SMBIOS_MEMORY_ERROR_OPERATION_*
+    DWORD VendorSyndrome;           // Vendor Syndrome
+    DWORD MemoryArrayErrorAddress;  // Memory Array Error Address
+    DWORD DeviceErrorAddress;       // Device Error Address
+    DWORD Resolution;               // Error Resolution
 } SMBIOS_32BIT_MEMORY_ERROR_INFORMATION, *PSMBIOS_32BIT_MEMORY_ERROR_INFORMATION, SMBIOS_TYPE_18, *PSMBIOS_TYPE_18;
 
 #pragma endregion
@@ -1788,13 +1788,13 @@ typedef struct _SMBIOS_32BIT_MEMORY_ERROR_INFORMATION
 typedef struct _SMBIOS_MEMORY_ARRAY_MAPPED_ADDRESS
 {
     SMBIOS_HEADER Header;
-    DWORD StartingAddress;
-    DWORD EndingAddress;
-    WORD MemoryArrayHandle;
-    BYTE PartitionWidth;
+    DWORD StartingAddress;          // Starting Address
+    DWORD EndingAddress;            // Ending Address
+    WORD MemoryArrayHandle;         // Memory Array Handle
+    BYTE PartitionWidth;            // Partition Width
 #if SMBIOS_VERSION >= 0x02070000
-    QWORD ExtendedStartingAddress;
-    QWORD ExtendedEndingAddress;
+    QWORD ExtendedStartingAddress;  // Extended Starting Address
+    QWORD ExtendedEndingAddress;    // Extended Ending Address
 #endif // SMBIOS_VERSION >= 0x02070000
 } SMBIOS_MEMORY_ARRAY_MAPPED_ADDRESS, *PSMBIOS_MEMORY_ARRAY_MAPPED_ADDRESS, SMBIOS_TYPE_19, *PSMBIOS_TYPE_19;
 
@@ -1807,16 +1807,16 @@ typedef struct _SMBIOS_MEMORY_ARRAY_MAPPED_ADDRESS
 typedef struct _SMBIOS_MEMORY_DEVICE_MAPPED_ADDRESS
 {
     SMBIOS_HEADER Header;
-    DWORD StartingAddress;
-    DWORD EndingAddress;
-    WORD MemoryDeviceHandle;
-    WORD MemoryArrayMappedAddressHandle;
-    BYTE PartitionRowPosition;
-    BYTE InterleavePosition;
-    BYTE InterleavedDataDepth;
+    DWORD StartingAddress;                  // Starting Address
+    DWORD EndingAddress;                    // Ending Address
+    WORD MemoryDeviceHandle;                // Memory Device Handle
+    WORD MemoryArrayMappedAddressHandle;    // Memory Array Mapped Address Handle
+    BYTE PartitionRowPosition;              // Partition Row Position
+    BYTE InterleavePosition;                // Interleave Position
+    BYTE InterleavedDataDepth;              // Interleaved Data Depth
 #if SMBIOS_VERSION >= 0x02070000
-    QWORD ExtendedStartingAddress;
-    QWORD ExtendedEndingAddress;
+    QWORD ExtendedStartingAddress;          // Extended Starting Address
+    QWORD ExtendedEndingAddress;            // Extended Ending Address
 #endif // SMBIOS_VERSION >= 0x02070000
 } SMBIOS_MEMORY_DEVICE_MAPPED_ADDRESS, *PSMBIOS_MEMORY_DEVICE_MAPPED_ADDRESS, SMBIOS_TYPE_20, *PSMBIOS_TYPE_20;
 
@@ -1853,9 +1853,9 @@ typedef struct _SMBIOS_MEMORY_DEVICE_MAPPED_ADDRESS
 typedef struct _SMBIOS_BUILTIN_POINTING_DEVICE
 {
     SMBIOS_HEADER Header;
-    BYTE Type;      // SMBIOS_BUILTIN_POINTING_DEVICE_TYPE_*
-    BYTE Interface; // SMBIOS_BUILTIN_POINTING_DEVICE_INTERFACE_*
-    BYTE NumberOfButtons;
+    BYTE Type;              // Type // SMBIOS_BUILTIN_POINTING_DEVICE_TYPE_*
+    BYTE Interface;         // Interface // SMBIOS_BUILTIN_POINTING_DEVICE_INTERFACE_*
+    BYTE NumberOfButtons;   // Number of Buttons
 } SMBIOS_BUILTIN_POINTING_DEVICE, *PSMBIOS_BUILTIN_POINTING_DEVICE, SMBIOS_TYPE_21, *PSMBIOS_TYPE_21;
 
 #pragma endregion
@@ -1876,31 +1876,31 @@ typedef struct _SMBIOS_BUILTIN_POINTING_DEVICE
 typedef struct _SMBIOS_PORTABLE_BATTERY
 {
     SMBIOS_HEADER Header;
-    BYTE Location;
-    BYTE Manufacturer;
-    BYTE ManufactureDate;
-    BYTE SerialNumber;
-    BYTE DeviceName;
-    BYTE DeviceChemistry;   // SMBIO_PORTABLE_BATTERY_DEVICE_CHEMISTRY_*
-    WORD DesignCapacity;    // Design capacity of the battery in milliwatt-hours, or 0 if unknown
-    WORD DesignVoltage;     // Design voltage of the battery in millivolts, or 0 if unknown
-    BYTE SBDSVersionNumber;
-    BYTE MaximumError;
+    UCHAR Location;             // Location
+    UCHAR Manufacturer;         // Manufacturer
+    UCHAR ManufactureDate;      // Manufacture Date
+    UCHAR SerialNumber;         // Serial Number
+    UCHAR DeviceName;           // Device Name
+    BYTE DeviceChemistry;       // Device Chemistry // SMBIO_PORTABLE_BATTERY_DEVICE_CHEMISTRY_*
+    WORD DesignCapacity;        // Design Capacity // Design capacity of the battery in milliwatt-hours, or 0 if unknown
+    WORD DesignVoltage;         // Design Voltage // Design voltage of the battery in millivolts, or 0 if unknown
+    UCHAR SBDSVersionNumber;    // SBDS Version Number
+    BYTE MaximumError;          // Maximum Error in Battery Data
 #if SMBIOS_VERSION >= 0x02020000
-    WORD SBDSSerialNumber;
+    WORD SBDSSerialNumber;      // SBDS Serial Number
     union
     {
         WORD Value;
         struct
         {
-            WORD Day : 5;   // 00:04 Date, in the range 1 to 31
-            WORD Month : 4; // 05:08 Month, in the range 1 to 12
-            WORD Year : 7;  // 09:15 Year, biased by 1980, in the range 0 to 127
+            WORD Day : 5;   // 00:04 Date // In the range 1 to 31
+            WORD Month : 4; // 05:08 Month // Iin the range 1 to 12
+            WORD Year : 7;  // 09:15 Year // Biased by 1980, in the range 0 to 127
         };
-    } SBDSManufactureDate;
-    BYTE SBDSDeviceChemistry;
-    BYTE DesignCapacityMultiplier;
-    DWORD OEMSpecific;
+    } SBDSManufactureDate;          // SBDS Manufacture Date
+    UCHAR SBDSDeviceChemistry;      // SBDS Device Chemistry
+    BYTE DesignCapacityMultiplier;  // Design Capacity Multiplier
+    DWORD OEMSpecific;              // OEM-specific
 #endif // SMBIOS_VERSION >= 0x02020000
 } SMBIOS_PORTABLE_BATTERY, *PSMBIOS_PORTABLE_BATTERY, SMBIOS_TYPE_22, *PSMBIOS_TYPE_22;
 
@@ -1912,7 +1912,7 @@ typedef struct _SMBIOS_PORTABLE_BATTERY
 
 #define SMBIOS_TYPE_SYSTEM_RESET ((BYTE)23)
 
-#define SMBIOS_SYSTEM_RESET_BOOT_OPTION_RESERVED            ((BYTE)0b00) // Reserved, do not use
+#define SMBIOS_SYSTEM_RESET_BOOT_OPTION_RESERVED            ((BYTE)0b00) // Reserved // Do not use
 #define SMBIOS_SYSTEM_RESET_BOOT_OPTION_OPERATING_SYSTEM    ((BYTE)0b01) // Operating system
 #define SMBIOS_SYSTEM_RESET_BOOT_OPTION_SYSTEM_UTILITIES    ((BYTE)0b10) // System utilities
 #define SMBIOS_SYSTEM_RESET_BOOT_OPTION_DO_NOT_REBOOT       ((BYTE)0b11) // Do not reboot
@@ -1925,17 +1925,17 @@ typedef struct _SMBIOS_SYSTEM_RESET
         BYTE Value;
         struct
         {
-            BYTE Status : 1;                        // 0 Identifies whether (1) or not (0) the system reset is enabled by the user
-            BYTE BootOption : 2;                    // 1:2 SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
-            BYTE BootOptionOnLimit : 2;             // 3:4 SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
-            BYTE SystemContainsAWatchdogTimer : 1;  // 5 True (1) or False (0)
-            BYTE Reserved : 2;                      // 6:7 Reserved for future assignment by this specification, set to 00b
+            BYTE Status : 1;                        // 00 Status // Identifies whether (1) or not (0) the system reset is enabled by the user
+            BYTE BootOption : 2;                    // 01:02 Boot Option // SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
+            BYTE BootOptionOnLimit : 2;             // 03:04 Boot Option on Limit // SMBIOS_SYSTEM_RESET_BOOT_OPTION_*
+            BYTE SystemContainsAWatchdogTimer : 1;  // 05 System contains a watchdog timer // True (1) or False (0)
+            BYTE Reserved : 2;                      // 06:07 Reserved // Set to 00b
         };
-    } Capabilities;
-    WORD ResetCount;
-    WORD ResetLimit;
-    WORD TimerInterval;
-    WORD Timeout;
+    } Capabilities;     // Capabilities
+    WORD ResetCount;    // Reset Count
+    WORD ResetLimit;    // Reset Limit
+    WORD TimerInterval; // Timer Interval
+    WORD Timeout;       // Timeout
 } SMBIOS_SYSTEM_RESET, *PSMBIOS_SYSTEM_RESET, SMBIOS_TYPE_23, *PSMBIOS_TYPE_23;
 
 #pragma endregion
@@ -1957,12 +1957,12 @@ typedef struct _SMBIOS_HARDWARE_SECURITY
         BYTE Value;
         struct
         {
-            BYTE FrontPanelResetStatus : 2;         // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
-            BYTE AdministratorPasswordStatus : 2;   // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
-            BYTE KeyboardPasswordStatus : 2;        // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
-            BYTE PowerOnPasswordStatus : 2;         // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
+            BYTE FrontPanelResetStatus : 2;         // Front Panel Reset Status // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
+            BYTE AdministratorPasswordStatus : 2;   // Administrator Password Status // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
+            BYTE KeyboardPasswordStatus : 2;        // Keyboard Password Status // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
+            BYTE PowerOnPasswordStatus : 2;         // Power-on Password Status // SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_*
         };
-    } Settings;
+    } Settings; // Hardware Security Settings
 } SMBIOS_HARDWARE_SECURITY, *PSMBIOS_HARDWARE_SECURITY, SMBIOS_TYPE_24, *PSMBIOS_TYPE_24;
 
 #pragma endregion
@@ -1974,11 +1974,11 @@ typedef struct _SMBIOS_HARDWARE_SECURITY
 typedef struct _SMBIOS_SYSTEM_POWER_CONTROLS
 {
     SMBIOS_HEADER Header;
-    BYTE NextScheduledPowerOnMonth;         // 01h to 12h
-    BYTE NextScheduledPowerOnDayOfMonth;    // 01h to 31h
-    BYTE NextScheduledPowerOnHour;          // 00h to 23h
-    BYTE NextScheduledPowerOnMinute;        // 00h to 59h
-    BYTE NextScheduledPowerOnSecond;        // 00h to 59h
+    BYTE NextScheduledPowerOnMonth;         // Next Scheduled Power on Month // 01h to 12h
+    BYTE NextScheduledPowerOnDayOfMonth;    // Next Scheduled Power on Day-of-month // 01h to 31h
+    BYTE NextScheduledPowerOnHour;          // Next Scheduled Power on Hour // 00h to 23h
+    BYTE NextScheduledPowerOnMinute;        // Next Scheduled Power on Minute // 00h to 59h
+    BYTE NextScheduledPowerOnSecond;        // Next Scheduled Power on Second // 00h to 59h
 } SMBIOS_SYSTEM_POWER_CONTROLS, *PSMBIOS_SYSTEM_POWER_CONTROLS, SMBIOS_TYPE_25, *PSMBIOS_TYPE_25;
 
 #pragma endregion
@@ -2009,23 +2009,23 @@ typedef struct _SMBIOS_SYSTEM_POWER_CONTROLS
 typedef struct _SMBIOS_VOLTAGE_PROBE
 {
     SMBIOS_HEADER Header;
-    BYTE Description;
+    UCHAR Description;          // Description
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Location : 5;  // 0:4 SMBIOS_VOLTAGE_PROBE_LOCATION_*
-            BYTE Status : 3;    // 5:7 SMBIOS_PROBE_STATUS_*
+            BYTE Location : 5;  // 00:04 Location // SMBIOS_VOLTAGE_PROBE_LOCATION_*
+            BYTE Status : 3;    // 05:07 Status // SMBIOS_PROBE_STATUS_*
         };
-    } LocationAndStatus;
-    WORD MaximumValue;
-    WORD MinimumValue;
-    WORD Resolution;
-    WORD Tolerance;
-    WORD Accuracy;
-    DWORD OEMDefined;
-    WORD NominalValue; // Present only if the structure's length is larger than 14h
+    } LocationAndStatus;        // Location and Status
+    WORD MaximumValue;          // Maximum Value
+    WORD MinimumValue;          // Minimum Value
+    WORD Resolution;            // Resolution
+    WORD Tolerance;             // Tolerance
+    WORD Accuracy;              // Accuracy
+    DWORD OEMDefined;           // OEM-defined
+    WORD NominalValue;          // Nominal Value // Present only if the structure's length is larger than 14h
 } SMBIOS_VOLTAGE_PROBE, *PSMBIOS_VOLTAGE_PROBE, SMBIOS_TYPE_26, *PSMBIOS_TYPE_26;
 
 #pragma endregion
@@ -2049,21 +2049,21 @@ typedef struct _SMBIOS_VOLTAGE_PROBE
 typedef struct _SMBIOS_COOLING_DEVICE
 {
     SMBIOS_HEADER Header;
-    WORD TemperatureProbeHandle;
+    WORD TemperatureProbeHandle;    // Temperature Probe Handle
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Type : 5;      // 0:4 SMBIOS_COOLING_DEVICE_TYPE_*
-            BYTE Status : 3;    // 5:7 SMBIOS_PROBE_STATUS_*
+            BYTE Type : 5;      // 00:04 Device Type // SMBIOS_COOLING_DEVICE_TYPE_*
+            BYTE Status : 3;    // 05:07 Status // SMBIOS_PROBE_STATUS_*
         };
-    } DeviceTypeAndStatus;
-    BYTE CoolingUnitGroup;
-    DWORD OEMDefined;
-    WORD NominalSpeed;
+    } DeviceTypeAndStatus;          // Device Type and Status
+    BYTE CoolingUnitGroup;          // Cooling Unit Group
+    DWORD OEMDefined;               // OEM-defined
+    WORD NominalSpeed;              // Nominal Speed
 #if SMBIOS_VERSION >= 0x02070000
-    BYTE Description;
+    UCHAR Description;              // Description
 #endif // SMBIOS_VERSION >= 0x02070000
 } SMBIOS_COOLING_DEVICE, *PSMBIOS_COOLING_DEVICE, SMBIOS_TYPE_27, *PSMBIOS_TYPE_27;
 
@@ -2092,23 +2092,23 @@ typedef struct _SMBIOS_COOLING_DEVICE
 typedef struct _SMBIOS_TEMPERATURE_PROBE
 {
     SMBIOS_HEADER Header;
-    BYTE Description;
+    UCHAR Description;          // Description
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Location : 5;  // 0:4 SMBIOS_TEMPERATURE_PROBE_LOCATION_*
-            BYTE Status : 3;    // 5:7 SMBIOS_PROBE_STATUS_*
+            BYTE Location : 5;  // Location // 00:04 SMBIOS_TEMPERATURE_PROBE_LOCATION_*
+            BYTE Status : 3;    // Status // 05:07 SMBIOS_PROBE_STATUS_*
         };
-    } LocationAndStatus;
-    WORD MaximumValue;
-    WORD MinimumValue;
-    WORD Resolution;
-    WORD Tolerance;
-    WORD Accuracy;
-    DWORD OEMDefined;
-    WORD NominalValue;
+    } LocationAndStatus;        // Location and Status
+    WORD MaximumValue;          // Maximum Value
+    WORD MinimumValue;          // Minimum Value
+    WORD Resolution;            // Resolution
+    WORD Tolerance;             // Tolerance
+    WORD Accuracy;              // Accuracy
+    DWORD OEMDefined;           // OEM-defined
+    WORD NominalValue;          // Nominal Value
 } SMBIOS_TEMPERATURE_PROBE, *PSMBIOS_TEMPERATURE_PROBE, SMBIOS_TYPE_28, *PSMBIOS_TYPE_28;
 
 #pragma endregion
@@ -2132,23 +2132,23 @@ typedef struct _SMBIOS_TEMPERATURE_PROBE
 typedef struct _SMBIOS_ELECTRICAL_CURRENT_PROBE
 {
     SMBIOS_HEADER Header;
-    BYTE Description;
+    UCHAR Description;          // Description
     union
     {
-        BYTE LocationAndStatus;
+        BYTE Value;
         struct
         {
-            BYTE Location : 5;  /* SMBIOS_ELECTRICAL_CURRENT_PROBE_LOCATION_* */
-            BYTE Status : 3;    // 5:7 SMBIOS_PROBE_STATUS_*
+            BYTE Location : 5;  // 00:04 Location // SMBIOS_ELECTRICAL_CURRENT_PROBE_LOCATION_* */
+            BYTE Status : 3;    // 05:07 Status // SMBIOS_PROBE_STATUS_*
         };
-    };
-    WORD MaximumValue;
-    WORD MinimumValue;
-    WORD Resolution;
-    WORD Tolerance;
-    WORD Accuracy;
-    DWORD OEMDefined;
-    WORD NominalValue;
+    } LocationAndStatus;        // Location and Status
+    WORD MaximumValue;          // Maximum Value
+    WORD MinimumValue;          // Minimum Value
+    WORD Resolution;            // Resolution
+    WORD Tolerance;             // Tolerance
+    WORD Accuracy;              // Accuracy
+    DWORD OEMDefined;           // OEM-defined
+    WORD NominalValue;          // Nominal Value
 } SMBIOS_ELECTRICAL_CURRENT_PROBE, *PSMBIOS_ELECTRICAL_CURRENT_PROBE, SMBIOS_TYPE_29, *PSMBIOS_TYPE_29;
 
 #pragma endregion
@@ -2160,17 +2160,17 @@ typedef struct _SMBIOS_ELECTRICAL_CURRENT_PROBE
 typedef struct _SMBIOS_OUT_OF_BAND_REMOTE_ACCESS
 {
     SMBIOS_HEADER Header;
-    BYTE ManufacturerName;
+    UCHAR ManufacturerName; // Manufacturer Name
     union
     {
         BYTE Value;
         struct
         {
-            BYTE InboundConnectionEnabled : 1;  // 0  Inbound Connection Enabled
-            BYTE OutboundConnectionEnabled : 1; // 1  Outbound Connection Enabled
-            BYTE Reserved : 6;                  // 2:7 Reserved for future definition by this specification, set to all zeros
+            BYTE InboundConnectionEnabled : 1;  // 00 Inbound Connection Enabled
+            BYTE OutboundConnectionEnabled : 1; // 01 Outbound Connection Enabled
+            BYTE Reserved : 6;                  // 02:07 Reserved // For future definition by this specification, set to all zeros
         };
-    } Connections;
+    } Connections;          // Connections
 } SMBIOS_OUT_OF_BAND_REMOTE_ACCESS, *PSMBIOS_OUT_OF_BAND_REMOTE_ACCESS, SMBIOS_TYPE_30, *PSMBIOS_TYPE_30;
 
 #pragma endregion
@@ -2203,9 +2203,9 @@ typedef struct _SMBIOS_SYSTEM_BOOT_INFORMATION
     BYTE Reserved[6];
     struct
     {
-        BYTE Status; // SMBIOS_SYSTEM_BOOT_STATUS_*
-        BYTE AdditionalData[9];
-    } Status;
+        BYTE Status; // Status // SMBIOS_SYSTEM_BOOT_STATUS_*
+        BYTE AdditionalData[9]; // Additional Data
+    } Status;   // Boot Status
 } SMBIOS_SYSTEM_BOOT_INFORMATION, *PSMBIOS_SYSTEM_BOOT_INFORMATION, SMBIOS_TYPE_32, *PSMBIOS_TYPE_32;
 
 #pragma endregion
