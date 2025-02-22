@@ -4,6 +4,10 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+String InputFile = args[0];
+Data = File.ReadAllLines(InputFile);
+Output = File.Create(Path.ChangeExtension(InputFile, "TypeInfo.h"));
+
 Byte[] Utf8Bom = [0xEF, 0xBB, 0xBF];
 Byte[] Head = """
 //------------------------------------------------------------------------------
@@ -123,18 +127,19 @@ static String AddStructureType(String TypeNumber, String StructureName)
 static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32 EndLine)
 {
     List<String> Fields = [];
-    Int32 Colon;
     Match Match;
-    String Parent = String.Empty, ParentComment = String.Empty;
+    String Parent = String.Empty, ParentSpecName = String.Empty;
     UInt16 ParentBits = 0;
     Boolean InCommentBlock = false;
 
-    for (UInt32 k = EndLine - 1; k > StartLine; k--)
+    for (UInt32 i = EndLine - 1; i > StartLine; i--)
     {
-        String Field, Comment = String.Empty, Name, Count = String.Empty, EnumName = String.Empty, TypeInfo;
-        String[] Comments;
+        String Field, FieldType, FieldName, FieldCount, SpecName = String.Empty, FieldComment, EnumName = String.Empty, TypeInfo;
+        String[] FieldComments;
+        UInt16 FieldBits;
+        Int32 j;
 
-        Field = Data[k].Trim();
+        Field = Data[i].Trim();
 
         /* Skip comments */
         if (Field == "*/")
@@ -146,6 +151,9 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
             InCommentBlock = false;
             continue;
         } else if (InCommentBlock)
+        {
+            continue;
+        } else if (Field.StartsWith("//"))
         {
             continue;
         }
@@ -162,7 +170,7 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
         if (Field == "union")
         {
             Parent = String.Empty;
-            ParentComment = String.Empty;
+            ParentSpecName = String.Empty;
             ParentBits = 0;
             continue;
         }
@@ -172,11 +180,11 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
         }
         if (Field[0] == '}')
         {
-            Comments = Field.Split(" // ");
-            if (Comments.Length > 1)
+            FieldComments = Field.Split(" // ");
+            if (FieldComments.Length > 1)
             {
                 Parent = Field[1..Field.IndexOf(';')].Trim();
-                ParentComment = Comments[1];
+                ParentSpecName = FieldComments[1];
             }
             continue;
         }
@@ -191,107 +199,117 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
         Match = RxField().Match(Field);
         if (!Match.Success || Match.Groups.Count != 4)
         {
-            throw new Exception("Cannot resolve line " + k.ToString() + ": " + Field);
+            throw new Exception("Cannot resolve line " + i.ToString() + ": " + Field);
         }
 
-        Name = Match.Groups[2].Value;
-        if (Name.EndsWith(']'))
+        FieldType = Match.Groups[1].Value;
+        FieldName = Match.Groups[2].Value;
+        FieldBits = 0;
+        FieldComment = Match.Groups[3].Value.Trim();
+        if (FieldComment.StartsWith("//"))
         {
-            Count = Name[(Name.IndexOf('[') + 1)..Name.IndexOf(']')];
-            if (String.IsNullOrEmpty(Count))
+            FieldComment = FieldComment[2..FieldComment.Length].TrimStart();
+        }
+        FieldComments = FieldComment.Split(" // ");
+        if (FieldName.EndsWith(']'))
+        {
+            FieldCount = FieldName[(FieldName.IndexOf('[') + 1)..(FieldName.Length - 1)];
+            if (String.IsNullOrEmpty(FieldCount))
             {
                 continue;
             }
-            Colon = -1;
+            FieldName = FieldName[0..FieldName.IndexOf('[')];
         } else
         {
-            Count = String.Empty;
-            Colon = Name.IndexOf(':');
+            FieldCount = String.Empty;
+            j = FieldName.IndexOf(':');
+            if (j >= 0)
+            {
+                FieldBits = UInt16.Parse(FieldName[(j + 1)..FieldName.Length].Trim());
+                FieldName = FieldName[0..j].Trim();
+            }
         }
-        Comments = Match.Groups[3].Value.Trim().Split("// ");
-        foreach (String Part in Comments)
+        foreach (String Part in FieldComments)
         {
             if (String.IsNullOrEmpty(EnumName) && Part.StartsWith("SMBIOS_") && Part.EndsWith("_*"))
             {
                 EnumName = Part[0..(Part.Length - 2)];
-            } else if (String.IsNullOrEmpty(Comment))
+            } else if (String.IsNullOrEmpty(SpecName))
             {
-                Comment = Part.Trim();
+                SpecName = Part.Trim();
             }
         }
-        if (Colon == -1)
+        if (FieldBits == 0)
         {
             if (String.IsNullOrEmpty(EnumName))
             {
-                if (Match.Groups[2].Value == "Value" && Data[k - 2].Trim() == "union")
+                if (FieldName == "Value" && Data[i - 2].Trim() == "union")
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_UINT(" +
-                        TypeNumber + ", \"" + ParentComment + "\", " + Parent +
+                        TypeNumber + ", \"" + ParentSpecName + "\", " + Parent +
                         ".Value)";
-                } else if (Match.Groups[1].Value == "BYTE" || Match.Groups[1].Value == "WORD" ||
-                    Match.Groups[1].Value == "DWORD" || Match.Groups[1].Value == "QWORD")
+                } else if (FieldType == "BYTE" || FieldType == "WORD" || FieldType == "DWORD" || FieldType == "QWORD")
                 {
-                    if (String.IsNullOrEmpty(Comment))
+                    if (String.IsNullOrEmpty(SpecName))
                     {
                         continue;
                     }
                     TypeInfo =
-                        "SMBIOS_DEFINE_FIELD_UINT(" +
-                        TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
+                        "SMBIOS_DEFINE_FIELD_" + (String.IsNullOrEmpty(FieldCount) ? "UINT" : "RAW") + "(" +
+                        TypeNumber + ", \"" + SpecName + "\", " + FieldName +
                         ")";
-                } else if (Match.Groups[1].Value == "UCHAR")
+                } else if (FieldType == "UCHAR")
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_STRING(" +
-                        TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
+                        TypeNumber + ", \"" + SpecName + "\", " + FieldName +
                         ")";
-                } else if (Match.Groups[1].Value == "SMBIOS_UUID")
+                } else if (FieldType == "SMBIOS_UUID")
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD(" +
-                        TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
+                        TypeNumber + ", \"" + SpecName + "\", " + FieldName +
                         ", SmbiosDataTypeUuid)";
-                } else if (Match.Groups[1].Value.StartsWith("SMBIOS_"))
+                } else if (FieldType.StartsWith("SMBIOS_"))
                 {
-                    Fields.Add(AddStructureType(TypeNumber, Match.Groups[1].Value));
+                    Fields.Add(AddStructureType(TypeNumber, FieldType));
                     TypeInfo =
                         "SMBIOS_DEFINE_FIELD_UINT(" +
-                        TypeNumber + ", \"" + Comment + "\", " + Match.Groups[2].Value +
+                        TypeNumber + ", \"" + SpecName + "\", " + FieldName +
                         ".Value)";
                 } else
                 {
-                    Console.WriteLine("Cannot resolve line " + k.ToString() + ": " + Field);
+                    Console.WriteLine("Cannot resolve line " + i.ToString() + ": " + Field);
                     continue;
                 }
             } else
             {
                 TypeInfo =
                         "SMBIOS_DEFINE_FIELD_ENUM(" +
-                        TypeNumber + ", \"" + Comment + "\", " +
+                        TypeNumber + ", \"" + SpecName + "\", " +
                         Match.Groups[2].Value + ", " + AddEnumType(EnumName) + ")";
             }
         } else
         {
             if (ParentBits == 0)
             {
-                ParentBits = Match.Groups[1].Value switch
+                ParentBits = FieldType switch
                 {
                     "BYTE" => 8,
                     "WORD" => 16,
                     "DWORD" => 32,
                     "QWORD" => 64,
-                    _ => throw new ArgumentException("Unrecognized 'Type' of bit field: " + Match.Groups[1].Value)
+                    _ => throw new ArgumentException("Unrecognized type of bit field: " + FieldType)
                 };
             }
-            Name = Comment[(Comment.IndexOf(' ') + 1)..Comment.Length].Replace("\"", "\\\"");
-            UInt16 BitSize = UInt16.Parse(Match.Groups[2].Value[(Colon + 1)..Match.Groups[2].Value.Length].Trim());
-            ParentBits -= BitSize;
-            if (BitSize == 1)
+            SpecName = FieldComments[0][(FieldComments[0].IndexOf(' ') + 1)..FieldComments[0].Length].Replace("\"", "\\\"");
+            ParentBits -= FieldBits;
+            if (FieldBits == 1)
             {
                 TypeInfo =
                     "SMBIOS_DEFINE_FIELD_BIT(\"" +
-                    Name + "\", " + ParentBits.ToString() +
+                    SpecName + "\", " + ParentBits.ToString() +
                     ")";
             } else
             {
@@ -299,13 +317,13 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_BIT_FIELD(\"" +
-                        Name + "\", " + ParentBits.ToString() + ", " + BitSize.ToString() +
+                        SpecName + "\", " + ParentBits.ToString() + ", " + FieldBits.ToString() +
                         ", SmbiosDataTypeUInt)";
                 } else
                 {
                     TypeInfo =
                         "SMBIOS_DEFINE_BIT_FIELD(\"" +
-                        Name + "\", " + ParentBits.ToString() + ", " + BitSize.ToString() +
+                        SpecName + "\", " + ParentBits.ToString() + ", " + FieldBits.ToString() +
                         ", SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(" + AddEnumType(EnumName) +
                         "))";
                 }
@@ -317,11 +335,14 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
     return Fields;
 }
 
+String TypeRegionStart = "#pragma region ";
+Dictionary<String, String> Types = [];
+
 for (UInt32 i = 1; i < Data.Length; i++)
 {
     UInt32 j;
     Match Match;
-    String TypeNumber;
+    String TypeNumber, TypeRegionEnd;
 
     /* Find type (line [j..i]) */
     Match = RxType().Match(Data[i]);
@@ -342,8 +363,17 @@ for (UInt32 i = 1; i < Data.Length; i++)
     {
         continue;
     }
-    j += 2;
     TypeNumber = Match.Groups[3].Value;
+    TypeRegionEnd = " (Type " + TypeNumber + ")";
+    for (UInt32 k = j; k > 0; k--)
+    {
+        if (Data[k].StartsWith(TypeRegionStart) && Data[k].EndsWith(TypeRegionEnd))
+        {
+            Types.Add(TypeNumber, Data[k][TypeRegionStart.Length..(Data[k].Length - TypeRegionEnd.Length)]);
+            break;
+        }
+    }
+    j += 2;
 
     /* Output fields */
     List<String> Fields = ResolveStructure(TypeNumber, j, i);
@@ -360,6 +390,13 @@ for (UInt32 i = 1; i < Data.Length; i++)
     }
 }
 
+Output.Write("__declspec(selectany)\r\nSMBIOS_TYPE_INFO SmbiosTypeInfo[] = {\r\n"u8.ToArray());
+foreach (var Type in Types)
+{
+    Output.Write(Encoding.UTF8.GetBytes("    SMBIOS_DEFINE_TYPE(" + Type.Key + ", \"" + Type.Value + "\"),\r\n"));
+}
+Output.Write("};\r\n"u8.ToArray());
+
 Output.Dispose();
 
 partial class Program
@@ -373,8 +410,8 @@ partial class Program
     [GeneratedRegex(@"#define (SMBIOS_\w+) +\(\S+\) // (.+)", RegexOptions.Compiled)]
     private static partial Regex RxEnumDefine();
 
-    private static readonly String[] Data = File.ReadAllLines("../../../../SMBIOS.h");
-    private static readonly FileStream Output = File.Create("../../../../TypeInfo.h");
+    private static FileStream Output;
+    private static String[] Data = [];
     private static readonly Dictionary<String, String> Enums = [];
     private static readonly Dictionary<String, String> Structures = [];
 }

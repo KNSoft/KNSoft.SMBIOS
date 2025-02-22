@@ -1104,7 +1104,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType13FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(13, "Flags", Flags.Value),
     SMBIOS_DEFINE_FIELD_BIT("Use the abbreviated format", 0),
     SMBIOS_DEFINE_BIT_FIELD("Reserved", 1, 7, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_UINT(13, "Reserved", Reserved[15]),
+    SMBIOS_DEFINE_FIELD_RAW(13, "Reserved", Reserved),
     SMBIOS_DEFINE_FIELD_STRING(13, "Current Language", CurrentLanguage),
 };
 
@@ -1636,15 +1636,20 @@ SMBIOS_FIELD_ENUM SmbiosSystemBootStatusEnum[] = {
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType32FieldInfo[] = {
+    SMBIOS_DEFINE_FIELD_RAW(32, "Reserved", Reserved),
     SMBIOS_DEFINE_FIELD_ENUM(32, "Status", Status, SmbiosSystemBootStatusEnum),
-    SMBIOS_DEFINE_FIELD_UINT(32, "Additional Data", AdditionalData[9]),
+    SMBIOS_DEFINE_FIELD_RAW(32, "Additional Data", AdditionalData),
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType33FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_ENUM(33, "", Type, SmbiosMemoryErrorTypeEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(33, "", Granularity, SmbiosMemoryErrorGranularityEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(33, "", Operation, SmbiosMemoryErrorOperationEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(33, "Error Type", Type, SmbiosMemoryErrorTypeEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(33, "Error Granularity", Granularity, SmbiosMemoryErrorGranularityEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(33, "Error Operation", Operation, SmbiosMemoryErrorOperationEnum),
+    SMBIOS_DEFINE_FIELD_UINT(33, "Vendor Syndrome", VendorSyndrome),
+    SMBIOS_DEFINE_FIELD_UINT(33, "Memory Array Error Address", MemoryArrayErrorAddress),
+    SMBIOS_DEFINE_FIELD_UINT(33, "Device Error Address", DeviceErrorAddress),
+    SMBIOS_DEFINE_FIELD_UINT(33, "Error Resolution", Resolution),
 };
 
 __declspec(selectany)
@@ -1675,8 +1680,28 @@ SMBIOS_FIELD_ENUM SmbiosManagementDeviceTypeEnum[] = {
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType34FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_ENUM(34, "", Type, SmbiosManagementDeviceTypeEnum),
-    SMBIOS_DEFINE_FIELD_ENUM(34, "", AddressType, SmbiosManagementDeviceAddressTypeEnum),
+    SMBIOS_DEFINE_FIELD_STRING(34, "Description", Description),
+    SMBIOS_DEFINE_FIELD_ENUM(34, "Type", Type, SmbiosManagementDeviceTypeEnum),
+    SMBIOS_DEFINE_FIELD_UINT(34, "Address", Address),
+    SMBIOS_DEFINE_FIELD_ENUM(34, "Address Type", AddressType, SmbiosManagementDeviceAddressTypeEnum),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_TYPE_INFO SmbiosType35FieldInfo[] = {
+    SMBIOS_DEFINE_FIELD_STRING(35, "Description", Description),
+    SMBIOS_DEFINE_FIELD_UINT(35, "Management Device Handle", ManagementDeviceHandle),
+    SMBIOS_DEFINE_FIELD_UINT(35, "Component Handle", ComponentHandle),
+    SMBIOS_DEFINE_FIELD_UINT(35, "Threshold Handle", ThresholdHandle),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_TYPE_INFO SmbiosType36FieldInfo[] = {
+    SMBIOS_DEFINE_FIELD_UINT(36, "Lower Threshold – Non-critical", LowerThresholdNonCritical),
+    SMBIOS_DEFINE_FIELD_UINT(36, "Upper Threshold – Non-critical", UpperThresholdNonCritical),
+    SMBIOS_DEFINE_FIELD_UINT(36, "Lower Threshold – Critical", LowerThresholdCritical),
+    SMBIOS_DEFINE_FIELD_UINT(36, "Upper Threshold – Critical", UpperThresholdCritical),
+    SMBIOS_DEFINE_FIELD_UINT(36, "Lower Threshold – Non-recoverable", LowerThresholdNonRecoverable),
+    SMBIOS_DEFINE_FIELD_UINT(36, "Upper Threshold – Non-recoverable", UpperThresholdNonRecoverable),
 };
 
 __declspec(selectany)
@@ -1689,7 +1714,17 @@ SMBIOS_FIELD_ENUM SmbiosMemoryChannelTypeEnum[] = {
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType37FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_ENUM(37, "", Type, SmbiosMemoryChannelTypeEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(37, "Channel Type", Type, SmbiosMemoryChannelTypeEnum),
+    SMBIOS_DEFINE_FIELD_UINT(37, "Maximum Channel Load", MaximumLoad),
+    SMBIOS_DEFINE_FIELD_UINT(37, "Memory Device Count", MemoryDeviceCount),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosIpmiDeviceBaseaddressRegisterSpacingEnum[] = {
+    { u8"On successive byte boundaries", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_SUCCESSIVE },
+    { u8"On 32-bit boundaries", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_32BIT },
+    { u8"On 16-bit boundaries", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_16BIT },
+    { u8"Reserved", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_RESERVED },
 };
 
 __declspec(selectany)
@@ -1703,53 +1738,134 @@ SMBIOS_FIELD_ENUM SmbiosIpmiDeviceInterfaceTypeEnum[] = {
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType38FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_ENUM(38, "", Type, SmbiosIpmiDeviceInterfaceTypeEnum),
-    SMBIOS_DEFINE_FIELD_UINT(38, "", .Value),
+    SMBIOS_DEFINE_FIELD_ENUM(38, "Interface Type", Type, SmbiosIpmiDeviceInterfaceTypeEnum),
+    SMBIOS_DEFINE_FIELD_UINT(38, "IPMI Specification Revision", SpecificationRevision.Value),
     SMBIOS_DEFINE_BIT_FIELD("Least significant bits", 0, 4, SmbiosDataTypeUInt),
     SMBIOS_DEFINE_BIT_FIELD("Most significant digit", 4, 4, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_UINT(38, "", .Value),
-    SMBIOS_DEFINE_FIELD_BIT("1 The address is in I/O space, or 0 the address is memory-mapped", 0),
+    SMBIOS_DEFINE_FIELD_UINT(38, "I2C Target Address", I2CTargetAddress),
+    SMBIOS_DEFINE_FIELD_UINT(38, "NV Storage Device Address", NVStorageDeviceAddress),
+    SMBIOS_DEFINE_FIELD_UINT(38, "Base Address", BaseAddress.Value),
+    SMBIOS_DEFINE_FIELD_BIT("I/O space", 0),
     SMBIOS_DEFINE_BIT_FIELD("Address", 1, 63, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_UINT(38, "", .Value),
-    SMBIOS_DEFINE_FIELD_BIT("1 = level, 0 = edge", 0),
-    SMBIOS_DEFINE_FIELD_BIT("1 = active high, 0 = active low", 1),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved. Return as 0b", 2),
-    SMBIOS_DEFINE_FIELD_BIT("1 = specified, 0 = not specified", 3),
+    SMBIOS_DEFINE_FIELD_UINT(38, "Base Address Modifier / Interrupt Info", BaseAddressInfo.Value),
+    SMBIOS_DEFINE_FIELD_BIT("Interrupt Trigger Mode", 0),
+    SMBIOS_DEFINE_FIELD_BIT("Interrupt Polarity", 1),
+    SMBIOS_DEFINE_FIELD_BIT("Reserved", 2),
+    SMBIOS_DEFINE_FIELD_BIT("Interrupt Info", 3),
     SMBIOS_DEFINE_FIELD_BIT("LS-bit for addresses", 4),
-    SMBIOS_DEFINE_FIELD_BIT("Reserved. Return as 0b", 5),
-    SMBIOS_DEFINE_BIT_FIELD("SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_*", 6, 2, SmbiosDataTypeUInt),
+    SMBIOS_DEFINE_FIELD_BIT("Reserved", 5),
+    SMBIOS_DEFINE_BIT_FIELD("Register spacing", 6, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosIpmiDeviceBaseaddressRegisterSpacingEnum)),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyTypeEnum[] = {
+    { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_OTHER },
+    { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UNKNOWN },
+    { u8"Linear", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_LINEAR },
+    { u8"Switching", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_SWITCHING },
+    { u8"Battery", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_BATTERY },
+    { u8"UPS", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UPS },
+    { u8"Converter", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_CONVERTER },
+    { u8"Regulator", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_REGULATOR },
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyStatusEnum[] = {
+    { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OTHER },
+    { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_UNKNOWN },
+    { u8"OK", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OK },
+    { u8"Non-critical", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_NON_CRITICAL },
+    { u8"Critical; power supply has failed and has been taken off-line", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_CRITICAL },
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyInputVoltageRangeSwitchingEnum[] = {
+    { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_OTHER },
+    { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_UNKNOWN },
+    { u8"Manual", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_MANUAL },
+    { u8"Auto-switch", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_AUTO_SWITCH },
+    { u8"Wide range", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_WIDE_RANGE },
+    { u8"Not applicable", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_NOT_APPLICABLE },
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType39FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_UINT(39, "", .Value),
-    SMBIOS_DEFINE_FIELD_BIT("Power supply is hot-replaceable", 0),
-    SMBIOS_DEFINE_FIELD_BIT("Power supply is present", 1),
-    SMBIOS_DEFINE_FIELD_BIT("Power supply is unplugged from the wall", 2),
-    SMBIOS_DEFINE_BIT_FIELD("SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_*", 3, 4, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_BIT_FIELD("SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_*", 7, 3, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_BIT_FIELD("SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_*", 10, 4, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_BIT_FIELD("Reserved, set to 00b", 14, 2, SmbiosDataTypeUInt),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Power Unit Group", PowerUnitGroup),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Location", Location),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Device Name", DeviceName),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Manufacturer", Manufacturer),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Serial Number", SerialNumber),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Asset Tag Number", AssetTagNumber),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Model Part Number", ModelPartNumber),
+    SMBIOS_DEFINE_FIELD_STRING(39, "Revision Level", RevisionLevel),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Max Power Capacity", MaxPowerCapacity),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Power Supply Characteristics", Characteristics.Value),
+    SMBIOS_DEFINE_FIELD_BIT("Hot-replaceable", 0),
+    SMBIOS_DEFINE_FIELD_BIT("Present", 1),
+    SMBIOS_DEFINE_FIELD_BIT("Unplugged from the wall", 2),
+    SMBIOS_DEFINE_BIT_FIELD("DMTF Input Voltage Range Switching", 3, 4, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosSystemPowerSupplyInputVoltageRangeSwitchingEnum)),
+    SMBIOS_DEFINE_BIT_FIELD("Status", 7, 3, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosSystemPowerSupplyStatusEnum)),
+    SMBIOS_DEFINE_BIT_FIELD("DMTF Power Supply Type", 10, 4, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosSystemPowerSupplyTypeEnum)),
+    SMBIOS_DEFINE_BIT_FIELD("Reserved", 14, 2, SmbiosDataTypeUInt),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Input Voltage Probe Handle", InputVoltageProbeHandle),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Cooling Device Handle", CoolingDeviceHandle),
+    SMBIOS_DEFINE_FIELD_UINT(39, "Input Current Probe Handle", InputCurrentProbeHandle),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_TYPE_INFO SmbiosType40FieldInfo[] = {
+    SMBIOS_DEFINE_FIELD_UINT(40, "Number of Additional Information entries", Count),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosOnboardDevicesExtendedTypeEnum[] = {
+    { u8"Other", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_OTHER },
+    { u8"Unknown", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UNKNOWN },
+    { u8"Video", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_VIDEO },
+    { u8"SCSI Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SCSI_CONTROLLER },
+    { u8"Ethernet", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_ETHERNET },
+    { u8"Token Ring", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_TOKEN_RING },
+    { u8"Sound", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SOUND },
+    { u8"PATA Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_PATA_CONTROLLER },
+    { u8"SATA Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SATA_CONTROLLER },
+    { u8"SAS Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_SAS_CONTROLLER },
+    { u8"Wireless LAN", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WIRELESS_LAN },
+    { u8"Bluetooth", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_BLUETOOTH },
+    { u8"WWAN", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_WWAN },
+    { u8"eMMC (embedded Multi-Media Controller)", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_EMMC },
+    { u8"NVMe Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_NVME_CONTROLLER },
+    { u8"UFS Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UFS_CONTROLLER },
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType41FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_UINT(41, "", .Value),
-    SMBIOS_DEFINE_BIT_FIELD("SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_*", 0, 7, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_BIT("1 – Device Enabled, 0 – Device Disabled", 7),
-    SMBIOS_DEFINE_FIELD_UINT(41, "", .Value),
+    SMBIOS_DEFINE_FIELD_STRING(41, "Reference Designation", ReferenceDesignation),
+    SMBIOS_DEFINE_FIELD_UINT(41, "Device Type", Type.Value),
+    SMBIOS_DEFINE_BIT_FIELD("Type of Device", 0, 7, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosOnboardDevicesExtendedTypeEnum)),
+    SMBIOS_DEFINE_FIELD_BIT("Device Status", 7),
+    SMBIOS_DEFINE_FIELD_UINT(41, "Device Type Instance", TypeInstance),
+    SMBIOS_DEFINE_FIELD_UINT(41, "Segment Group Number", SegmentGroupNumber),
+    SMBIOS_DEFINE_FIELD_UINT(41, "Bus Number", BusNumber),
+    SMBIOS_DEFINE_FIELD_UINT(41, "Device/Function Number", DeviceFunctionNumber.Value),
     SMBIOS_DEFINE_BIT_FIELD("Function number", 0, 3, SmbiosDataTypeUInt),
     SMBIOS_DEFINE_BIT_FIELD("Device number", 3, 5, SmbiosDataTypeUInt),
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType42FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_UINT(42, "00h–3Fh MCTP Host Interfaces, 40h Network Host Interface, F0h OEM-defined, others Reserved", Type),
+    SMBIOS_DEFINE_FIELD_UINT(42, "Interface Type", Type),
+    SMBIOS_DEFINE_FIELD_UINT(42, "Interface Type Specific Data Length", TypeSpecificDataLength),
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType43FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_UINT(43, "", .Value),
+    SMBIOS_DEFINE_FIELD_RAW(43, "Vendor ID", VendorID),
+    SMBIOS_DEFINE_FIELD_UINT(43, "Major Spec Version", MajorSpecVersion),
+    SMBIOS_DEFINE_FIELD_UINT(43, "Minor Spec Version", MinorSpecVersion),
+    SMBIOS_DEFINE_FIELD_UINT(43, "Firmware Version 1", FirmwareVersion1),
+    SMBIOS_DEFINE_FIELD_UINT(43, "Firmware Version 2", FirmwareVersion2),
+    SMBIOS_DEFINE_FIELD_STRING(43, "Description", Description),
+    SMBIOS_DEFINE_FIELD_UINT(43, "Characteristics", Characteristics.Value),
     SMBIOS_DEFINE_FIELD_BIT("Reserved", 0),
     SMBIOS_DEFINE_FIELD_BIT("Reserved", 1),
     SMBIOS_DEFINE_FIELD_BIT("Characteristics are not supported", 2),
@@ -1757,6 +1873,12 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType43FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_BIT("Family configurable via platform software support", 4),
     SMBIOS_DEFINE_FIELD_BIT("Family configurable via OEM proprietary mechanism", 5),
     SMBIOS_DEFINE_BIT_FIELD("Reserved", 6, 58, SmbiosDataTypeUInt),
+    SMBIOS_DEFINE_FIELD_UINT(43, "OEM-defined", OEMDefined),
+};
+
+__declspec(selectany)
+SMBIOS_FIELD_TYPE_INFO SmbiosType44FieldInfo[] = {
+    SMBIOS_DEFINE_FIELD_UINT(44, "Referenced Handle", ReferencedHandle),
 };
 
 __declspec(selectany)
@@ -1772,33 +1894,94 @@ SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryStateEnum[] = {
 };
 
 __declspec(selectany)
+SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryIdFormatEnum[] = {
+    { u8"Free-form string", SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM },
+    { u8"UEFI ESRT FwClass GUID or the UEFI Firmware Management Protocol ImageTypeId", SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID },
+};
+
+__declspec(selectany)
 SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryVersionFormatEnum[] = {
-    { u8"The format is a free-form string", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM },
-    { u8"The format is \"MAJOR.MINOR\"", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR },
-    { u8"The format is a C-style hexadecimal string representation of the 32-bit numeric value", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32 },
-    { u8"The format is a C-style hexadecimal string representation of the 64-bit numeric value", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64 },
+    { u8"Free-form string", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM },
+    { u8"\"MAJOR.MINOR\"", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR },
+    { u8"32-bit numeric value", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32 },
+    { u8"64-bit numeric value", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64 },
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType45FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_UINT(45, "SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*, 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific", VersionFormat),
-    SMBIOS_DEFINE_FIELD_UINT(45, "SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_*, 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific", IDFormat),
-    SMBIOS_DEFINE_FIELD_ENUM(45, "", LowestSupportedFirmwareVersion, SmbiosFirmwareInventoryVersionFormatEnum),
-    SMBIOS_DEFINE_FIELD_UINT(45, "", .Value),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Firmware Component Name", ComponentName),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Firmware Version", Version),
+    SMBIOS_DEFINE_FIELD_ENUM(45, "Version Format", VersionFormat, SmbiosFirmwareInventoryVersionFormatEnum),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Firmware ID", ID),
+    SMBIOS_DEFINE_FIELD_ENUM(45, "Firmware ID Format", IDFormat, SmbiosFirmwareInventoryIdFormatEnum),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Release Date", ReleaseDate),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Manufacturer", Manufacturer),
+    SMBIOS_DEFINE_FIELD_STRING(45, "Lowest Supported Firmware Version", LowestSupportedFirmwareVersion),
+    SMBIOS_DEFINE_FIELD_UINT(45, "Image Size", ImageSize),
+    SMBIOS_DEFINE_FIELD_UINT(45, "Characteristics", Characteristics.Value),
     SMBIOS_DEFINE_FIELD_BIT("Updatable", 0),
     SMBIOS_DEFINE_FIELD_BIT("Write-Protect", 1),
     SMBIOS_DEFINE_BIT_FIELD("Reserved", 2, 14, SmbiosDataTypeUInt),
-    SMBIOS_DEFINE_FIELD_ENUM(45, "", State, SmbiosFirmwareInventoryStateEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(45, "State", State, SmbiosFirmwareInventoryStateEnum),
+    SMBIOS_DEFINE_FIELD_UINT(45, "Number of Associated Components", NumberOfAssociatedComponents),
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_ENUM SmbiosStringPropertyIdEnum[] = {
-    { u8"Reserved – do not use", SMBIOS_STRING_PROPERTY_ID_RESERVED },
+    { u8"Reserved", SMBIOS_STRING_PROPERTY_ID_RESERVED },
     { u8"UEFI device path", SMBIOS_STRING_PROPERTY_ID_UEFI_DEVICE_PATH },
 };
 
 __declspec(selectany)
 SMBIOS_FIELD_TYPE_INFO SmbiosType46FieldInfo[] = {
-    SMBIOS_DEFINE_FIELD_ENUM(46, "", ID, SmbiosStringPropertyIdEnum),
+    SMBIOS_DEFINE_FIELD_ENUM(46, "String Property ID", ID, SmbiosStringPropertyIdEnum),
+    SMBIOS_DEFINE_FIELD_STRING(46, "String Property Value", String),
+    SMBIOS_DEFINE_FIELD_UINT(46, "Parent handle", ParentHandle),
 };
 
+__declspec(selectany)
+SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
+    SMBIOS_DEFINE_TYPE(0, "Platform Firmware Information"),
+    SMBIOS_DEFINE_TYPE(1, "System Information"),
+    SMBIOS_DEFINE_TYPE(2, "Baseboard Information"),
+    SMBIOS_DEFINE_TYPE(3, "System Enclosure or Chassis"),
+    SMBIOS_DEFINE_TYPE(4, "Processor Information"),
+    SMBIOS_DEFINE_TYPE(7, "Cache Information"),
+    SMBIOS_DEFINE_TYPE(8, "Port Connector Information"),
+    SMBIOS_DEFINE_TYPE(9, "System Slots"),
+    SMBIOS_DEFINE_TYPE(11, "OEM Strings"),
+    SMBIOS_DEFINE_TYPE(12, "System Configuration Options"),
+    SMBIOS_DEFINE_TYPE(13, "Firmware Language Information"),
+    SMBIOS_DEFINE_TYPE(14, "Group Associations"),
+    SMBIOS_DEFINE_TYPE(15, "System Event Log"),
+    SMBIOS_DEFINE_TYPE(16, "Physical Memory Array"),
+    SMBIOS_DEFINE_TYPE(17, "Memory Device"),
+    SMBIOS_DEFINE_TYPE(18, "32-Bit Memory Error Information"),
+    SMBIOS_DEFINE_TYPE(19, "Memory Array Mapped Address"),
+    SMBIOS_DEFINE_TYPE(20, "Memory Device Mapped Address"),
+    SMBIOS_DEFINE_TYPE(21, "Built-in Pointing Device"),
+    SMBIOS_DEFINE_TYPE(22, "Portable Battery"),
+    SMBIOS_DEFINE_TYPE(23, "System Reset"),
+    SMBIOS_DEFINE_TYPE(24, "Hardware Security"),
+    SMBIOS_DEFINE_TYPE(25, "System Power Controls"),
+    SMBIOS_DEFINE_TYPE(26, "Voltage Probe"),
+    SMBIOS_DEFINE_TYPE(27, "Cooling Device"),
+    SMBIOS_DEFINE_TYPE(28, "Temperature Probe"),
+    SMBIOS_DEFINE_TYPE(29, "Electrical Current Probe"),
+    SMBIOS_DEFINE_TYPE(30, "Out-of-Band Remote Access"),
+    SMBIOS_DEFINE_TYPE(32, "System Boot Information"),
+    SMBIOS_DEFINE_TYPE(33, "64-Bit Memory Error Information"),
+    SMBIOS_DEFINE_TYPE(34, "Management Device"),
+    SMBIOS_DEFINE_TYPE(35, "Management Device Component"),
+    SMBIOS_DEFINE_TYPE(36, "Management Device Threshold Data"),
+    SMBIOS_DEFINE_TYPE(37, "Memory Channel"),
+    SMBIOS_DEFINE_TYPE(38, "IPMI Device Information"),
+    SMBIOS_DEFINE_TYPE(39, "System Power Supply"),
+    SMBIOS_DEFINE_TYPE(40, "Additional Information"),
+    SMBIOS_DEFINE_TYPE(41, "Onboard Devices Extended Information"),
+    SMBIOS_DEFINE_TYPE(42, "Management Controller Host Interface"),
+    SMBIOS_DEFINE_TYPE(43, "TPM Device"),
+    SMBIOS_DEFINE_TYPE(44, "Processor Additional Information"),
+    SMBIOS_DEFINE_TYPE(45, "Firmware Inventory Information"),
+    SMBIOS_DEFINE_TYPE(46, "String Property"),
+};

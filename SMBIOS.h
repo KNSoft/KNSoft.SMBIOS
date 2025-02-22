@@ -159,12 +159,12 @@ typedef struct _SMBIOS_PLATFORM_FIRMWARE_INFORMATION
             BYTE ManufacturingModeEnabled : 1;                  // 06 Manufacturing mode is enabled
             BYTE Reserved : 1;                                  // 07 Reserved
         };
-    } CharacteristicsExtensionByte2; // Firmware Characteristics Extension Byte 2
+    } CharacteristicsExtensionByte2;    // Firmware Characteristics Extension Byte 2
 #if SMBIOS_VERSION >= 0x02040000
-    BYTE MajorRelease; // Platform Firmware Major Release
-    BYTE MinorRelease; // Platform Firmware Minor Release
-    BYTE ECFirmwareMajorRelease; // Embedded Controller Firmware Major Release
-    BYTE ECFirmwareMinorRelease; // Embedded Controller Firmware Minor Release
+    BYTE MajorRelease;                  // Platform Firmware Major Release
+    BYTE MinorRelease;                  // Platform Firmware Minor Release
+    BYTE ECFirmwareMajorRelease;        // Embedded Controller Firmware Major Release
+    BYTE ECFirmwareMinorRelease;        // Embedded Controller Firmware Minor Release
 #if SMBIOS_VERSION >= 0x03010000
     union
     {
@@ -254,10 +254,10 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
             BYTE HotSwappable : 1;      // 04 The board is s hot swappable
             BYTE Reserved : 3;          // 05:07 Reserved
         };
-    } FeatureFlags;         // Feature Flags
-    UCHAR LocationInChassis; // Location in Chassis
-    WORD ChassisHandle;     // Chassis Handle
-    BYTE BoardType;         // Board Type // SMBIOS_BASEBOARD_TYPE_*
+    } FeatureFlags;             // Feature Flags
+    UCHAR LocationInChassis;    // Location in Chassis
+    WORD ChassisHandle;         // Chassis Handle
+    BYTE BoardType;             // Board Type // SMBIOS_BASEBOARD_TYPE_*
     BYTE NumberOfContainedObjectHandles;    // Number of Contained Object Handles
     _Field_size_(NumberOfContainedObjectHandles) WORD ContainedObjectHandles[];
 } SMBIOS_BASEBOARD_INFORMATION, *PSMBIOS_BASEBOARD_INFORMATION, SMBIOS_TYPE_2, *PSMBIOS_TYPE_2;
@@ -2200,12 +2200,12 @@ typedef struct _SMBIOS_OUT_OF_BAND_REMOTE_ACCESS
 typedef struct _SMBIOS_SYSTEM_BOOT_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Reserved[6];
-    struct
-    {
-        BYTE Status; // Status // SMBIOS_SYSTEM_BOOT_STATUS_*
+    BYTE Reserved[6];           // Reserved
+    // struct
+    // {
+        BYTE Status;            // Status // SMBIOS_SYSTEM_BOOT_STATUS_*
         BYTE AdditionalData[9]; // Additional Data
-    } Status;   // Boot Status
+    // } Status;                // Boot Status
 } SMBIOS_SYSTEM_BOOT_INFORMATION, *PSMBIOS_SYSTEM_BOOT_INFORMATION, SMBIOS_TYPE_32, *PSMBIOS_TYPE_32;
 
 #pragma endregion
@@ -2217,13 +2217,13 @@ typedef struct _SMBIOS_SYSTEM_BOOT_INFORMATION
 typedef struct _SMBIOS_64BIT_MEMORY_ERROR_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Type;          // SMBIOS_MEMORY_ERROR_TYPE_*
-    BYTE Granularity;   // SMBIOS_MEMORY_ERROR_GRANULARITY_*
-    BYTE Operation;     // SMBIOS_MEMORY_ERROR_OPERATION_*
-    DWORD VendorSyndrome;
-    QWORD MemoryArrayErrorAddress;
-    QWORD DeviceErrorAddress;
-    DWORD Resolution;
+    BYTE Type;                      // Error Type // SMBIOS_MEMORY_ERROR_TYPE_*
+    BYTE Granularity;               // Error Granularity // SMBIOS_MEMORY_ERROR_GRANULARITY_*
+    BYTE Operation;                 // Error Operation // SMBIOS_MEMORY_ERROR_OPERATION_*
+    DWORD VendorSyndrome;           // Vendor Syndrome
+    QWORD MemoryArrayErrorAddress;  // Memory Array Error Address
+    QWORD DeviceErrorAddress;       // Device Error Address
+    DWORD Resolution;               // Error Resolution
 } SMBIOS_64BIT_MEMORY_ERROR_INFORMATION, *PSMBIOS_64BIT_MEMORY_ERROR_INFORMATION, SMBIOS_TYPE_33, *PSMBIOS_TYPE_33;
 
 #pragma endregion
@@ -2255,10 +2255,10 @@ typedef struct _SMBIOS_64BIT_MEMORY_ERROR_INFORMATION
 typedef struct _SMBIOS_MANAGEMENT_DEVICE
 {
     SMBIOS_HEADER Header;
-    BYTE Description;
-    BYTE Type;          // SMBIOS_MANAGEMENT_DEVICE_TYPE_*
-    DWORD Address;
-    BYTE AddressType;   // SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_*
+    UCHAR Description;  // Description
+    BYTE Type;          // Type // SMBIOS_MANAGEMENT_DEVICE_TYPE_*
+    DWORD Address;      // Address
+    BYTE AddressType;   // Address Type // SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_*
 } SMBIOS_MANAGEMENT_DEVICE, *PSMBIOS_MANAGEMENT_DEVICE, SMBIOS_TYPE_34, *PSMBIOS_TYPE_34;
 
 #pragma endregion
@@ -2270,10 +2270,10 @@ typedef struct _SMBIOS_MANAGEMENT_DEVICE
 typedef struct _SMBIOS_MANAGEMENT_DEVICE_COMPONENT
 {
     SMBIOS_HEADER Header;
-    BYTE Description;
-    WORD ManagementDeviceHandle;
-    WORD ComponentHandle;
-    WORD ThresholdHandle;
+    UCHAR Description;              // Description
+    WORD ManagementDeviceHandle;    // Management Device Handle
+    WORD ComponentHandle;           // Component Handle
+    WORD ThresholdHandle;           // Threshold Handle
 } SMBIOS_MANAGEMENT_DEVICE_COMPONENT, *PSMBIOS_MANAGEMENT_DEVICE_COMPONENT, SMBIOS_TYPE_35, *PSMBIOS_TYPE_35;
 
 #pragma endregion
@@ -2285,12 +2285,12 @@ typedef struct _SMBIOS_MANAGEMENT_DEVICE_COMPONENT
 typedef struct _SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA
 {
     SMBIOS_HEADER Header;
-    WORD LowerThresholdNonCritical;
-    WORD UpperThresholdNonCritical;
-    WORD LowerThresholdCritical;
-    WORD UpperThresholdCritical;
-    WORD LowerThresholdNonRecoverable;
-    WORD UpperThresholdNonRecoverable;
+    WORD LowerThresholdNonCritical;     // Lower Threshold – Non-critical
+    WORD UpperThresholdNonCritical;     // Upper Threshold – Non-critical
+    WORD LowerThresholdCritical;        // Lower Threshold – Critical
+    WORD UpperThresholdCritical;        // Upper Threshold – Critical
+    WORD LowerThresholdNonRecoverable;  // Lower Threshold – Non-recoverable
+    WORD UpperThresholdNonRecoverable;  // Upper Threshold – Non-recoverable
 } SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA, *PSMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA, SMBIOS_TYPE_36, *PSMBIOS_TYPE_36;
 
 #pragma endregion
@@ -2306,16 +2306,16 @@ typedef struct _SMBIOS_MANAGEMENT_DEVICE_THRESHOLD_DATA
 
 typedef struct _SMBIOS_MEMORY_CHANNEL_DEVICE
 {
-    BYTE Load;
-    WORD Handle;
+    BYTE Load;      // Memory Device Load
+    WORD Handle;    // Memory Device Handle
 } SMBIOS_MEMORY_CHANNEL_DEVICE, *PSMBIOS_MEMORY_CHANNEL_DEVICE;
 
 typedef struct _SMBIOS_MEMORY_CHANNEL
 {
     SMBIOS_HEADER Header;
-    BYTE Type; // SMBIOS_MEMORY_CHANNEL_TYPE_*
-    BYTE MaximumLoad;
-    BYTE MemoryDeviceCount;
+    BYTE Type;              // Channel Type // SMBIOS_MEMORY_CHANNEL_TYPE_*
+    BYTE MaximumLoad;       // Maximum Channel Load
+    BYTE MemoryDeviceCount; // Memory Device Count
     _Field_size_(MemoryDeviceCount) SMBIOS_MEMORY_CHANNEL_DEVICE MemoryDevices[];
 } SMBIOS_MEMORY_CHANNEL, *PSMBIOS_MEMORY_CHANNEL, SMBIOS_TYPE_37, *PSMBIOS_TYPE_37;
 
@@ -2339,41 +2339,41 @@ typedef struct _SMBIOS_MEMORY_CHANNEL
 typedef struct _SMBIOS_IPMI_DEVICE_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Type; // SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_*
+    BYTE Type; // Interface Type // SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_*
     union
     {
         BYTE Value;
         struct
         {
-            BYTE Minor : 4; // 0:3 Least significant bits
-            BYTE Major : 4; // 4:7 Most significant digit
+            BYTE Minor : 4; // 00:03 Least significant bits
+            BYTE Major : 4; // 04:07 Most significant digit
         };
-    } SpecificationRevision;
-    BYTE I2CTargetAddress;
-    BYTE NVStorageDeviceAddress;
+    } SpecificationRevision;        // IPMI Specification Revision
+    BYTE I2CTargetAddress;          // I2C Target Address
+    BYTE NVStorageDeviceAddress;    // NV Storage Device Address
     union
     {
         QWORD Value;
         struct
         {
-            QWORD IOSpace : 1;  // 00 1 The address is in I/O space, or 0 the address is memory-mapped
+            QWORD IOSpace : 1;  // 00 I/O space // 1 The address is in I/O space, or 0 the address is memory-mapped
             QWORD Address : 63; // 01:63 Address
         };
-    } BaseAddress;
+    } BaseAddress;  // Base Address
     union
     {
         BYTE Value;
         struct
         {
-            BYTE InterruptTriggerMode : 1;  // 0 1 = level, 0 = edge
-            BYTE InterruptPolarity : 1;     // 1 1 = active high, 0 = active low
-            BYTE Reserved0 : 1;             // 2 Reserved. Return as 0b
-            BYTE InterruptInfo : 1;         // 3 1 = specified, 0 = not specified
-            BYTE LSBAddress : 1;            // 4 LS-bit for addresses
-            BYTE Reserved1 : 1;             // 5 Reserved. Return as 0b
-            BYTE RegisterSpacing : 2;       // 6:7 SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_*
+            BYTE InterruptTriggerMode : 1;  // 00 Interrupt Trigger Mode // 1 = level, 0 = edge
+            BYTE InterruptPolarity : 1;     // 01 Interrupt Polarity // 1 = active high, 0 = active low
+            BYTE Reserved0 : 1;             // 02 Reserved // Return as 0b
+            BYTE InterruptInfo : 1;         // 03 Interrupt Info // 1 = specified, 0 = not specified
+            BYTE LSBAddress : 1;            // 04 LS-bit for addresses
+            BYTE Reserved1 : 1;             // 05 Reserved // Return as 0b
+            BYTE RegisterSpacing : 2;       // 06:07 Register spacing // SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_*
         };
-    } BaseAddressInfo;
+    } BaseAddressInfo;  // Base Address Modifier / Interrupt Info
 } SMBIOS_IPMI_DEVICE_INFORMATION, *PSMBIOS_IPMI_DEVICE_INFORMATION, SMBIOS_TYPE_38, *PSMBIOS_TYPE_38;
 
 #pragma endregion
@@ -2409,32 +2409,32 @@ typedef struct _SMBIOS_IPMI_DEVICE_INFORMATION
 typedef struct _SMBIOS_SYSTEM_POWER_SUPPLY
 {
     SMBIOS_HEADER Header;
-    BYTE PowerUnitGroup;
-    BYTE Location;
-    BYTE DeviceName;
-    BYTE Manufacturer;
-    BYTE SerialNumber;
-    BYTE AssetTagNumber;
-    BYTE ModelPartNumber;
-    BYTE RevisionLevel;
-    WORD MaxPowerCapacity;
+    BYTE PowerUnitGroup;    // Power Unit Group
+    UCHAR Location;         // Location
+    UCHAR DeviceName;       // Device Name
+    UCHAR Manufacturer;     // Manufacturer
+    UCHAR SerialNumber;     // Serial Number 
+    UCHAR AssetTagNumber;   // Asset Tag Number
+    UCHAR ModelPartNumber;  // Model Part Number
+    UCHAR RevisionLevel;    // Revision Level
+    WORD MaxPowerCapacity;  // Max Power Capacity
     union
     {
         WORD Value;
         struct
         {
-            WORD HotReplaceable : 1;                // 00 Power supply is hot-replaceable
-            WORD Present : 1;                       // 01 Power supply is present 
-            WORD UnpluggedFromTheWall : 1;          // 02 Power supply is unplugged from the wall
-            WORD InputVoltageRangeSwitching : 4;    // 03:06 SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_*
-            WORD Status : 3;                        // 07:09 SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_*
-            WORD Type : 4;                          // 10:13 SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_*
-            WORD Reserved : 2;                      // 14:15 Reserved, set to 00b
+            WORD HotReplaceable : 1;                // 00 Hot-replaceable // Power supply is hot-replaceable
+            WORD Present : 1;                       // 01 Present // Power supply is present 
+            WORD UnpluggedFromTheWall : 1;          // 02 Unplugged from the wall // Power supply is unplugged from the wall
+            WORD InputVoltageRangeSwitching : 4;    // 03:06 DMTF Input Voltage Range Switching // SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_*
+            WORD Status : 3;                        // 07:09 Status // SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_*
+            WORD Type : 4;                          // 10:13 DMTF Power Supply Type // SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_*
+            WORD Reserved : 2;                      // 14:15 Reserved // Set to 00b
         };
-    } Characteristics;
-    WORD InputVoltageProbeHandle;
-    WORD CoolingDeviceHandle;
-    WORD InputCurrentProbeHandle;
+    } Characteristics;              // Power Supply Characteristics
+    WORD InputVoltageProbeHandle;   // Input Voltage Probe Handle
+    WORD CoolingDeviceHandle;       // Cooling Device Handle
+    WORD InputCurrentProbeHandle;   // Input Current Probe Handle
 } SMBIOS_SYSTEM_POWER_SUPPLY, *PSMBIOS_SYSTEM_POWER_SUPPLY, SMBIOS_TYPE_39, *PSMBIOS_TYPE_39;
 
 #pragma endregion
@@ -2447,17 +2447,17 @@ typedef struct _SMBIOS_SYSTEM_POWER_SUPPLY
 
 typedef struct _SMBIOS_ADDITIONAL_INFORMATION_ENTRY
 {
-    BYTE Length;
-    WORD ReferencedHandle;
-    BYTE ReferencedOffset;
-    BYTE String;
-    BYTE Value[1]; // Varies
+    BYTE Length;            // Entry Length
+    WORD ReferencedHandle;  // Referenced Handle
+    BYTE ReferencedOffset;  // Referenced Offset
+    UCHAR String;           // String
+    BYTE Value[1];          // Value // Varies
 } SMBIOS_ADDITIONAL_INFORMATION_ENTRY, *PSMBIOS_ADDITIONAL_INFORMATION_ENTRY;
 
 typedef struct _SMBIOS_ADDITIONAL_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Count;
+    BYTE Count; // Number of Additional Information entries
     _Field_size_(Count) SMBIOS_ADDITIONAL_INFORMATION_ENTRY Entries[];
 } SMBIOS_ADDITIONAL_INFORMATION, *PSMBIOS_ADDITIONAL_INFORMATION, SMBIOS_TYPE_40, *PSMBIOS_TYPE_40;
 
@@ -2487,28 +2487,28 @@ typedef struct _SMBIOS_ADDITIONAL_INFORMATION
 typedef struct _SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE ReferenceDesignation;
+    UCHAR ReferenceDesignation; // Reference Designation
     union
     {
         BYTE Value;
         struct
         {
-            BYTE DeviceType : 7;    // 0:6 SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_*
-            BYTE Status : 1;        // 7 1 – Device Enabled, 0 – Device Disabled
+            BYTE DeviceType : 7;    // 00:06 Type of Device // SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_*
+            BYTE Status : 1;        // 07 Device Status // 1 – Device Enabled, 0 – Device Disabled
         };
-    } Type;
-    BYTE TypeInstance;
-    WORD SegmentGroupNumber;
-    BYTE BusNumber;
+    } Type;                     // Device Type
+    BYTE TypeInstance;          // Device Type Instance
+    WORD SegmentGroupNumber;    // Segment Group Number
+    BYTE BusNumber;             // Bus Number
     union
     {
         BYTE Value;
         struct
         {
-            BYTE FunctionNumber : 3;    // 0:2 Function number
-            BYTE DeviceNumber : 5;      // 3:7 Device number
+            BYTE FunctionNumber : 3;    // 00:02 Function number
+            BYTE DeviceNumber : 5;      // 03:07 Device number
         };
-    } DeviceFunctionNumber;
+    } DeviceFunctionNumber;     // Device/Function Number
 } SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION, *PSMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION, SMBIOS_TYPE_41, *PSMBIOS_TYPE_41;
 
 #pragma endregion
@@ -2534,8 +2534,8 @@ typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD
 typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE
 {
     SMBIOS_HEADER Header;
-    BYTE Type; // 00h–3Fh MCTP Host Interfaces, 40h Network Host Interface, F0h OEM-defined, others Reserved
-    BYTE TypeSpecificDataLength;
+    BYTE Type;                      // Interface Type // 00h–3Fh MCTP Host Interfaces, 40h Network Host Interface, F0h OEM-defined, others Reserved
+    BYTE TypeSpecificDataLength;    // Interface Type Specific Data Length
     _Field_size_bytes_(TypeSpecificDataLength) BYTE TypeSpecificData[];
 /*
     BYTE NumberOfProtocolRecords;
@@ -2552,12 +2552,12 @@ typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE
 typedef struct _SMBIOS_TPM_DEVICE
 {
     SMBIOS_HEADER Header;
-    BYTE VendorID[4];
-    BYTE MajorSpecVersion;
-    BYTE MinorSpecVersion;
-    DWORD FirmwareVersion1;
-    DWORD FirmwareVersion2;
-    BYTE Description;
+    BYTE VendorID[4];       // Vendor ID
+    BYTE MajorSpecVersion;  // Major Spec Version
+    BYTE MinorSpecVersion;  // Minor Spec Version
+    DWORD FirmwareVersion1; // Firmware Version 1
+    DWORD FirmwareVersion2; // Firmware Version 2
+    UCHAR Description;      // Description
     union
     {
         QWORD Value;
@@ -2571,8 +2571,8 @@ typedef struct _SMBIOS_TPM_DEVICE
             QWORD FamilyConfigurableViaOEMProprietaryMechanism : 1; // 05 Family configurable via OEM proprietary mechanism
             QWORD Reserved2 : 58;                                   // 06:63 Reserved
         };
-    } Characteristics;
-    DWORD OEMDefined;
+    } Characteristics;  // Characteristics
+    DWORD OEMDefined;   // OEM-defined
 } SMBIOS_TPM_DEVICE, *PSMBIOS_TPM_DEVICE, SMBIOS_TYPE_43, *PSMBIOS_TYPE_43;
 
 #pragma endregion
@@ -2595,15 +2595,15 @@ typedef struct _SMBIOS_TPM_DEVICE
 
 typedef struct _SMBIOS_PROCESSOR_SPECIFIC_BLOCK
 {
-    BYTE Length;
-    BYTE Type; // SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_*
-    _Field_size_bytes_(Length) BYTE Data[1]; // Varies
+    BYTE Length;    // Block Length
+    BYTE Type;      // Processor Type // SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_*
+    _Field_size_bytes_(Length) BYTE Data[1]; // Processor-Specific Data // Varies
 } SMBIOS_PROCESSOR_SPECIFIC_BLOCK, *PSMBIOS_PROCESSOR_SPECIFIC_BLOCK;
 
 typedef struct _SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION
 {
     SMBIOS_HEADER Header;
-    WORD ReferencedHandle;
+    WORD ReferencedHandle;  // Referenced Handle
     SMBIOS_PROCESSOR_SPECIFIC_BLOCK ProcessorSpecificBlock[];
 } SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION, *PSMBIOS_PROCESSOR_ADDITIONAL_INFORMATION, SMBIOS_TYPE_44, *PSMBIOS_TYPE_44;
 
@@ -2615,13 +2615,13 @@ typedef struct _SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION
 
 #define SMBIOS_TYPE_FIRMWARE_INVENTORY_INFORMATION ((BYTE)45)
 
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM      ((BYTE)0x00) // The format is a free-form string
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR    ((BYTE)0x01) // The format is "MAJOR.MINOR"
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32  ((BYTE)0x02) // The format is a C-style hexadecimal string representation of the 32-bit numeric value
-#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64  ((BYTE)0x03) // The format is a C-style hexadecimal string representation of the 64-bit numeric value
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM      ((BYTE)0x00) // Free-form string
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR    ((BYTE)0x01) // "MAJOR.MINOR"
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_32  ((BYTE)0x02) // 32-bit numeric value
+#define SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64  ((BYTE)0x03) // 64-bit numeric value
 
-#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM   ((BYTE)0x00) // The format is a free-form string
-#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID   ((BYTE)0x01) // The format is a string representation of the UEFI ESRT FwClass GUID or the UEFI Firmware Management Protocol ImageTypeId
+#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM   ((BYTE)0x00) // Free-form string
+#define SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID   ((BYTE)0x01) // UEFI ESRT FwClass GUID or the UEFI Firmware Management Protocol ImageTypeId
 
 #define SMBIOS_FIRMWARE_INVENTORY_STATE_OTHER               ((BYTE)0x01) // Other
 #define SMBIOS_FIRMWARE_INVENTORY_STATE_UNKNOWN             ((BYTE)0x02) // Unknown
@@ -2635,15 +2635,15 @@ typedef struct _SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION
 typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE ComponentName;
-    BYTE Version;
-    BYTE VersionFormat;                     // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*, 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
-    BYTE ID;
-    BYTE IDFormat;                          // SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_*, 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
-    BYTE ReleaseDate;
-    BYTE Manufacturer;
-    BYTE LowestSupportedFirmwareVersion;    // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_*
-    QWORD ImageSize;
+    UCHAR ComponentName;                    // Firmware Component Name
+    UCHAR Version;                          // Firmware Version
+    BYTE VersionFormat;                     // Version Format // SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_* // 04h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    UCHAR ID;                               // Firmware ID
+    BYTE IDFormat;                          // Firmware ID Format // SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_* // 02h–7Fh Available for future assignment by this specification, 80h-FFh Firmware Vendor/OEM-specific
+    UCHAR ReleaseDate;                      // Release Date
+    UCHAR Manufacturer;                     // Manufacturer
+    UCHAR LowestSupportedFirmwareVersion;   // Lowest Supported Firmware Version
+    QWORD ImageSize;                        // Image Size
     union
     {
         WORD Value;
@@ -2653,9 +2653,9 @@ typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
             WORD WriteProtect : 1;  // 01 Write-Protect
             WORD Reserved : 14;     // 02:15 Reserved
         };
-    } Characteristics;
-    BYTE State; // SMBIOS_FIRMWARE_INVENTORY_STATE_*
-    BYTE NumberOfAssociatedComponents;
+    } Characteristics;                  // Characteristics
+    BYTE State;                         // State // SMBIOS_FIRMWARE_INVENTORY_STATE_*
+    BYTE NumberOfAssociatedComponents;  // Number of Associated Components
     _Field_size_(NumberOfAssociatedComponents) WORD AssociatedComponentHandles[];
 } SMBIOS_FIRMWARE_INVENTORY_INFORMATION, *PSMBIOS_FIRMWARE_INVENTORY_INFORMATION, SMBIOS_TYPE_45, *PSMBIOS_TYPE_45;
 
@@ -2665,15 +2665,15 @@ typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
 
 #define SMBIOS_TYPE_STRING_PROPERTY ((BYTE)46)
 
-#define SMBIOS_STRING_PROPERTY_ID_RESERVED          ((WORD)0) // Reserved – do not use
+#define SMBIOS_STRING_PROPERTY_ID_RESERVED          ((WORD)0) // Reserved // Do not use
 #define SMBIOS_STRING_PROPERTY_ID_UEFI_DEVICE_PATH  ((WORD)1) // UEFI device path
 
 typedef struct _SMBIOS_STRING_PROPERTY
 {
     SMBIOS_HEADER Header;
-    WORD ID; // SMBIOS_STRING_PROPERTY_ID_*
-    BYTE String;
-    WORD ParentHandle;
+    WORD ID;            // String Property ID // SMBIOS_STRING_PROPERTY_ID_*
+    UCHAR String;       // String Property Value
+    WORD ParentHandle;  // Parent handle
 } SMBIOS_STRING_PROPERTY, *PSMBIOS_STRING_PROPERTY, SMBIOS_TYPE_46, *PSMBIOS_TYPE_46;
 
 #pragma endregion

@@ -14,11 +14,16 @@ typedef enum _SMBIOS_DATA_TYPE
     SmbiosDataTypeBit,
     SmbiosDataTypeEnum,
     SmbiosDataTypeUuid,
+    SmbiosDataTypeRaw,
 } SMBIOS_DATA_TYPE, *PSMBIOS_DATA_TYPE;
 
 typedef struct _SMBIOS_FIELD_ENUM
 {
+#ifdef __cplusplus
     const char8_t* Name;
+#else
+    const char* Name;
+#endif
     QWORD Value;
 } SMBIOS_FIELD_ENUM, *PSMBIOS_FIELD_ENUM;
 
@@ -53,6 +58,7 @@ typedef struct _SMBIOS_TYPE_INFO
 
 #define SMBIOS_DEFINE_FIELD_STRING(Type, Name, Field) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeString)
 #define SMBIOS_DEFINE_FIELD_UINT(Type, Name, Field) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeUInt)
+#define SMBIOS_DEFINE_FIELD_RAW(Type, Name, Field) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeRaw)
 #define SMBIOS_DEFINE_FIELD_ENUM(Type, Name, Field, EnumName) SMBIOS_DEFINE_FIELD(Type, Name, Field, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(EnumName))
 #define SMBIOS_DEFINE_FIELD_BIT(Name, BitOffset) SMBIOS_DEFINE_BIT_FIELD(Name, BitOffset, 1, SmbiosDataTypeBit)
 

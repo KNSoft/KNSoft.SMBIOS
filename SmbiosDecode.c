@@ -66,7 +66,7 @@ GetSmbiosTableData(
 #endif
 
 #define AddPtr(P, I) ((void*)((unsigned char*)(P) + (I))) // aka Add2Ptr
-#define SubPtr(B,O) ((unsigned int)((size_t)(O) - (size_t)(B))) // aka PtrOffset
+#define SubPtr(B, O) ((unsigned int)((size_t)(O) - (size_t)(B))) // aka PtrOffset
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -243,7 +243,7 @@ PrintSmbiosTable(
                     }
                 }
             }
-        } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeOther)
+        } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeRaw || TypeInfo->Fields[i].Type == SmbiosDataTypeOther)
         {
             BYTE j, *p;
             p = AddPtr(Table, TypeInfo->Fields[i].Offset);
