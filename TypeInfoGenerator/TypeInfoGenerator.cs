@@ -335,14 +335,36 @@ static List<String> ResolveStructure(String TypeNumber, UInt32 StartLine, UInt32
     return Fields;
 }
 
-String TypeRegionStart = "#pragma region ";
-Dictionary<String, String> Types = [];
+List<SmbiosType> Types = [];
+Boolean InTypeRegion = false;
+SmbiosType TypeDef = new();
 
 for (UInt32 i = 1; i < Data.Length; i++)
 {
     UInt32 j;
     Match Match;
-    String TypeNumber, TypeRegionEnd;
+    String TypeNumber;
+    List<String> Fields = [];
+
+    if (!InTypeRegion)
+    {
+        Match = RxTypeRegion().Match(Data[i]);
+        if (!Match.Success || Match.Groups.Count != 3)
+        {
+            continue;
+        }
+        TypeDef = new()
+        {
+            Number = Match.Groups[2].Value,
+            Name = Match.Groups[1].Value,
+        };
+        InTypeRegion = true;
+        continue;
+    }
+    if (Data[i].StartsWith("#pragma endregion"))
+    {
+        goto _AddType;
+    }
 
     /* Find type (line [j..i]) */
     Match = RxType().Match(Data[i]);
@@ -364,19 +386,10 @@ for (UInt32 i = 1; i < Data.Length; i++)
         continue;
     }
     TypeNumber = Match.Groups[3].Value;
-    TypeRegionEnd = " (Type " + TypeNumber + ")";
-    for (UInt32 k = j; k > 0; k--)
-    {
-        if (Data[k].StartsWith(TypeRegionStart) && Data[k].EndsWith(TypeRegionEnd))
-        {
-            Types.Add(TypeNumber, Data[k][TypeRegionStart.Length..(Data[k].Length - TypeRegionEnd.Length)]);
-            break;
-        }
-    }
     j += 2;
 
     /* Output fields */
-    List<String> Fields = ResolveStructure(TypeNumber, j, i);
+    Fields = ResolveStructure(TypeNumber, j, i);
     if (Fields.Count > 0)
     {
         Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
@@ -388,12 +401,23 @@ for (UInt32 i = 1; i < Data.Length; i++)
         }
         Output.Write("};\r\n\r\n"u8.ToArray());
     }
+
+_AddType:
+    TypeDef.HasDefination = Fields.Count > 0;
+    Types.Add(TypeDef);
+    InTypeRegion = false;
 }
 
 Output.Write("__declspec(selectany)\r\nSMBIOS_TYPE_INFO SmbiosTypeInfo[] = {\r\n"u8.ToArray());
 foreach (var Type in Types)
 {
-    Output.Write(Encoding.UTF8.GetBytes("    SMBIOS_DEFINE_TYPE(" + Type.Key + ", \"" + Type.Value + "\"),\r\n"));
+    if (Type.HasDefination)
+    {
+        Output.Write(Encoding.UTF8.GetBytes("    SMBIOS_DEFINE_TYPE(" + Type.Number + ", \"" + Type.Name + "\"),\r\n"));
+    } else
+    {
+        Output.Write(Encoding.UTF8.GetBytes("    { "+ Type.Number + ", \""+ Type.Name + "\", 0, NULL },\r\n"));
+    }
 }
 Output.Write("};\r\n"u8.ToArray());
 
@@ -401,6 +425,9 @@ Output.Dispose();
 
 partial class Program
 {
+    [GeneratedRegex(@"#pragma region (.+) \(Type (\d+).+", RegexOptions.Compiled)]
+    private static partial Regex RxTypeRegion();
+
     [GeneratedRegex(@"\} SMBIOS_(\w+), \*PSMBIOS_(\w+), SMBIOS_TYPE_(\d+), \*PSMBIOS_TYPE_(\d+);", RegexOptions.Compiled)]
     private static partial Regex RxType();
 
@@ -414,4 +441,10 @@ partial class Program
     private static String[] Data = [];
     private static readonly Dictionary<String, String> Enums = [];
     private static readonly Dictionary<String, String> Structures = [];
+    private struct SmbiosType
+    {
+        public String Number;
+        public String Name;
+        public Boolean HasDefination;
+    }
 }

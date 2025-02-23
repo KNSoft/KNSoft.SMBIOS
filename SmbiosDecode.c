@@ -71,7 +71,7 @@ GetSmbiosTableData(
 #define NULL ((void *)0)
 #endif
 
-static const char* g_Strings[UCHAR_MAX];
+static const char* g_Strings[UCHAR_MAX] = { 0 };
 
 static
 PSMBIOS_TABLE
@@ -205,7 +205,7 @@ PrintSmbiosTable(
             BYTE Index = *(BYTE*)AddPtr(Table, TypeInfo->Fields[i].Offset);
             if (Index != 0 && Index <= StringCount)
             {
-                printf("0x%02hhX \"%hs\"", Index, g_Strings[Index - 1]);
+                printf("0x%02hhX \"%hs\"", Index, g_Strings[(BYTE)(Index - 1)]);
             }
         } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUInt || TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
         {
