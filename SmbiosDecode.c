@@ -178,7 +178,7 @@ PrintSmbiosTable(
             {
                 printf("%02hhu [%hc] %hs",
                        TypeInfo->Fields[i].Offset,
-                       _bittest64(&BitFieldValue, TypeInfo->Fields[i].Offset) ? 'x' : ' ',
+                       (BitFieldValue & ((QWORD)1 << TypeInfo->Fields[i].Offset)) ? 'x' : ' ',
                        TypeInfo->Fields[i].Name);
             } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUInt || TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
             {

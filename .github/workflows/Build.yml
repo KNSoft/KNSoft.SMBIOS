@@ -31,7 +31,7 @@ jobs:
       if: ${{ matrix.platform == 'x64' || matrix.platform == 'x86' }}
       working-directory: ${{github.workspace}}
       run: |
-        ".\VSProject\OutDir\${{matrix.platform}}\${{matrix.config}}\SmbiosDecode.exe">.\SmbiosDecode.txt
+        .\VSProject\OutDir\${{matrix.platform}}\${{matrix.config}}\SmbiosDecode.exe>.\SmbiosDecode.txt
         TYPE .\SmbiosDecode.txt
     - name: Archive output SMBIOS decode result
       uses: actions/upload-artifact@main
