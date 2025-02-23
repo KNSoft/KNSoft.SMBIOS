@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  Build-Windows-MSVC:
+    strategy:
+      matrix:
+        platform: [x64, x86, ARM64]
+        config: [Debug, Release]
+      fail-fast: false
+    runs-on: windows-latest
+    steps:
+    - name: Source checkout
+      uses: actions/checkout@main
+      with:
+          submodules: recursive
+    - name: Prepare MSBuild
+      uses: microsoft/setup-msbuild@main
+    - name: Build
+      working-directory: ${{github.workspace}}
+      run: msbuild ".\VSProject\KNSoft.SMBIOS.sln" /restore /m /p:Configuration=${{matrix.config}} /p:Platform=${{matrix.platform}} /p:RestorePackagesConfig=true
+    - name: Run SmbiosDecode
+      if: ${{ matrix.platform == 'x64' || matrix.platform == 'x86' }}
+      working-directory: ${{github.workspace}}
+      run: |
+        ".\VSProject\OutDir\${{matrix.platform}}\${{matrix.config}}\SmbiosDecode.exe">.\SmbiosDecode.txt
+        TYPE .\SmbiosDecode.txt
+    - name: Archive output SMBIOS decode result
+      uses: actions/upload-artifact@main
+      with:
+        name: KNSoft.SMBIOS-Windows-MSVC-${{matrix.platform}}-${{matrix.config}}-${{github.sha}}
+        path: .\SmbiosDecode.txt
