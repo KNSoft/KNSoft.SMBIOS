@@ -30,18 +30,7 @@ typedef unsigned long long  QWORD; // UINT64
 
 /* For code analysis */
 #ifdef _MSC_VER
-#include <sal.h>
 #pragma warning(disable: 4200) // MS-Spec: nonstandard extension used: zero-sized array in struct/union
-#else
-#pragma push_macro("_Field_size_")
-#pragma push_macro("_Field_size_bytes_")
-#ifndef _Field_size_
-#define _Field_size_(x)
-#endif
-#ifndef _Field_size_bytes_
-#define _Field_size_bytes_(x)
-#endif
-
 #endif
 
 #pragma endregion
@@ -58,7 +47,7 @@ typedef struct _SMBIOS_RAW_DATA
     BYTE SMBIOSMinorVersion;
     BYTE DmiRevision;
     DWORD Length;
-    _Field_size_bytes_(Length) BYTE SMBIOSTableData[]; // SMBIOS_HEADER
+    BYTE SMBIOSTableData[]; // SMBIOS_HEADER // _Field_size_bytes_(Length)
 } SMBIOS_RAW_DATA, *PSMBIOS_RAW_DATA;
 
 typedef struct _SMBIOS_HEADER
@@ -261,7 +250,7 @@ typedef struct _SMBIOS_BASEBOARD_INFORMATION
     WORD ChassisHandle;         // Chassis Handle
     BYTE BoardType;             // Board Type // SMBIOS_BASEBOARD_TYPE_*
     BYTE NumberOfContainedObjectHandles;    // Number of Contained Object Handles
-    _Field_size_(NumberOfContainedObjectHandles) WORD ContainedObjectHandles[];
+    WORD ContainedObjectHandles[];          // Contained Object Handles // _Field_size_(NumberOfContainedObjectHandles)
 } SMBIOS_BASEBOARD_INFORMATION, *PSMBIOS_BASEBOARD_INFORMATION, SMBIOS_TYPE_2, *PSMBIOS_TYPE_2;
 
 #pragma endregion
@@ -347,7 +336,7 @@ typedef struct _SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS
     BYTE NumberOfPowerCords;            // Number of Power Cords
     BYTE ContainedElementCount;         // Contained Element Count
     BYTE ContainedElementRecordLength;  // Contained Element Record Length
-    _Field_size_bytes_(ContainedElementCount * ContainedElementRecordLength) BYTE ContainedElements[];
+    BYTE ContainedElements[];           // Contained Elements // _Field_size_bytes_(ContainedElementCount * ContainedElementRecordLength)
 /*
 #if SMBIOS_VERSION >= 0x02070000
     BYTE SKUNumber;
@@ -918,7 +907,7 @@ typedef struct _SMBIOS_MEMORY_CONTROLLER_INFORMATION
         };
     } MemoryModuleVoltage;              // Memory Module Voltage
     BYTE NumberOfAssociatedMemorySlots; // Number of Associated Memory Slots
-    _Field_size_(NumberOfAssociatedMemorySlots) WORD MemoryModuleConfigurationHandles[];    // Memory Module Configuration Handles
+    WORD MemoryModuleConfigurationHandles[];    // Memory Module Configuration Handles // _Field_size_(NumberOfAssociatedMemorySlots)
 /*
 #if SMBIOS_VERSION >= 0x02010000
     BYTE EnabledErrorCorrectingCapabilities;    // Enabled Error Correcting Capabilities
@@ -1350,7 +1339,7 @@ typedef struct _SMBIOS_SYSTEM_SLOTS
 #if SMBIOS_VERSION >= 0x03020000
     BYTE BaseDataBusWidth;      // Data Bus Width (Base)
     BYTE PeerGroupingCount;     // Peer (S/B/D/F/Width) grouping count
-    _Field_size_bytes_(5 * PeerGroupingCount) BYTE PeerGroups[];
+    BYTE PeerGroups[];          // Peer (S/B/D/F/Width) groups // _Field_size_bytes_(5 * PeerGroupingCount)
 /*
 #if SMBIOS_VERSION >= 0x03040000
     BYTE Information;
@@ -1521,7 +1510,7 @@ typedef struct _SMBIOS_SYSTEM_EVENT_LOG
     BYTE HeaderFormat;                      // Log Header Format // SMBIOS_SYSTEM_EVENT_LOG_HEADERFORMAT_*
     BYTE NumberOfSupportedTypeDescriptors;  // Number of Supported Log Type Descriptors
     BYTE LengthOfTypeDescriptor;            // Length of each Log Type Descriptor // Currently hard-coded as 2
-    _Field_size_bytes_(NumberOfSupportedTypeDescriptors * LengthOfTypeDescriptor) BYTE SupportedTypeDescriptors[];
+    BYTE SupportedTypeDescriptors[];        // List of Supported Event Log Type Descriptors // _Field_size_bytes_(NumberOfSupportedTypeDescriptors * LengthOfTypeDescriptor)
 #endif // SMBIOS_VERSION >= 0x02010000
 } SMBIOS_SYSTEM_EVENT_LOG, *PSMBIOS_SYSTEM_EVENT_LOG, SMBIOS_TYPE_15, *PSMBIOS_TYPE_15;
 
@@ -2315,10 +2304,10 @@ typedef struct _SMBIOS_MEMORY_CHANNEL_DEVICE
 typedef struct _SMBIOS_MEMORY_CHANNEL
 {
     SMBIOS_HEADER Header;
-    BYTE Type;              // Channel Type // SMBIOS_MEMORY_CHANNEL_TYPE_*
-    BYTE MaximumLoad;       // Maximum Channel Load
-    BYTE MemoryDeviceCount; // Memory Device Count
-    _Field_size_(MemoryDeviceCount) SMBIOS_MEMORY_CHANNEL_DEVICE MemoryDevices[];
+    BYTE Type;                                      // Channel Type // SMBIOS_MEMORY_CHANNEL_TYPE_*
+    BYTE MaximumLoad;                               // Maximum Channel Load
+    BYTE MemoryDeviceCount;                         // Memory Device Count
+    SMBIOS_MEMORY_CHANNEL_DEVICE MemoryDevices[];   // Memory Devices // _Field_size_(MemoryDeviceCount)
 } SMBIOS_MEMORY_CHANNEL, *PSMBIOS_MEMORY_CHANNEL, SMBIOS_TYPE_37, *PSMBIOS_TYPE_37;
 
 #pragma endregion
@@ -2459,8 +2448,8 @@ typedef struct _SMBIOS_ADDITIONAL_INFORMATION_ENTRY
 typedef struct _SMBIOS_ADDITIONAL_INFORMATION
 {
     SMBIOS_HEADER Header;
-    BYTE Count; // Number of Additional Information entries
-    _Field_size_(Count) SMBIOS_ADDITIONAL_INFORMATION_ENTRY Entries[];
+    BYTE Count;                                     // Number of Additional Information entries
+    SMBIOS_ADDITIONAL_INFORMATION_ENTRY Entries[];  // Additional Information entries // _Field_size_(Count)
 } SMBIOS_ADDITIONAL_INFORMATION, *PSMBIOS_ADDITIONAL_INFORMATION, SMBIOS_TYPE_40, *PSMBIOS_TYPE_40;
 
 #pragma endregion
@@ -2528,9 +2517,9 @@ typedef struct _SMBIOS_ONBOARD_DEVICES_EXTENDED_INFORMATION
 
 typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD
 {
-    BYTE Type; // SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_*
-    BYTE TypeSpecificDataLength;
-    _Field_size_bytes_(TypeSpecificDataLength) BYTE TypeSpecificData[];
+    BYTE Type;                      // Protocol Type // SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_TYPE_*
+    BYTE TypeSpecificDataLength;    // Protocol Type Specific Data Length
+    BYTE TypeSpecificData[];        // Protocol Type Specific Data // _Field_size_bytes_(TypeSpecificDataLength)
 } SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD, *PSMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD;
 
 typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE
@@ -2538,10 +2527,10 @@ typedef struct _SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE
     SMBIOS_HEADER Header;
     BYTE Type;                      // Interface Type // 00h–3Fh MCTP Host Interfaces, 40h Network Host Interface, F0h OEM-defined, others Reserved
     BYTE TypeSpecificDataLength;    // Interface Type Specific Data Length
-    _Field_size_bytes_(TypeSpecificDataLength) BYTE TypeSpecificData[];
+    BYTE TypeSpecificData[];        // Interface Type Specific Data // _Field_size_bytes_(TypeSpecificDataLength)
 /*
-    BYTE NumberOfProtocolRecords;
-    SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD ProtocolRecords[];
+    BYTE NumberOfProtocolRecords;   // Number of Protocol Records
+    SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE_PROTOCOL_RECORD ProtocolRecords[];  // Protocol Records // _Field_size_(NumberOfProtocolRecords)
 */
 } SMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE, *PSMBIOS_MANAGEMENT_CONTROLLER_HOST_INTERFACE, SMBIOS_TYPE_42, *PSMBIOS_TYPE_42;
 
@@ -2599,7 +2588,7 @@ typedef struct _SMBIOS_PROCESSOR_SPECIFIC_BLOCK
 {
     BYTE Length;    // Block Length
     BYTE Type;      // Processor Type // SMBIOS_PROCESSOR_ARCHITECTURE_TYPE_*
-    _Field_size_bytes_(Length) BYTE Data[1]; // Processor-Specific Data // Varies
+    BYTE Data[1];   // Processor-Specific Data // _Field_size_bytes_(Length)
 } SMBIOS_PROCESSOR_SPECIFIC_BLOCK, *PSMBIOS_PROCESSOR_SPECIFIC_BLOCK;
 
 typedef struct _SMBIOS_PROCESSOR_ADDITIONAL_INFORMATION
@@ -2658,7 +2647,7 @@ typedef struct _SMBIOS_FIRMWARE_INVENTORY_INFORMATION
     } Characteristics;                  // Characteristics
     BYTE State;                         // State // SMBIOS_FIRMWARE_INVENTORY_STATE_*
     BYTE NumberOfAssociatedComponents;  // Number of Associated Components
-    _Field_size_(NumberOfAssociatedComponents) WORD AssociatedComponentHandles[];
+    WORD AssociatedComponentHandles[];  // Associated Component Handles // _Field_size_(NumberOfAssociatedComponents)
 } SMBIOS_FIRMWARE_INVENTORY_INFORMATION, *PSMBIOS_FIRMWARE_INVENTORY_INFORMATION, SMBIOS_TYPE_45, *PSMBIOS_TYPE_45;
 
 #pragma endregion
@@ -2773,7 +2762,4 @@ typedef union _SMBIOS_TABLE
 
 #ifdef _MSC_VER
 #pragma warning(default: 4200)
-#else
-#pragma pop_macro("_Field_size_")
-#pragma pop_macro("_Field_size_bytes_")
 #endif

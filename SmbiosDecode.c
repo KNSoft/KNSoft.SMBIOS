@@ -103,7 +103,7 @@ GetSmbiosTableData(
         goto _exit_1;
     }
 
-    *Data = p;
+    *Data = (PSMBIOS_RAW_DATA)p;
     *DataSize = sb.st_size;
     return true;
 

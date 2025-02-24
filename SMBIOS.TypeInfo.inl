@@ -47,7 +47,7 @@ typedef struct _SMBIOS_FIELD_TYPE_INFO
         struct
         {
             WORD Count;
-            _Field_size_(Count) SMBIOS_FIELD_ENUM* Values;
+            PSMBIOS_FIELD_ENUM Values; // _Field_size_(Count)
         } Enum;
     } AdditionalInfo;
 } SMBIOS_FIELD_TYPE_INFO, *PSMBIOS_FIELD_TYPE_INFO;
@@ -57,7 +57,7 @@ typedef struct _SMBIOS_TYPE_INFO
     BYTE Type;          // Type number in SMBIOS spec.
     const char* Name;   // Type name in SMBIOS spec.
     WORD FieldCount;    // Number of Fields
-    _Field_size_(FieldCount) SMBIOS_FIELD_TYPE_INFO* Fields;  // Field information in type structure
+    PSMBIOS_FIELD_TYPE_INFO Fields; // Field information in type structure // _Field_size_(FieldCount)
 } SMBIOS_TYPE_INFO, *PSMBIOS_TYPE_INFO;
 
 #define SMBIOS_DEFINE_FIELD(Type, Name, Field, FieldType, ...) { Name, false, (WORD)offsetof(SMBIOS_TYPE_##Type, Field), (BYTE)sizeof(((SMBIOS_TYPE_##Type*)0)->Field), FieldType, ##__VA_ARGS__ }
