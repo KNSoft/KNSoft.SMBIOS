@@ -55,8 +55,8 @@ jobs:
     - name: Run SmbiosDecode
       working-directory: ${{github.workspace}}
       run: |
-        ./SmbiosDecode
-        ./SmbiosDecode >./SmbiosDecode.txt
+        sudo ./SmbiosDecode
+        sudo ./SmbiosDecode >./SmbiosDecode.txt
         cat ./SmbiosDecode.txt
     - name: Archive output SMBIOS decode result
       uses: actions/upload-artifact@main
