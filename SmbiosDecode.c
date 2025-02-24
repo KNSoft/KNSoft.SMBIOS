@@ -70,8 +70,8 @@ GetSmbiosTableData(
 {
     int fd, ret;
     struct stat sb;
-    void* p;
-    ssize_t size;
+    char* p;
+    ssize_t i, size;
 
     fd = open("/sys/firmware/dmi/tables/DMI", O_RDONLY);
     if (fd == -1)
@@ -88,20 +88,27 @@ GetSmbiosTableData(
     p = malloc(sb.st_size);
     if (p == NULL)
     {
-        printf("malloc failed to allocate %lu bytes buffer\n", sb.st_size);
+        printf("malloc failed to allocate %zd bytes buffer\n", sb.st_size);
         goto _exit_0;
     }
-    size = read(fd, p, sb.st_size);
-    close(fd);
-    if (size == -1)
+
+    size = 0;
+    do
     {
-        printf("read failed with: %d\n", errno);
-        goto _exit_1;
-    } else if (size != sb.st_size)
+        i = read(fd, p + size, sb.st_size - size);
+        if (i == -1)
+        {
+            printf("read failed with: %d\n", errno);
+            goto _exit_1;
+        }
+        size += i;
+    } while (i != 0);
+    if (size != sb.st_size)
     {
-        printf("Read size (%zd) is not match expected size (%zu)", size, sb.st_size);
+        printf("Read size (%zd) is not match expected size (%zd)\n", size, sb.st_size);
         goto _exit_1;
     }
+    close(fd);
 
     *Data = (PSMBIOS_RAW_DATA)p;
     *DataSize = sb.st_size;
