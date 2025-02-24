@@ -11,13 +11,13 @@
 #include "SMBIOS.h"
 #include "SMBIOS.TypeInfo.inl"
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPlatformFirmwareExtendedRomsizeUnitEnum[] = {
     { u8"MB", SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_MB },
     { u8"GB", SMBIOS_PLATFORM_FIRMWARE_EXTENDED_ROMSIZE_UNIT_GB },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType0FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(0, "Vendor", Vendor),
     SMBIOS_DEFINE_FIELD_STRING(0, "Firmware Version", Version),
@@ -86,7 +86,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType0FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Unit", 14, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosPlatformFirmwareExtendedRomsizeUnitEnum)),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemWakeuptypeEnum[] = {
     { u8"Reserved", SMBIOS_SYSTEM_WAKEUPTYPE_RESERVED },
     { u8"Other", SMBIOS_SYSTEM_WAKEUPTYPE_OTHER },
@@ -99,7 +99,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemWakeuptypeEnum[] = {
     { u8"AC Power Restored", SMBIOS_SYSTEM_WAKEUPTYPE_AC_POWER_RESTORED },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType1FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(1, "Manufacturer", Manufacturer),
     SMBIOS_DEFINE_FIELD_STRING(1, "Product Name", ProductName),
@@ -111,7 +111,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType1FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(1, "Family", Family),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosBaseboardTypeEnum[] = {
     { u8"Unknown", SMBIOS_BASEBOARD_TYPE_UNKNOWN },
     { u8"Other", SMBIOS_BASEBOARD_TYPE_OTHER },
@@ -128,7 +128,7 @@ SMBIOS_FIELD_ENUM SmbiosBaseboardTypeEnum[] = {
     { u8"Interconnect board", SMBIOS_BASEBOARD_TYPE_INTERCONNECT_BOARD },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType2FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(2, "Manufacturer", Manufacturer),
     SMBIOS_DEFINE_FIELD_STRING(2, "Product", Product),
@@ -148,7 +148,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType2FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(2, "Number of Contained Object Handles", NumberOfContainedObjectHandles),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisSecurityStateEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_UNKNOWN },
@@ -157,7 +157,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisSecurityStateEnum[] = {
     { u8"External interface enabled", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_SECURITY_STATE_EXTERNAL_INTERFACE_ENABLED },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisStateEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_UNKNOWN },
@@ -167,7 +167,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisStateEnum[] = {
     { u8"Non-recoverable", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_STATE_NON_RECOVERABLE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisTypeEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_UNKNOWN },
@@ -207,7 +207,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemEnclosureOrChassisTypeEnum[] = {
     { u8"Stick PC", SMBIOS_SYSTEM_ENCLOSURE_OR_CHASSIS_TYPE_STICK_PC },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType3FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(3, "Manufacturer", Manufacturer),
     SMBIOS_DEFINE_FIELD_UINT(3, "Type", Type.Value),
@@ -227,7 +227,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType3FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(3, "Contained Element Record Length", ContainedElementRecordLength),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProcessorFamily2Enum[] = {
     { u8"ARMv7", SMBIOS_PROCESSOR_FAMILY2_ARMV7 },
     { u8"ARMv8", SMBIOS_PROCESSOR_FAMILY2_ARMV8 },
@@ -272,7 +272,7 @@ SMBIOS_FIELD_ENUM SmbiosProcessorFamily2Enum[] = {
     { u8"Intel® Core™ Ultra 9", SMBIOS_PROCESSOR_FAMILY2_INTEL_CORE_ULTRA_9 },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProcessorUpgradeEnum[] = {
     { u8"Other", SMBIOS_PROCESSOR_UPGRADE_OTHER },
     { u8"Unknown", SMBIOS_PROCESSOR_UPGRADE_UNKNOWN },
@@ -364,7 +364,7 @@ SMBIOS_FIELD_ENUM SmbiosProcessorUpgradeEnum[] = {
     { u8"Invalid", SMBIOS_PROCESSOR_UPGRADE_INVALID },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProcessorCpuStatusEnum[] = {
     { u8"Unknown", SMBIOS_PROCESSOR_CPU_STATUS_UNKNOWN },
     { u8"CPU Enabled", SMBIOS_PROCESSOR_CPU_STATUS_ENABLED },
@@ -374,7 +374,7 @@ SMBIOS_FIELD_ENUM SmbiosProcessorCpuStatusEnum[] = {
     { u8"Other", SMBIOS_PROCESSOR_CPU_STATUS_OTHER },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProcessorFamilyEnum[] = {
     { u8"Other", SMBIOS_PROCESSOR_FAMILY_OTHER },
     { u8"Unknown", SMBIOS_PROCESSOR_FAMILY_UNKNOWN },
@@ -580,7 +580,7 @@ SMBIOS_FIELD_ENUM SmbiosProcessorFamilyEnum[] = {
     { u8"(See Processor Family 2)", SMBIOS_PROCESSOR_FAMILY_EXTENSION_INDICATOR },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProcessorTypeEnum[] = {
     { u8"Other", SMBIOS_PROCESSOR_TYPE_OTHER },
     { u8"Unknown", SMBIOS_PROCESSOR_TYPE_UNKNOWN },
@@ -590,7 +590,7 @@ SMBIOS_FIELD_ENUM SmbiosProcessorTypeEnum[] = {
     { u8"Video Processor", SMBIOS_PROCESSOR_TYPE_VIDEO_PROCESSOR },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType4FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(4, "Socket Designation", SocketDesignation),
     SMBIOS_DEFINE_FIELD_ENUM(4, "Processor Type", Type, SmbiosProcessorTypeEnum),
@@ -659,7 +659,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType4FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_BIT("SDRAM", 10),\
     SMBIOS_DEFINE_BIT_FIELD("Reserved", 11, 5, SmbiosDataTypeUInt)
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryControllerInterleaveEnum[] = {
     { u8"Other", SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_UNKNOWN },
@@ -670,7 +670,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryControllerInterleaveEnum[] = {
     { u8"Sixteen-Way Interleave", SMBIOS_MEMORY_CONTROLLER_INTERLEAVE_SIXTEEN_WAY },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryControllerErrorDetectingMethodEnum[] = {
     { u8"Other", SMBIOS_MEMORY_CONTROLLER_ERROR_DETECTING_METHOD_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_CONTROLLER_ERROR_DETECTING_METHOD_UNKNOWN },
@@ -682,7 +682,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryControllerErrorDetectingMethodEnum[] = {
     { u8"CRC", SMBIOS_MEMORY_CONTROLLER_ERROR_DETECTING_METHOD_CRC },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType5FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(5, "Error Detecting Method", ErrorDetectingMethod, SmbiosMemoryControllerErrorDetectingMethodEnum),
     SMBIOS_DEFINE_FIELD_UINT(5, "Error Correcting Capability", ErrorCorrectingCapability.Value),
@@ -717,7 +717,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType5FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Size", 0, 7, SmbiosDataTypeUInt),\
     SMBIOS_DEFINE_FIELD_BIT("Double-bank", 7)
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType6FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(6, "Socket Designation", SocketDesignation),
     SMBIOS_DEFINE_FIELD_UINT(6, "Bank Connections", BankConnections),
@@ -739,7 +739,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType6FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Size", 0, 31, SmbiosDataTypeUInt),\
     SMBIOS_DEFINE_FIELD_BIT("64K Granularity", 31)
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCacheAssociativityEnum[] = {
     { u8"Other", SMBIOS_CACHE_ASSOCIATIVITY_OTHER },
     { u8"Unknown", SMBIOS_CACHE_ASSOCIATIVITY_UNKNOWN },
@@ -757,7 +757,7 @@ SMBIOS_FIELD_ENUM SmbiosCacheAssociativityEnum[] = {
     { u8"20-way Set-Associative", SMBIOS_CACHE_ASSOCIATIVITY_20_WAY },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCacheSystemCacheTypeEnum[] = {
     { u8"Other", SMBIOS_CACHE_SYSTEM_CACHE_TYPE_OTHER },
     { u8"Unknown", SMBIOS_CACHE_SYSTEM_CACHE_TYPE_UNKNOWN },
@@ -766,7 +766,7 @@ SMBIOS_FIELD_ENUM SmbiosCacheSystemCacheTypeEnum[] = {
     { u8"Unified", SMBIOS_CACHE_SYSTEM_CACHE_TYPE_UNIFIED },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCacheErrorCorrectionTypeEnum[] = {
     { u8"Other", SMBIOS_CACHE_ERROR_CORRECTION_TYPE_OTHER },
     { u8"Unknown", SMBIOS_CACHE_ERROR_CORRECTION_TYPE_UNKNOWN },
@@ -790,7 +790,7 @@ SMBIOS_FIELD_ENUM SmbiosCacheErrorCorrectionTypeEnum[] = {
     SMBIOS_DEFINE_BIT_FIELD("Size", 0, 15, SmbiosDataTypeUInt),\
     SMBIOS_DEFINE_FIELD_BIT("64K Granularity", 15)
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCacheOperationalModeEnum[] = {
     { u8"Write Through", SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_THROUGH },
     { u8"Write Back", SMBIOS_CACHE_OPERATIONAL_MODE_WRITE_BACK },
@@ -798,7 +798,7 @@ SMBIOS_FIELD_ENUM SmbiosCacheOperationalModeEnum[] = {
     { u8"Unknown", SMBIOS_CACHE_OPERATIONAL_MODE_UNKNOWN },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCacheLocationEnum[] = {
     { u8"Internal", SMBIOS_CACHE_LOCATION_INTERNAL },
     { u8"External", SMBIOS_CACHE_LOCATION_EXTERNAL },
@@ -806,7 +806,7 @@ SMBIOS_FIELD_ENUM SmbiosCacheLocationEnum[] = {
     { u8"Unknown", SMBIOS_CACHE_LOCATION_UNKNOWN },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType7FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(7, "Socket Designation", SocketDesignation),
     SMBIOS_DEFINE_FIELD_UINT(7, "Cache Configuration", Configuration.Value),
@@ -835,7 +835,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType7FieldInfo[] = {
     SMBIOS_CACHE_SIZE2_FIELDS,
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPortConnectorPortTypeEnum[] = {
     { u8"None", SMBIOS_PORT_CONNECTOR_PORT_TYPE_NONE },
     { u8"Parallel Port XT/AT Compatible", SMBIOS_PORT_CONNECTOR_PORT_TYPE_PARALLEL_PORT_XT_AT_COMPATIBLE },
@@ -878,7 +878,7 @@ SMBIOS_FIELD_ENUM SmbiosPortConnectorPortTypeEnum[] = {
     { u8"Other", SMBIOS_PORT_CONNECTOR_PORT_TYPE_OTHER },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPortConnectorTypeEnum[] = {
     { u8"None", SMBIOS_PORT_CONNECTOR_TYPE_NONE },
     { u8"Centronics", SMBIOS_PORT_CONNECTOR_TYPE_CENTRONICS },
@@ -924,7 +924,7 @@ SMBIOS_FIELD_ENUM SmbiosPortConnectorTypeEnum[] = {
     { u8"Other", SMBIOS_PORT_CONNECTOR_TYPE_OTHER },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType8FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(8, "Internal Reference Designator", InternalReferenceDesignator),
     SMBIOS_DEFINE_FIELD_ENUM(8, "Internal Connector Type", InternalConnectorType, SmbiosPortConnectorTypeEnum),
@@ -933,7 +933,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType8FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(8, "Port Type", PortType, SmbiosPortConnectorPortTypeEnum),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemSlotsLengthEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_SLOTS_LENGTH_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_SLOTS_LENGTH_UNKNOWN },
@@ -943,7 +943,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemSlotsLengthEnum[] = {
     { u8"3.5\" drive form factor", SMBIOS_SYSTEM_SLOTS_LENGTH_3DOT5_INCH_DRIVE_FORM_FACTOR },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemSlotsCurrentUsageEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_UNKNOWN },
@@ -952,7 +952,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemSlotsCurrentUsageEnum[] = {
     { u8"Unavailable", SMBIOS_SYSTEM_SLOTS_CURRENT_USAGE_UNAVAILABLE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemSlotsDataBusWidthEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_UNKNOWN },
@@ -970,7 +970,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemSlotsDataBusWidthEnum[] = {
     { u8"32x or x32", SMBIOS_SYSTEM_SLOTS_DATA_BUS_WIDTH_32X },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemSlotsTypeEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_SLOTS_TYPE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_SLOTS_TYPE_UNKNOWN },
@@ -1053,7 +1053,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemSlotsTypeEnum[] = {
     { u8"Enterprise and Datacenter 3\" E3 Form Factor Slot", SMBIOS_SYSTEM_SLOTS_TYPE_EDSFF_E3S_E3L },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType9FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(9, "Slot Designation", Designation),
     SMBIOS_DEFINE_FIELD_ENUM(9, "Slot Type", Type, SmbiosSystemSlotsTypeEnum),
@@ -1088,17 +1088,17 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType9FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(9, "Peer (S/B/D/F/Width) grouping count", PeerGroupingCount),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType11FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(11, "Count", Count),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType12FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(12, "Count", Count),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType13FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(13, "Installable Languages", InstallableLanguages),
     SMBIOS_DEFINE_FIELD_UINT(13, "Flags", Flags.Value),
@@ -1108,18 +1108,18 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType13FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(13, "Current Language", CurrentLanguage),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType14FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(14, "Group Name", GroupName),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemEventLogHeaderformatEnum[] = {
     { u8"No header", SMBIOS_SYSTEM_EVENT_LOG_HEADERFORMAT_NO_HEADER },
     { u8"Type 1 log header", SMBIOS_SYSTEM_EVENT_LOG_HEADERFORMAT_TYPE_1 },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemEventLogAccessmethodEnum[] = {
     { u8"Indexed I/O: 1 8-bit index port, 1 8-bit data port", SMBIOS_SYSTEM_EVENT_LOG_ACCESSMETHOD_1_8BIT_INDEX_1_8BIT_DATA },
     { u8"Indexed I/O: 2 8-bit index port, 1 8-bit data port", SMBIOS_SYSTEM_EVENT_LOG_ACCESSMETHOD_2_8BIT_INDEX_1_8BIT_DATA },
@@ -1128,7 +1128,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemEventLogAccessmethodEnum[] = {
     { u8"Available through General-Purpose NonVolatile Data functions", SMBIOS_SYSTEM_EVENT_LOG_ACCESSMETHOD_NONVOLATILE_DATA },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType15FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(15, "Log Area Length", AreaLength),
     SMBIOS_DEFINE_FIELD_UINT(15, "Log Header Start Offset", HeaderStartOffset),
@@ -1145,7 +1145,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType15FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(15, "Length of each Log Type Descriptor", LengthOfTypeDescriptor),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayErrorCorrectionTypeEnum[] = {
     { u8"Other", SMBIOS_PHYSICAL_MEMORY_ARRAY_ERROR_CORRECTION_TYPE_OTHER },
     { u8"Unknown", SMBIOS_PHYSICAL_MEMORY_ARRAY_ERROR_CORRECTION_TYPE_UNKNOWN },
@@ -1156,7 +1156,7 @@ SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayErrorCorrectionTypeEnum[] = {
     { u8"CRC", SMBIOS_PHYSICAL_MEMORY_ARRAY_ERROR_CORRECTION_TYPE_CRC },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayUseEnum[] = {
     { u8"Other", SMBIOS_PHYSICAL_MEMORY_ARRAY_USE_OTHER },
     { u8"Unknown", SMBIOS_PHYSICAL_MEMORY_ARRAY_USE_UNKNOWN },
@@ -1167,7 +1167,7 @@ SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayUseEnum[] = {
     { u8"Cache memory", SMBIOS_PHYSICAL_MEMORY_ARRAY_USE_CACHE_MEMORY },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayLocationEnum[] = {
     { u8"Other", SMBIOS_PHYSICAL_MEMORY_ARRAY_LOCATION_OTHER },
     { u8"Unknown", SMBIOS_PHYSICAL_MEMORY_ARRAY_LOCATION_UNKNOWN },
@@ -1186,7 +1186,7 @@ SMBIOS_FIELD_ENUM SmbiosPhysicalMemoryArrayLocationEnum[] = {
     { u8"CXL add-on card", SMBIOS_PHYSICAL_MEMORY_ARRAY_LOCATION_CXL_ADDON_CARD },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType16FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(16, "Location", Location, SmbiosPhysicalMemoryArrayLocationEnum),
     SMBIOS_DEFINE_FIELD_ENUM(16, "Use", Use, SmbiosPhysicalMemoryArrayUseEnum),
@@ -1197,7 +1197,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType16FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(16, "Extended Maximum Capacity", ExtendedMaximumCapacity),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryDeviceTechnologyEnum[] = {
     { u8"Other", SMBIOS_MEMORY_DEVICE_TECHNOLOGY_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_DEVICE_TECHNOLOGY_UNKNOWN },
@@ -1209,7 +1209,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryDeviceTechnologyEnum[] = {
     { u8"MRDIMM", SMBIOS_MEMORY_DEVICE_TECHNOLOGY_MRDIMM },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryDeviceTypeEnum[] = {
     { u8"Other", SMBIOS_MEMORY_DEVICE_TYPE_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_DEVICE_TYPE_UNKNOWN },
@@ -1246,7 +1246,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryDeviceTypeEnum[] = {
     { u8"HBM3 (High Bandwidth Memory Generation 3)", SMBIOS_MEMORY_DEVICE_TYPE_HBM3 },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryDeviceFormFactorEnum[] = {
     { u8"Other", SMBIOS_MEMORY_DEVICE_FORM_FACTOR_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_DEVICE_FORM_FACTOR_UNKNOWN },
@@ -1267,7 +1267,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryDeviceFormFactorEnum[] = {
     { u8"CAMM", SMBIOS_MEMORY_DEVICE_FORM_FACTOR_CAMM },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType17FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(17, "Physical Memory Array Handle", PhysicalMemoryArrayHandle),
     SMBIOS_DEFINE_FIELD_UINT(17, "Memory Error Information Handle", ErrorInformationHandle),
@@ -1339,7 +1339,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType17FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(17, "RCD Revision Number", RCDRevisionNumber),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryErrorOperationEnum[] = {
     { u8"Other", SMBIOS_MEMORY_ERROR_OPERATION_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_ERROR_OPERATION_UNKNOWN },
@@ -1348,7 +1348,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryErrorOperationEnum[] = {
     { u8"Partial write", SMBIOS_MEMORY_ERROR_OPERATION_PARTIAL_WRITE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryErrorGranularityEnum[] = {
     { u8"Other", SMBIOS_MEMORY_ERROR_GRANULARITY_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_ERROR_GRANULARITY_UNKNOWN },
@@ -1356,7 +1356,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryErrorGranularityEnum[] = {
     { u8"Memory partition level", SMBIOS_MEMORY_ERROR_GRANULARITY_MEMORY_PARTITION_LEVEL },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryErrorTypeEnum[] = {
     { u8"Other", SMBIOS_MEMORY_ERROR_TYPE_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_ERROR_TYPE_UNKNOWN },
@@ -1374,7 +1374,7 @@ SMBIOS_FIELD_ENUM SmbiosMemoryErrorTypeEnum[] = {
     { u8"Uncorrectable error", SMBIOS_MEMORY_ERROR_TYPE_UNCORRECTABLE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType18FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(18, "Error Type", Type, SmbiosMemoryErrorTypeEnum),
     SMBIOS_DEFINE_FIELD_ENUM(18, "Error Granularity", Granularity, SmbiosMemoryErrorGranularityEnum),
@@ -1385,7 +1385,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType18FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(18, "Error Resolution", Resolution),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType19FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(19, "Starting Address", StartingAddress),
     SMBIOS_DEFINE_FIELD_UINT(19, "Ending Address", EndingAddress),
@@ -1395,7 +1395,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType19FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(19, "Extended Ending Address", ExtendedEndingAddress),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType20FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(20, "Starting Address", StartingAddress),
     SMBIOS_DEFINE_FIELD_UINT(20, "Ending Address", EndingAddress),
@@ -1408,7 +1408,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType20FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(20, "Extended Ending Address", ExtendedEndingAddress),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosBuiltinPointingDeviceInterfaceEnum[] = {
     { u8"Other", SMBIOS_BUILTIN_POINTING_DEVICE_INTERFACE_OTHER },
     { u8"Unknown", SMBIOS_BUILTIN_POINTING_DEVICE_INTERFACE_UNKNOWN },
@@ -1425,7 +1425,7 @@ SMBIOS_FIELD_ENUM SmbiosBuiltinPointingDeviceInterfaceEnum[] = {
     { u8"SPI", SMBIOS_BUILTIN_POINTING_DEVICE_INTERFACE_SPI },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosBuiltinPointingDeviceTypeEnum[] = {
     { u8"Other", SMBIOS_BUILTIN_POINTING_DEVICE_TYPE_OTHER },
     { u8"Unknown", SMBIOS_BUILTIN_POINTING_DEVICE_TYPE_UNKNOWN },
@@ -1438,14 +1438,14 @@ SMBIOS_FIELD_ENUM SmbiosBuiltinPointingDeviceTypeEnum[] = {
     { u8"Optical Sensor", SMBIOS_BUILTIN_POINTING_DEVICE_TYPE_OPTICAL_SENSOR },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType21FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(21, "Type", Type, SmbiosBuiltinPointingDeviceTypeEnum),
     SMBIOS_DEFINE_FIELD_ENUM(21, "Interface", Interface, SmbiosBuiltinPointingDeviceInterfaceEnum),
     SMBIOS_DEFINE_FIELD_UINT(21, "Number of Buttons", NumberOfButtons),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType22FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(22, "Location", Location),
     SMBIOS_DEFINE_FIELD_STRING(22, "Manufacturer", Manufacturer),
@@ -1467,7 +1467,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType22FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(22, "OEM-specific", OEMSpecific),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemResetBootOptionEnum[] = {
     { u8"Reserved", SMBIOS_SYSTEM_RESET_BOOT_OPTION_RESERVED },
     { u8"Operating system", SMBIOS_SYSTEM_RESET_BOOT_OPTION_OPERATING_SYSTEM },
@@ -1475,7 +1475,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemResetBootOptionEnum[] = {
     { u8"Do not reboot", SMBIOS_SYSTEM_RESET_BOOT_OPTION_DO_NOT_REBOOT },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType23FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(23, "Capabilities", Capabilities.Value),
     SMBIOS_DEFINE_FIELD_BIT("Status", 0),
@@ -1489,7 +1489,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType23FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(23, "Timeout", Timeout),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosHardwareSecuritySettingsStatusEnum[] = {
     { u8"Disabled", SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_DISABLED },
     { u8"Enabled", SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_ENABLED },
@@ -1497,7 +1497,7 @@ SMBIOS_FIELD_ENUM SmbiosHardwareSecuritySettingsStatusEnum[] = {
     { u8"Unknown", SMBIOS_HARDWARE_SECURITY_SETTINGS_STATUS_UNKNOWN },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType24FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(24, "Hardware Security Settings", Settings.Value),
     SMBIOS_DEFINE_BIT_FIELD("Panel Reset Status", 0, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosHardwareSecuritySettingsStatusEnum)),
@@ -1506,7 +1506,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType24FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Password Status", 6, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosHardwareSecuritySettingsStatusEnum)),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType25FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(25, "Next Scheduled Power on Month", NextScheduledPowerOnMonth),
     SMBIOS_DEFINE_FIELD_UINT(25, "Next Scheduled Power on Day-of-month", NextScheduledPowerOnDayOfMonth),
@@ -1515,7 +1515,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType25FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(25, "Next Scheduled Power on Second", NextScheduledPowerOnSecond),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosProbeStatusEnum[] = {
     { u8"Other", SMBIOS_PROBE_STATUS_OTHER },
     { u8"Unknown", SMBIOS_PROBE_STATUS_UNKNOWN },
@@ -1525,7 +1525,7 @@ SMBIOS_FIELD_ENUM SmbiosProbeStatusEnum[] = {
     { u8"Non-recoverable", SMBIOS_PROBE_STATUS_NON_RECOVERABLE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosVoltageProbeLocationEnum[] = {
     { u8"Other", SMBIOS_VOLTAGE_PROBE_LOCATION_OTHER },
     { u8"Unknown", SMBIOS_VOLTAGE_PROBE_LOCATION_UNKNOWN },
@@ -1540,7 +1540,7 @@ SMBIOS_FIELD_ENUM SmbiosVoltageProbeLocationEnum[] = {
     { u8"Add-in Card", SMBIOS_VOLTAGE_PROBE_LOCATION_ADDIN_CARD },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType26FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(26, "Description", Description),
     SMBIOS_DEFINE_FIELD_UINT(26, "Location and Status", LocationAndStatus.Value),
@@ -1555,7 +1555,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType26FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(26, "Nominal Value", NominalValue),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosCoolingDeviceTypeEnum[] = {
     { u8"Other", SMBIOS_COOLING_DEVICE_TYPE_OTHER },
     { u8"Unknown", SMBIOS_COOLING_DEVICE_TYPE_UNKNOWN },
@@ -1570,7 +1570,7 @@ SMBIOS_FIELD_ENUM SmbiosCoolingDeviceTypeEnum[] = {
     { u8"Passive Cooling", SMBIOS_COOLING_DEVICE_TYPE_PASSIVE_COOLING },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType27FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(27, "Temperature Probe Handle", TemperatureProbeHandle),
     SMBIOS_DEFINE_FIELD_UINT(27, "Device Type and Status", DeviceTypeAndStatus.Value),
@@ -1582,7 +1582,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType27FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(27, "Description", Description),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType28FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(28, "Description", Description),
     SMBIOS_DEFINE_FIELD_UINT(28, "Location and Status", LocationAndStatus.Value),
@@ -1597,7 +1597,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType28FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(28, "Nominal Value", NominalValue),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType29FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(29, "Description", Description),
     SMBIOS_DEFINE_FIELD_UINT(29, "Location and Status", LocationAndStatus.Value),
@@ -1612,7 +1612,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType29FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(29, "Nominal Value", NominalValue),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType30FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(30, "Manufacturer Name", ManufacturerName),
     SMBIOS_DEFINE_FIELD_UINT(30, "Connections", Connections.Value),
@@ -1621,7 +1621,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType30FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Reserved", 2, 6, SmbiosDataTypeUInt),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemBootStatusEnum[] = {
     { u8"No errors detected", SMBIOS_SYSTEM_BOOT_STATUS_NO_ERROR },
     { u8"No bootable media", SMBIOS_SYSTEM_BOOT_STATUS_NO_BOOTABLE_MEDIA },
@@ -1634,14 +1634,14 @@ SMBIOS_FIELD_ENUM SmbiosSystemBootStatusEnum[] = {
     { u8"System watchdog timer expired", SMBIOS_SYSTEM_BOOT_STATUS_SYSTEM_WATCHDOG_TIMER_EXPIRED },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType32FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_RAW(32, "Reserved", Reserved),
     SMBIOS_DEFINE_FIELD_ENUM(32, "Status", Status, SmbiosSystemBootStatusEnum),
     SMBIOS_DEFINE_FIELD_RAW(32, "Additional Data", AdditionalData),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType33FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(33, "Error Type", Type, SmbiosMemoryErrorTypeEnum),
     SMBIOS_DEFINE_FIELD_ENUM(33, "Error Granularity", Granularity, SmbiosMemoryErrorGranularityEnum),
@@ -1652,7 +1652,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType33FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(33, "Error Resolution", Resolution),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosManagementDeviceAddressTypeEnum[] = {
     { u8"Other", SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_OTHER },
     { u8"Unknown", SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_UNKNOWN },
@@ -1661,7 +1661,7 @@ SMBIOS_FIELD_ENUM SmbiosManagementDeviceAddressTypeEnum[] = {
     { u8"SM Bus", SMBIOS_MANAGEMENT_DEVICE_ADDRESS_TYPE_SMBUS },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosManagementDeviceTypeEnum[] = {
     { u8"Other", SMBIOS_MANAGEMENT_DEVICE_TYPE_OTHER },
     { u8"Unknown", SMBIOS_MANAGEMENT_DEVICE_TYPE_UNKNOWN },
@@ -1678,7 +1678,7 @@ SMBIOS_FIELD_ENUM SmbiosManagementDeviceTypeEnum[] = {
     { u8"Holtek HT82H791", SMBIOS_MANAGEMENT_DEVICE_TYPE_HOLTEK_HT82H791 },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType34FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(34, "Description", Description),
     SMBIOS_DEFINE_FIELD_ENUM(34, "Type", Type, SmbiosManagementDeviceTypeEnum),
@@ -1686,7 +1686,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType34FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(34, "Address Type", AddressType, SmbiosManagementDeviceAddressTypeEnum),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType35FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(35, "Description", Description),
     SMBIOS_DEFINE_FIELD_UINT(35, "Management Device Handle", ManagementDeviceHandle),
@@ -1694,7 +1694,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType35FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(35, "Threshold Handle", ThresholdHandle),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType36FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(36, "Lower Threshold – Non-critical", LowerThresholdNonCritical),
     SMBIOS_DEFINE_FIELD_UINT(36, "Upper Threshold – Non-critical", UpperThresholdNonCritical),
@@ -1704,7 +1704,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType36FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(36, "Upper Threshold – Non-recoverable", UpperThresholdNonRecoverable),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosMemoryChannelTypeEnum[] = {
     { u8"Other", SMBIOS_MEMORY_CHANNEL_TYPE_OTHER },
     { u8"Unknown", SMBIOS_MEMORY_CHANNEL_TYPE_UNKNOWN },
@@ -1712,14 +1712,14 @@ SMBIOS_FIELD_ENUM SmbiosMemoryChannelTypeEnum[] = {
     { u8"SyncLink", SMBIOS_MEMORY_CHANNEL_TYPE_SYNC_LINK },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType37FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(37, "Channel Type", Type, SmbiosMemoryChannelTypeEnum),
     SMBIOS_DEFINE_FIELD_UINT(37, "Maximum Channel Load", MaximumLoad),
     SMBIOS_DEFINE_FIELD_UINT(37, "Memory Device Count", MemoryDeviceCount),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosIpmiDeviceBaseaddressRegisterSpacingEnum[] = {
     { u8"On successive byte boundaries", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_SUCCESSIVE },
     { u8"On 32-bit boundaries", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_32BIT },
@@ -1727,7 +1727,7 @@ SMBIOS_FIELD_ENUM SmbiosIpmiDeviceBaseaddressRegisterSpacingEnum[] = {
     { u8"Reserved", SMBIOS_IPMI_DEVICE_BASEADDRESS_REGISTER_SPACING_RESERVED },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosIpmiDeviceInterfaceTypeEnum[] = {
     { u8"Unknown", SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_UNKONWN },
     { u8"KCS: Keyboard Controller Style", SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_KCS },
@@ -1736,7 +1736,7 @@ SMBIOS_FIELD_ENUM SmbiosIpmiDeviceInterfaceTypeEnum[] = {
     { u8"SSIF: SMBus System Interface", SMBIOS_IPMI_DEVICE_INTERFACE_TYPE_SSIF },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType38FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(38, "Interface Type", Type, SmbiosIpmiDeviceInterfaceTypeEnum),
     SMBIOS_DEFINE_FIELD_UINT(38, "IPMI Specification Revision", SpecificationRevision.Value),
@@ -1757,7 +1757,7 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType38FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Register spacing", 6, 2, SmbiosDataTypeEnum, SMBIOS_FIELD_ENUM_VALUES(SmbiosIpmiDeviceBaseaddressRegisterSpacingEnum)),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyTypeEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_UNKNOWN },
@@ -1769,7 +1769,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyTypeEnum[] = {
     { u8"Regulator", SMBIOS_SYSTEM_POWER_SUPPLY_TYPE_REGULATOR },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyStatusEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_UNKNOWN },
@@ -1778,7 +1778,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyStatusEnum[] = {
     { u8"Critical; power supply has failed and has been taken off-line", SMBIOS_SYSTEM_POWER_SUPPLY_STATUS_CRITICAL },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyInputVoltageRangeSwitchingEnum[] = {
     { u8"Other", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_OTHER },
     { u8"Unknown", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_UNKNOWN },
@@ -1788,7 +1788,7 @@ SMBIOS_FIELD_ENUM SmbiosSystemPowerSupplyInputVoltageRangeSwitchingEnum[] = {
     { u8"Not applicable", SMBIOS_SYSTEM_POWER_SUPPLY_INPUT_VOLTAGE_RANGE_SWITCHING_NOT_APPLICABLE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType39FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(39, "Power Unit Group", PowerUnitGroup),
     SMBIOS_DEFINE_FIELD_STRING(39, "Location", Location),
@@ -1812,12 +1812,12 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType39FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(39, "Input Current Probe Handle", InputCurrentProbeHandle),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType40FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(40, "Number of Additional Information entries", Count),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosOnboardDevicesExtendedTypeEnum[] = {
     { u8"Other", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_OTHER },
     { u8"Unknown", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UNKNOWN },
@@ -1837,7 +1837,7 @@ SMBIOS_FIELD_ENUM SmbiosOnboardDevicesExtendedTypeEnum[] = {
     { u8"UFS Controller", SMBIOS_ONBOARD_DEVICES_EXTENDED_TYPE_UFS_CONTROLLER },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType41FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(41, "Reference Designation", ReferenceDesignation),
     SMBIOS_DEFINE_FIELD_UINT(41, "Device Type", Type.Value),
@@ -1851,13 +1851,13 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType41FieldInfo[] = {
     SMBIOS_DEFINE_BIT_FIELD("Device number", 3, 5, SmbiosDataTypeUInt),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType42FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(42, "Interface Type", Type),
     SMBIOS_DEFINE_FIELD_UINT(42, "Interface Type Specific Data Length", TypeSpecificDataLength),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType43FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_RAW(43, "Vendor ID", VendorID),
     SMBIOS_DEFINE_FIELD_UINT(43, "Major Spec Version", MajorSpecVersion),
@@ -1876,12 +1876,12 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType43FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(43, "OEM-defined", OEMDefined),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType44FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(44, "Referenced Handle", ReferencedHandle),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryStateEnum[] = {
     { u8"Other", SMBIOS_FIRMWARE_INVENTORY_STATE_OTHER },
     { u8"Unknown", SMBIOS_FIRMWARE_INVENTORY_STATE_UNKNOWN },
@@ -1893,13 +1893,13 @@ SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryStateEnum[] = {
     { u8"UnavailableOffline", SMBIOS_FIRMWARE_INVENTORY_STATE_UNAVAILABLE_OFFLINE },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryIdFormatEnum[] = {
     { u8"Free-form string", SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_FREE_FORM },
     { u8"UEFI ESRT FwClass GUID or the UEFI Firmware Management Protocol ImageTypeId", SMBIOS_FIRMWARE_INVENTORY_ID_FORMAT_UEFI_GUID },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryVersionFormatEnum[] = {
     { u8"Free-form string", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_FREE_FORM },
     { u8"\"MAJOR.MINOR\"", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_MAJOR_MINOR },
@@ -1907,7 +1907,7 @@ SMBIOS_FIELD_ENUM SmbiosFirmwareInventoryVersionFormatEnum[] = {
     { u8"64-bit numeric value", SMBIOS_FIRMWARE_INVENTORY_VERSION_FORMAT_HEX_STRING_64 },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType45FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_STRING(45, "Firmware Component Name", ComponentName),
     SMBIOS_DEFINE_FIELD_STRING(45, "Firmware Version", Version),
@@ -1926,20 +1926,20 @@ SMBIOS_FIELD_TYPE_INFO SmbiosType45FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_UINT(45, "Number of Associated Components", NumberOfAssociatedComponents),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_ENUM SmbiosStringPropertyIdEnum[] = {
     { u8"Reserved", SMBIOS_STRING_PROPERTY_ID_RESERVED },
     { u8"UEFI device path", SMBIOS_STRING_PROPERTY_ID_UEFI_DEVICE_PATH },
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_FIELD_TYPE_INFO SmbiosType46FieldInfo[] = {
     SMBIOS_DEFINE_FIELD_ENUM(46, "String Property ID", ID, SmbiosStringPropertyIdEnum),
     SMBIOS_DEFINE_FIELD_STRING(46, "String Property Value", String),
     SMBIOS_DEFINE_FIELD_UINT(46, "Parent handle", ParentHandle),
 };
 
-__declspec(selectany)
+SMBIOS_TYPEINFO_SELECTANY
 SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
     SMBIOS_DEFINE_TYPE(0, "Platform Firmware Information"),
     SMBIOS_DEFINE_TYPE(1, "System Information"),
@@ -1951,7 +1951,7 @@ SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
     SMBIOS_DEFINE_TYPE(7, "Cache Information"),
     SMBIOS_DEFINE_TYPE(8, "Port Connector Information"),
     SMBIOS_DEFINE_TYPE(9, "System Slots"),
-    { 10, "On Board Devices Information", 0, NULL },
+    { 10, "On Board Devices Information", 0 },
     SMBIOS_DEFINE_TYPE(11, "OEM Strings"),
     SMBIOS_DEFINE_TYPE(12, "System Configuration Options"),
     SMBIOS_DEFINE_TYPE(13, "Firmware Language Information"),
@@ -1972,7 +1972,7 @@ SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
     SMBIOS_DEFINE_TYPE(28, "Temperature Probe"),
     SMBIOS_DEFINE_TYPE(29, "Electrical Current Probe"),
     SMBIOS_DEFINE_TYPE(30, "Out-of-Band Remote Access"),
-    { 31, "Boot Integrity Services (BIS) Entry Point", 0, NULL },
+    { 31, "Boot Integrity Services (BIS) Entry Point", 0 },
     SMBIOS_DEFINE_TYPE(32, "System Boot Information"),
     SMBIOS_DEFINE_TYPE(33, "64-Bit Memory Error Information"),
     SMBIOS_DEFINE_TYPE(34, "Management Device"),
@@ -1988,6 +1988,6 @@ SMBIOS_TYPE_INFO SmbiosTypeInfo[] = {
     SMBIOS_DEFINE_TYPE(44, "Processor Additional Information"),
     SMBIOS_DEFINE_TYPE(45, "Firmware Inventory Information"),
     SMBIOS_DEFINE_TYPE(46, "String Property"),
-    { 126, "Inactive", 0, NULL },
-    { 127, "End-of-Table", 0, NULL },
+    { 126, "Inactive", 0 },
+    { 127, "End-of-Table", 0 },
 };

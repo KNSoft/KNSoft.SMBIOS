@@ -13,6 +13,8 @@
 
 #pragma region Preparations
 
+#include <assert.h>
+
 /* Version Control */
 #ifndef SMBIOS_VERSION
 #define SMBIOS_VERSION 0x03080000 // 0x(Major)(Minor)(Revision)(WIP)
@@ -24,7 +26,7 @@ typedef unsigned char       UCHAR; // STRING
 typedef unsigned char       BYTE;  // UINT8
 typedef unsigned short      WORD;  // UINT16
 typedef unsigned long       DWORD; // UINT32
-typedef unsigned __int64    QWORD; // UINT64
+typedef unsigned long long  QWORD; // UINT64
 
 /* For code analysis */
 #ifdef _MSC_VER

@@ -41,7 +41,7 @@ static String AddEnumType(String EnumName)
         if (Data[i].Trim().StartsWith("#define " + EnumName + '_'))
         {
             EnumTypeName = String.Empty;
-            Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_ENUM "u8.ToArray());
+            Output.Write("SMBIOS_TYPEINFO_SELECTANY\r\nSMBIOS_FIELD_ENUM "u8.ToArray());
             String[] Words = EnumName.Split('_');
             foreach (String Word in Words)
             {
@@ -392,7 +392,7 @@ for (UInt32 i = 1; i < Data.Length; i++)
     Fields = ResolveStructure(TypeNumber, j, i);
     if (Fields.Count > 0)
     {
-        Output.Write("__declspec(selectany)\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
+        Output.Write("SMBIOS_TYPEINFO_SELECTANY\r\nSMBIOS_FIELD_TYPE_INFO SmbiosType"u8.ToArray());
         Output.Write(Encoding.UTF8.GetBytes(TypeNumber));
         Output.Write("FieldInfo[] = {\r\n"u8.ToArray());
         for (Int32 k = Fields.Count - 1; k >= 0; k--)
@@ -408,7 +408,7 @@ _AddType:
     InTypeRegion = false;
 }
 
-Output.Write("__declspec(selectany)\r\nSMBIOS_TYPE_INFO SmbiosTypeInfo[] = {\r\n"u8.ToArray());
+Output.Write("SMBIOS_TYPEINFO_SELECTANY\r\nSMBIOS_TYPE_INFO SmbiosTypeInfo[] = {\r\n"u8.ToArray());
 foreach (var Type in Types)
 {
     if (Type.HasDefination)
@@ -416,7 +416,7 @@ foreach (var Type in Types)
         Output.Write(Encoding.UTF8.GetBytes("    SMBIOS_DEFINE_TYPE(" + Type.Number + ", \"" + Type.Name + "\"),\r\n"));
     } else
     {
-        Output.Write(Encoding.UTF8.GetBytes("    { "+ Type.Number + ", \""+ Type.Name + "\", 0, NULL },\r\n"));
+        Output.Write(Encoding.UTF8.GetBytes("    { "+ Type.Number + ", \""+ Type.Name + "\", 0 },\r\n"));
     }
 }
 Output.Write("};\r\n"u8.ToArray());
