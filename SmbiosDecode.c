@@ -113,7 +113,7 @@ static bool GetSmbiosTableData(PSMBIOS_RAW_DATA* Data)
     } while (i > 0);
     if (size != sb.st_size)
     {
-        printf("Read size (%zd) is not match expected size (%zd)\n", size, sb.st_size);
+        printf("Read size (%zd) is not match expected size (%ld)\n", size, sb.st_size);
         goto _exit_1;
     }
     close(fd);
@@ -281,14 +281,14 @@ PrintSmbiosTable(
             if (TypeInfo->Fields[i].Type == SmbiosDataTypeBit)
             {
                 printf("%02hhu [%c] %s",
-                       TypeInfo->Fields[i].Offset,
+                       (BYTE)TypeInfo->Fields[i].Offset,
                        (BitFieldValue & ((QWORD)1 << TypeInfo->Fields[i].Offset)) ? 'x' : ' ',
                        TypeInfo->Fields[i].Name);
             } else if (TypeInfo->Fields[i].Type == SmbiosDataTypeUInt || TypeInfo->Fields[i].Type == SmbiosDataTypeEnum)
             {
                 printf("%02hhu:%02hhu %s: ",
-                       TypeInfo->Fields[i].Offset,
-                       TypeInfo->Fields[i].Offset + TypeInfo->Fields[i].Size - 1,
+                       (BYTE)TypeInfo->Fields[i].Offset,
+                       (BYTE)TypeInfo->Fields[i].Offset + TypeInfo->Fields[i].Size - 1,
                        TypeInfo->Fields[i].Name);
                 Value = BitFieldValue;
                 Value >>= TypeInfo->Fields[i].Offset;
