@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
+#include <errno.h>
 
 #define AddPtr(P, I) ((void*)((unsigned char*)(P) + (I))) // aka Add2Ptr
 #define SubPtr(B, O) ((unsigned int)((size_t)(O) - (size_t)(B))) // aka PtrOffset
@@ -52,9 +53,8 @@ static bool GetSmbiosTableData(PSMBIOS_RAW_DATA* Data)
     return false;
 }
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 
-#include <errno.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -171,7 +171,7 @@ _exit_0:
 
 #else
 
-#error No OS target specified, currently supports Windows (_WIN32) and Linux (__linux__)
+#error No OS target specified, currently supports Windows (_WIN32), Linux (__linux__) and MacOS (__APPLE__)
 
 #endif
 
