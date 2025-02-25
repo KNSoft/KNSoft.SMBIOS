@@ -8,19 +8,17 @@
 #include <locale.h>
 #include <string.h>
 
-bool
-GetSmbiosTableData(
-    PSMBIOS_RAW_DATA* Data,
-    unsigned int* DataSize);
+#define AddPtr(P, I) ((void*)((unsigned char*)(P) + (I))) // aka Add2Ptr
+#define SubPtr(B, O) ((unsigned int)((size_t)(O) - (size_t)(B))) // aka PtrOffset
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
 
-#if defined(_WINDOWS)
+#if defined(_WIN32)
 
 #include <Windows.h>
 
-bool
-GetSmbiosTableData(
-    PSMBIOS_RAW_DATA* Data,
-    unsigned int* DataSize)
+static bool GetSmbiosTableData(PSMBIOS_RAW_DATA* Data)
 {
     UINT BufferSize, BytesWritten;
     PVOID Buffer;
@@ -47,7 +45,6 @@ GetSmbiosTableData(
     } else
     {
         *Data = (PSMBIOS_RAW_DATA)Buffer;
-        *DataSize = BufferSize;
         return true;
     }
 
@@ -55,7 +52,7 @@ GetSmbiosTableData(
     return false;
 }
 
-#elif defined(_LINUX)
+#elif defined(__linux__)
 
 #include <errno.h>
 #include <fcntl.h>
@@ -63,46 +60,57 @@ GetSmbiosTableData(
 #include <sys/stat.h>
 #include <unistd.h>
 
-bool
-GetSmbiosTableData(
-    PSMBIOS_RAW_DATA* Data,
-    unsigned int* DataSize)
+static char SmbiosEntryPointAnchorString21[] = SMBIOS_ENTRY_POINT_21_ANCHOR_STRING;
+static char SmbiosEntryPointAnchorString30[] = SMBIOS_ENTRY_POINT_30_ANCHOR_STRING;
+
+static bool ReadSmbiosEntryField(int fd, off_t off, void* p, size_t len)
+{
+    if (lseek(fd, off, SEEK_SET) == (off_t)-1)
+    {
+        return false;
+    }
+    return read(fd, p, len) == len;
+}
+
+static bool GetSmbiosTableData(PSMBIOS_RAW_DATA* Data)
 {
     int fd, ret;
     struct stat sb;
-    char* p;
-    ssize_t i, size;
+    PSMBIOS_RAW_DATA p;
+    ssize_t size, i;
+    char anchor[5];
 
     fd = open("/sys/firmware/dmi/tables/DMI", O_RDONLY);
-    if (fd == -1)
+    if (fd < 0)
     {
         printf("open failed with: %d\n", errno);
         return false;
     }
     ret = fstat(fd, &sb);
-    if (ret == -1)
+    if (ret < 0)
     {
         printf("fstat failed with: %d\n", errno);
         goto _exit_0;
     }
-    p = malloc(sb.st_size);
+    size = sizeof(SMBIOS_RAW_DATA) + sb.st_size;
+    p = (PSMBIOS_RAW_DATA)malloc(size);
     if (p == NULL)
     {
-        printf("malloc failed to allocate %zd bytes buffer\n", sb.st_size);
+        printf("malloc failed to allocate %zd bytes buffer\n", size);
         goto _exit_0;
     }
 
     size = 0;
     do
     {
-        i = read(fd, p + size, sb.st_size - size);
-        if (i == -1)
+        i = read(fd, AddPtr(p, sizeof(SMBIOS_RAW_DATA) + size), sb.st_size - size);
+        if (i < 0)
         {
             printf("read failed with: %d\n", errno);
             goto _exit_1;
         }
         size += i;
-    } while (i != 0);
+    } while (i > 0);
     if (size != sb.st_size)
     {
         printf("Read size (%zd) is not match expected size (%zd)\n", size, sb.st_size);
@@ -110,10 +118,50 @@ GetSmbiosTableData(
     }
     close(fd);
 
-    *Data = (PSMBIOS_RAW_DATA)p;
-    *DataSize = sb.st_size;
+    fd = open("/sys/firmware/dmi/tables/smbios_entry_point", O_RDONLY);
+    if (fd < 0)
+    {
+        printf("open failed with: %d\n", errno);
+        free(p);
+        return false;
+    }
+    i = read(fd, anchor, sizeof(anchor));
+    if (i != sizeof(anchor))
+    {
+        goto _exit_2;
+    }
+    if (memcmp(anchor, SmbiosEntryPointAnchorString30, sizeof(SmbiosEntryPointAnchorString30)) == 0)
+    {
+        if (!ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_30, MajorVersion), &p->SMBIOSMajorVersion, sizeof(p->SMBIOSMajorVersion)) ||
+            !ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_30, MinorVersion), &p->SMBIOSMinorVersion, sizeof(p->SMBIOSMajorVersion)) ||
+            !ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_30, TableMaxSize), &p->Length, sizeof(p->Length)))
+        {
+            goto _exit_2;
+        }
+        p->DmiRevision = 3;
+    } else if (memcmp(anchor, SmbiosEntryPointAnchorString21, sizeof(SmbiosEntryPointAnchorString21)) == 0)
+    {
+        WORD len;
+
+        if (!ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_21, MajorVersion), &p->SMBIOSMajorVersion, sizeof(p->SMBIOSMajorVersion)) ||
+            !ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_21, MinorVersion), &p->SMBIOSMinorVersion, sizeof(p->SMBIOSMajorVersion)) ||
+            !ReadSmbiosEntryField(fd, offsetof(SMBIOS_ENTRY_POINT_21, TableLength), &len, sizeof(len)))
+        {
+            goto _exit_2;
+        }
+        p->Length = len;
+        p->DmiRevision = 2;
+    } else
+    {
+        goto _exit_2;
+    }
+    p->Used20CallingMethod = 0;
+
+    *Data = p;
     return true;
 
+_exit_2:
+    puts("Read SMBIOS entry point failed\n");
 _exit_1:
     free(p);
 _exit_0:
@@ -123,14 +171,8 @@ _exit_0:
 
 #else
 
-#error No OS target specified, currently supports Windows (_WINDOWS) and Linux (_LINUX)
+#error No OS target specified, currently supports Windows (_WIN32) and Linux (__linux__)
 
-#endif
-
-#define AddPtr(P, I) ((void*)((unsigned char*)(P) + (I))) // aka Add2Ptr
-#define SubPtr(B, O) ((unsigned int)((size_t)(O) - (size_t)(B))) // aka PtrOffset
-#ifndef NULL
-#define NULL ((void *)0)
 #endif
 
 static const char* g_Strings[UCHAR_MAX] = { 0 };
@@ -336,17 +378,16 @@ int
 main()
 {
     PSMBIOS_RAW_DATA Data;
-    unsigned int DataSize;
     PSMBIOS_TABLE Table;
 
-#ifdef _WINDOWS
+#ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
     setlocale(LC_ALL, ".UTF-8");
 
-    if (!GetSmbiosTableData(&Data, &DataSize))
+    if (!GetSmbiosTableData(&Data))
     {
-        puts("Get SMBIOS table failed\n");
+        puts("Get SMBIOS table failed");
         return ENODATA;
     }
     printf("SMBIOS Version: %hhu.%hhu\n", Data->SMBIOSMajorVersion, Data->SMBIOSMinorVersion);

@@ -39,6 +39,51 @@ typedef unsigned long long  QWORD; // UINT64
 
 #pragma pack(push, 1)
 
+#define SMBIOS_ENTRY_POINT_21_ANCHOR_STRING     { '_', 'S', 'M', '_' }
+#define SMBIOS_ENTRY_POINT_21_ANCHOR_STRING2    { '_', 'D', 'M', 'I', '_' }
+
+typedef struct _SMBIOS_ENTRY_POINT_21
+{
+    BYTE AnchorString[4];       // Anchor String // "_SM_" (5F 53 4D 5F)
+    BYTE Checksum;              // Entry Point Structure Checksum
+    BYTE Length;                // Entry Point Length
+    BYTE MajorVersion;          // SMBIOS Major Version
+    BYTE MinorVersion;          // SMBIOS Minor Version
+    WORD MaxStructureSize;      // Maximum Structure Size
+    BYTE EntryPointRevision;    // Entry Point Revision
+    BYTE FormattedArea[5];      // Formatted Area
+    BYTE AnchorString2[5];      // Intermediate Anchor String // "_DMI_" (5F 44 4D 49 5F)
+    BYTE Checksum2;             // Intermediate Checksum
+    WORD TableLength;           // Structure Table Length
+    DWORD TableAddress;         // Structure Table Address
+    WORD NumberOfStructures;    // Number of SMBIOS Structures
+    union
+    {
+        BYTE Value;
+        struct
+        {
+            BYTE MinorVersion : 4;
+            BYTE MajorVersion : 4;
+        };
+    } BCDRevision;              // SMBIOS BCD Revision
+} SMBIOS_ENTRY_POINT_21, *PSMBIOS_ENTRY_POINT_21;
+
+#define SMBIOS_ENTRY_POINT_30_ANCHOR_STRING     { '_', 'S', 'M', '3', '_' }
+
+typedef struct _SMBIOS_ENTRY_POINT_30
+{
+    BYTE AnchorString[5];       // Anchor String // "_SM3_" (5F 53 4D 33 5F)
+    BYTE Checksum;              // Entry Point Structure Checksum
+    BYTE Length;                // Entry Point Length
+    BYTE MajorVersion;          // SMBIOS Major Version
+    BYTE MinorVersion;          // SMBIOS Minor Version
+    BYTE Docref;                // SMBIOS Docrev
+    BYTE EntryPointRevision;    // Entry Point Revision
+    BYTE Reserved;              // Reserved
+    DWORD TableMaxSize;         // Structure table maximum size
+    QWORD TableAddress;         // Structure table address
+} SMBIOS_ENTRY_POINT_30, *PSMBIOS_ENTRY_POINT_30;
+
 /* aka RawSMBIOSData on Windows */
 typedef struct _SMBIOS_RAW_DATA
 {
