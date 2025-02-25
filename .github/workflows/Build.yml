@@ -38,7 +38,9 @@ jobs:
       uses: actions/upload-artifact@main
       with:
         name: KNSoft.SMBIOS-Windows-MSVC-${{matrix.platform}}-${{matrix.config}}-${{github.sha}}
-        path: .\SmbiosDecode.txt
+        path: |
+          .\SmbiosDecode.exe
+          .\SmbiosDecode.txt
 
   Build-Linux-GCC:
     strategy:
@@ -61,28 +63,6 @@ jobs:
       uses: actions/upload-artifact@main
       with:
         name: KNSoft.SMBIOS-Linux-GCC-${{github.sha}}
-        path: ./SmbiosDecode.txt
-    
-  Build-MacOS-GCC:
-    strategy:
-      fail-fast: false
-    runs-on: macos-latest
-    steps:
-    - name: Source checkout
-      uses: actions/checkout@main
-      with:
-          submodules: recursive
-    - name: Build
-      working-directory: ${{github.workspace}}
-      run: gcc -fdiagnostics-color=always -D_LINUX -g ./SmbiosDecode.c -o SmbiosDecode
-    - name: Run SmbiosDecode
-      working-directory: ${{github.workspace}}
-      run: |
-        sudo ./SmbiosDecode
-        sudo ./SmbiosDecode >./SmbiosDecode.txt
-        cat ./SmbiosDecode.txt
-    - name: Archive output SMBIOS decode result
-      uses: actions/upload-artifact@main
-      with:
-        name: KNSoft.SMBIOS-MacOS-GCC-${{github.sha}}
-        path: ./SmbiosDecode.txt
+        path: |
+          ./SmbiosDecode
+          ./SmbiosDecode.txt

@@ -53,7 +53,7 @@ static bool GetSmbiosTableData(PSMBIOS_RAW_DATA* Data)
     return false;
 }
 
-#elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__)
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -171,7 +171,7 @@ _exit_0:
 
 #else
 
-#error No OS target specified, currently supports Windows (_WIN32), Linux (__linux__) and MacOS (__APPLE__)
+#error No OS target specified, currently supports Windows (_WIN32) and Linux (__linux__)
 
 #endif
 
